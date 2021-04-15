@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Icon from '@mdi/react';
 import { mdiClose } from '@mdi/js';
 import AutoComplete from './AutoComplete';
+import Alert from './Alert';
 
 export default function Form_dados_coleta({
 	ativo,
@@ -12,6 +13,7 @@ export default function Form_dados_coleta({
 }) {
 	const [resposta, setresposta] = useState();
 	const [postarDadosController, setpostarDadosController] = useState(false);
+	//const [anim, setanim] = useState(0);
 
 	let data = new Date();
 
@@ -104,13 +106,22 @@ export default function Form_dados_coleta({
 			}
 
 			setTimeout(() => {
+				setpostarDadosController(false);
 				setresposta();
-				atualizarColeta();
 				fecharForm();
+				atualizarColeta();
 			}, 2000);
 		}
-		setpostarDadosController(false);
+		//animPop();
 	};
+
+	// const animPop = _ => {
+	// 	setanim(1);
+
+	// 	setTimeout(() => {
+	// 		setanim(0);
+	// 	}, 3000);
+	// };
 
 	const valorEdicao = chave => {
 		if (editarItem) {
@@ -181,12 +192,8 @@ export default function Form_dados_coleta({
 							/>
 						</div>
 					</div>
-
-					{resposta ? (
-						<div className='alerta'>{resposta}</div>
-					) : (
-						<button>{editarItem ? 'Atualizar' : 'Inserir'}</button>
-					)}
+					<Alert status={postarDadosController} texto={resposta} />
+					{editarItem ? <button>Atualizar</button> : <button>Inserir</button>}
 				</div>
 			</div>
 		</form>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Alerta from './Alert';
 
 export default function TesteFc() {
 	const [status, setstatus] = useState(false);
@@ -10,17 +11,13 @@ export default function TesteFc() {
 	};
 
 	const endAnimation = e => {
-		setfu(0);
-		setstatus(false);
+		//setfu(0);
+		//setstatus(false);
 	};
 
 	return (
 		<div>
-			{status ? (
-				<div className='alerta' onAnimationEnd={endAnimation} fu={fu}>
-					MENSAGEM DE TESTE
-				</div>
-			) : null}
+			<Alerta status={status} texto={'ALERTA TESTE !'} />
 			<div style={{ position: 'absolute', bottom: '0' }}>
 				<button onClick={change}>CHANGE</button>
 			</div>
