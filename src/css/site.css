@@ -521,8 +521,8 @@ body .alerta {
   position: absolute;
   top: 50%;
   left: 50%;
-  -webkit-transform: translate(-50%, -20%);
-          transform: translate(-50%, -20%);
+  -webkit-transform: translate(-50%, -50%);
+          transform: translate(-50%, -50%);
   width: 80%;
   -webkit-transition: all 500ms ease-in-out 0s;
   transition: all 500ms ease-in-out 0s;
@@ -530,6 +530,45 @@ body .alerta {
   -webkit-box-shadow: 0 1px 5px black, 0 1px 3px rgba(0, 0, 0, 0.24);
           box-shadow: 0 1px 5px black, 0 1px 3px rgba(0, 0, 0, 0.24);
   z-index: 9;
+}
+
+body .alerta[fu='1'] {
+  -webkit-animation: alertaZoomIn;
+          animation: alertaZoomIn;
+  -webkit-animation-timing-function: linear;
+          animation-timing-function: linear;
+  -webkit-animation-duration: 3s;
+          animation-duration: 3s;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
+}
+
+@-webkit-keyframes alertaZoomIn {
+  0%,
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+
+@keyframes alertaZoomIn {
+  0%,
+  100% {
+    opacity: 0;
+    -webkit-transform: scale(0);
+            transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
 }
 
 body .addColeta {

@@ -57,8 +57,6 @@ export default function AutoComplete({
 				return arrayAutoComplete;
 			});
 
-		console.log('teste');
-
 		setfiltro(arrayAutoComplete);
 		setvalorSelecionado(target.value);
 

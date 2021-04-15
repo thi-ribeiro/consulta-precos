@@ -9,6 +9,8 @@ import Menu from './Menu';
 import ConsultaProdutos from './Consulta_produtos';
 import Coleta from './Coleta';
 
+import Teste from './testeFc';
+
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 ReactDOM.render(
@@ -25,6 +27,9 @@ ReactDOM.render(
 				</Route>
 				<Route path='/coleta'>
 					<Coleta />
+				</Route>
+				<Route path='/testes'>
+					<Teste />
 				</Route>
 			</Switch>
 		</Router>
