@@ -1,0 +1,2 @@
+export const SERVER_API = 'http://192.168.2.103/';
+///MODIFICAR E ESTUDAR DEPOIS!

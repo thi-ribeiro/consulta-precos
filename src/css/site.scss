@@ -1,0 +1,438 @@
+* {
+	box-sizing: border-box;
+	outline: none;
+	font-family: 'Open Sans', 'Roboto', sans-serif;
+}
+
+a {
+	text-decoration: none;
+	outline: none;
+	color: rgba(0, 0, 0, 0.5);
+}
+
+a:hover {
+	color: rgba(0, 0, 0, 1);
+}
+
+.selected {
+	color: rgba(0, 0, 0, 1);
+}
+
+body {
+	margin: 0;
+
+	button {
+		display: flex;
+		padding: 5px;
+		height: 35px;
+		font-weight: bold;
+		text-transform: uppercase;
+		align-items: center;
+		background-color: rgba(0, 0, 0, 0);
+		border: 1px solid rgba(0, 0, 0, 0.3);
+		transition: box-shadow, background-color 500ms ease-in-out 0s;
+	}
+
+	button:hover {
+		box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.1);
+		background-color: rgba(0, 0, 0, 0.1);
+	}
+
+	select {
+		display: flex;
+		padding: 5px;
+		height: 35px;
+		font-weight: bold;
+		color: #000;
+		border: 1px solid rgba(0, 0, 0, 0.3);
+	}
+
+	input {
+		height: 30px;
+		padding: 5px;
+		height: 35px;
+		font-weight: bold;
+		border: 1px solid rgba(0, 0, 0, 0.3);
+	}
+
+	.menu {
+		background-color: rgba(0, 0, 0, 0.05);
+		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+		padding: 10px;
+		font-size: large;
+		font-weight: bold;
+		text-transform: uppercase;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		ul {
+			display: flex;
+			margin: 0;
+			padding: 0;
+			list-style: none;
+
+			li {
+				padding: 0 5px;
+			}
+		}
+	}
+
+	.tabelas-centralizar {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.tabelas-select {
+		margin: 10px;
+
+		.tabelas-select-form {
+			display: flex;
+			margin: 10px 0 5px 0;
+			flex-direction: column;
+
+			.tabelas-select-tabelas-filtro {
+				display: flex;
+				justify-content: center;
+			}
+
+			.filtro_produtos_marca {
+				display: flex;
+				margin: 10px 0 0 0;
+				width: 100%;
+
+				input[type='text'] {
+					width: 100%;
+				}
+			}
+		}
+
+		.tabela-select,
+		.ordem_lista {
+			margin: 0 10px 0 0;
+			width: 100%;
+			text-transform: capitalize;
+		}
+	}
+
+	.loading-centralizar {
+		margin: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.hl_data {
+		width: 100%;
+		text-align: center;
+		border-bottom: 1px solid rgba(0, 0, 0, 1);
+		line-height: 0.1em;
+		margin: 10px 0 20px;
+		text-transform: uppercase;
+		position: relative;
+
+		.dataSpan {
+			font-weight: bold;
+			background-color: #fff;
+			padding: 0 10px;
+		}
+	}
+
+	.produtos-cards {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+
+		.counterLista {
+			//position: absolute;
+			font-size: small;
+			font-weight: bold;
+			margin: 5px 0;
+			text-align: right;
+		}
+
+		.produto-card {
+			position: relative;
+			display: flex;
+			border: 1px solid rgba(0, 0, 0, 0.3);
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+			margin: 10px 5px;
+			padding: 10px;
+			transition: background-color 500ms ease-in-out 0s;
+
+			.editar-item {
+				display: flex;
+				position: absolute;
+				right: 10px;
+				bottom: 10px;
+			}
+
+			.options-produto {
+				width: 100%;
+				position: absolute;
+				height: 100%;
+				margin: -10px; //Tamanho do padding
+				background-color: rgba(0, 0, 0, 0.05);
+				backdrop-filter: blur(5px);
+				z-index: 8;
+
+				.menu-editar-produto {
+					display: flex;
+					height: 100%;
+					width: 100%;
+					align-content: center;
+					justify-content: center;
+					align-items: center;
+					div {
+						margin: 0 5px;
+					}
+				}
+
+				.options-produto-fechar {
+					position: absolute;
+					top: 10px;
+					right: 10px;
+				}
+			}
+
+			h3 {
+				margin: 5px 0;
+			}
+
+			.grid-container {
+				display: grid;
+				grid-template-columns: 1fr min-content;
+				grid-template-rows: min-content 1fr 1fr;
+				gap: 0px 0px;
+				grid-template-areas:
+					'Data Data'
+					'Detalhes Funcoes'
+					'Detalhes Funcoes';
+				width: 100%;
+
+				.Detalhes {
+					grid-area: Detalhes;
+					display: flex;
+
+					.detalhes-marca-preco {
+						display: flex;
+						align-items: center;
+						width: 100%;
+
+						.marca-item {
+							display: flex;
+							flex-direction: column;
+							flex-grow: 1;
+
+							.marca {
+								padding: 0 5px;
+								word-break: break-word;
+							}
+						}
+
+						.preco-item {
+							display: flex;
+							padding: 0 10px;
+							font-weight: bold;
+							font-size: x-large;
+						}
+					}
+				}
+
+				.Data {
+					grid-area: Data;
+					display: flex;
+					align-items: center;
+					font-weight: bold;
+
+					.detalhes-empresa {
+						flex-grow: 1;
+					}
+
+					.detalhes-data {
+						justify-content: flex-end;
+						font-size: small;
+					}
+				}
+
+				.Funcoes {
+					grid-area: Funcoes;
+					flex-direction: column;
+					align-items: flex-end;
+					justify-content: center;
+					margin: 5px 0;
+
+					button {
+						border: 1px solid rgba(0, 0, 0, 0.3);
+						box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12),
+							0 1px 2px rgba(0, 0, 0, 0.24);
+					}
+
+					button:first-child {
+						margin: 0 0 5px 0;
+					}
+				}
+			}
+		}
+
+		.produto-card:hover,
+		.produtod-card:active {
+			background-color: rgba(0, 0, 0, 0.05);
+		}
+	}
+
+	.coleta-selecao {
+		margin: 10px;
+
+		.avoid-overlaping {
+			margin: 80px;
+		}
+
+		.form-coleta {
+			display: flex;
+			flex-direction: column;
+			margin: 5px 0;
+			overflow: auto;
+
+			input {
+				width: 100%;
+			}
+
+			.lista-busca-filtrada {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				div {
+					display: flex;
+				}
+
+				.form-coleta-filtros {
+					width: 100%;
+
+					select {
+						width: 100%;
+					}
+
+					div:first-child {
+						margin: 0 10px 0 0;
+					}
+
+					div {
+						width: 100%;
+						//margin: 0 5px;
+					}
+				}
+
+				.form-coleta-acao-filtrar {
+					width: 100%;
+					margin: 10px 10px 0 10px;
+
+					.form-acao-text {
+						flex-grow: 1;
+						margin: 0 10px 0 0;
+					}
+				}
+			}
+
+			.lista-filtro {
+				display: flex;
+
+				margin: 10px 0;
+
+				input {
+					margin-right: 5px;
+				}
+			}
+		}
+	}
+
+	.background-adicionar-dados {
+		background-color: rgba(0, 0, 0, 0.1);
+		backdrop-filter: blur(5px);
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 9;
+
+		.fechar-form-coleta {
+			position: absolute;
+			top: 10px;
+			right: 10px;
+		}
+
+		.adicionar-dados-coleta {
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 90%;
+
+			span {
+				font-weight: bold;
+			}
+		}
+
+		.coleta-empresa {
+			select {
+				width: 100%;
+				height: 30px;
+				margin: 5px 0;
+			}
+		}
+
+		input[type='text'] {
+			width: 100%;
+			font-weight: bold;
+			margin: 5px 0;
+		}
+	}
+
+	.alerta {
+		padding: 10px;
+		text-align: center;
+		background-color: rgba(0, 0, 0, 0.5);
+		color: #fff;
+		backdrop-filter: blur(5px);
+		font-weight: bold;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -20%);
+		width: 80%;
+		transition: all 500ms ease-in-out 0s;
+		border: 1px solid rgba(0, 0, 0, 0.3);
+		box-shadow: 0 1px 5px rgba(0, 0, 0, 1), 0 1px 3px rgba(0, 0, 0, 0.24);
+		z-index: 9;
+	}
+
+	.addColeta {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		background-color: #eee;
+		border: 1px solid rgba(0, 0, 0, 0.2);
+		box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.2);
+		border-radius: 100%;
+		width: 50px;
+		height: 50px;
+		position: fixed;
+		right: 25px;
+		bottom: 25px;
+		//transition: background-color 500ms ease-in-out 0s;
+		z-index: 8;
+	}
+
+	.coleta-vazia {
+		text-align: center;
+		margin: 10px;
+		font-weight: bold;
+		font-size: larger;
+		color: rgba(0, 0, 0, 1);
+	}
+}
