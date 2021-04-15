@@ -91,7 +91,7 @@ export default function AutoComplete({
 
 		if (response.ok) {
 			let resJson = await response.json();
-			console.log('RETORNO AUTO COMPLETE');
+			//console.log('RETORNO AUTO COMPLETE');
 			setautoCompleteArray(resJson);
 		}
 	};

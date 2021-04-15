@@ -9,9 +9,7 @@ export default function Filtro_produto({
 	const refe = useRef();
 
 	useEffect(() => {
-		console.log(refe.current.children.tipoProduto.value
-
-		);
+		console.log(refe.current.children.tipoProduto.value);
 	}, []);
 
 	return ativo ? (

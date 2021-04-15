@@ -216,6 +216,11 @@ body {
 					grid-area: Detalhes;
 					display: flex;
 
+					.marcadoresDetalhes {
+						font-weight: bold;
+						font-size: x-small;
+					}
+
 					.detalhes-marca-preco {
 						display: flex;
 						align-items: center;
@@ -226,8 +231,11 @@ body {
 							flex-direction: column;
 							flex-grow: 1;
 
+							.tipodeProduto {
+								margin: 0 0 5px 0;
+							}
+
 							.marca {
-								padding: 0 5px;
 								word-break: break-word;
 							}
 						}
@@ -407,7 +415,6 @@ body {
 		transition: all 500ms ease-in-out 0s;
 		border: 1px solid rgba(0, 0, 0, 0.3);
 		box-shadow: 0 1px 5px rgba(0, 0, 0, 1), 0 1px 3px rgba(0, 0, 0, 0.24);
-
 		z-index: 9;
 	}
 
@@ -423,12 +430,10 @@ body {
 		0%,
 		100% {
 			opacity: 0;
-			transform: scale(0);
 		}
 
 		50% {
 			opacity: 1;
-			transform: scale(1);
 		}
 	}
 

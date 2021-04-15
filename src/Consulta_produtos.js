@@ -4,18 +4,14 @@ import ListaProdutos from './Lista_produtos';
 import Icon from '@mdi/react';
 import { mdiTextSearch } from '@mdi/js';
 
-import AutoComplete from './AutoComplete';
-
 export default function Consulta_produtos() {
-	const refTipoProduto = useRef();
 	const refOrdemList = useRef();
-	const refAc = useRef();
 
 	const [lista, setLista] = useState([]);
-	const [filtro, setFiltro] = useState(false);
+
 	const [listaProdutosAtual, setListaProdutosAtual] = useState([]);
 	const [listagemAtiva, setListagemAtiva] = useState(false);
-	const [configBusca, setConfigBusca] = useState([0]);
+	const [configBusca, setConfigBusca] = useState([]);
 	const [Loading, setLoading] = useState(true);
 	const [LoadingProds, setLoadingProds] = useState(false);
 	const [tipoProdutoState, settipoProdutoState] = useState();
@@ -34,10 +30,7 @@ export default function Consulta_produtos() {
 		}
 	};
 
-	const listagemProdutoOrdem = (
-		tipoProduto = refTipoProduto.current.value,
-		ordem = refOrdemList.current.value
-	) => {
+	const listagemProdutoOrdem = (tipoProduto, ordem) => {
 		setLoadingProds(true);
 		setListagemAtiva(false);
 
@@ -46,7 +39,7 @@ export default function Consulta_produtos() {
 			.then(data => {
 				setListaProdutosAtual(data);
 				setLoadingProds(false);
-				setFiltro(false);
+				//setFiltro(false);
 				listagemTipoProduto();
 
 				if (data.length) {
@@ -72,11 +65,6 @@ export default function Consulta_produtos() {
 		}
 	};
 
-	// const filtroProdutos = e => {
-	// 	setFiltro(e.target.value);
-	// 	console.log(e);
-	// };
-
 	const getSelectOnChange = e => {
 		e.preventDefault();
 
@@ -84,23 +72,19 @@ export default function Consulta_produtos() {
 		let selectOrdem = e.target.ordem_lista.value;
 
 		setConfigBusca({
-			tipoProduto: refTipoProduto.current.value,
+			tipoProduto: selectTipoProduto,
 			ordem: selectOrdem
 		});
 
-		//console.log(e.target.ac_marca.value);
-
-		console.log(refAc);
-
-		if (filtro && e.target.ac_marca.value) {
-			let filtroInput = e.target.ac_marca.value;
-			setConfigBusca({ ...configBusca, filtroInput: e.target.ac_marca.value });
-			listagemBusca(selectTipoProduto, selectOrdem, filtroInput);
+		if (configBusca.textSearch) {
+			listagemBusca(selectTipoProduto, selectOrdem, configBusca.textSearch);
 		} else {
-			setFiltro(true); //ATENCAO, SEMPRE AO SETAR UM STATE ANTES DO FETCH!!!!
-			setConfigBusca({ ...configBusca, filtroInput: '' });
 			listagemProdutoOrdem(selectTipoProduto, selectOrdem);
 		}
+	};
+
+	const handlerText = e => {
+		setConfigBusca({ ...configBusca, textSearch: e.target.value });
 	};
 
 	const atualizar = e => {
@@ -151,15 +135,9 @@ export default function Consulta_produtos() {
 							name='tipoProduto'
 							className='tabela-select'
 							onChange={setTipoProduto}
-							ref={refTipoProduto}>
+							defaultValue={tipoProdutoState}>
 							{lista.map((item, index) => (
-								<option
-									{...(item.tipoProduto === tipoProdutoState
-										? { selected: 'selected' }
-										: null)}
-									key={index}>
-									{item.tipoProduto}
-								</option>
+								<option key={index}>{item.tipoProduto}</option>
 							))}
 						</select>
 
@@ -185,12 +163,11 @@ export default function Consulta_produtos() {
 
 					{listagemAtiva ? (
 						<div className='filtro_produtos_marca'>
-							<AutoComplete
-								colunaBusca='marca'
-								placeholder='Buscar por marca...'
-								tipoProduto={configBusca.tipoProduto}
-								req={false}
-								referencia={refAc}
+							<input
+								type='text'
+								name='buscaMarca'
+								placeholder='Buscar marca...'
+								onChange={handlerText}
 							/>
 						</div>
 					) : null}

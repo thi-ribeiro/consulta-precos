@@ -79,8 +79,16 @@ export default function Lista_produtos_itens({
 								<div className='Detalhes'>
 									<div className='detalhes-marca-preco'>
 										<div className='marca-item'>
-											<h3>{item.tipoProduto}</h3>
-											<div className='marca'>{item.marca}</div>
+											<div className='tipodeProduto'>
+												<div className='marcadoresDetalhes'>
+													Tipo de produto
+												</div>
+												{item.tipoProduto}
+											</div>
+											<div className='marca'>
+												<div className='marcadoresDetalhes'>Marca</div>
+												{item.marca}
+											</div>
 										</div>
 										<div className='preco-item'>
 											{formatarMoeda(item.preco, '.', ',')}

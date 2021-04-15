@@ -288,6 +288,11 @@ body .produtos-cards .produto-card .grid-container .Detalhes {
   display: flex;
 }
 
+body .produtos-cards .produto-card .grid-container .Detalhes .marcadoresDetalhes {
+  font-weight: bold;
+  font-size: x-small;
+}
+
 body .produtos-cards .produto-card .grid-container .Detalhes .detalhes-marca-preco {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -311,8 +316,11 @@ body .produtos-cards .produto-card .grid-container .Detalhes .detalhes-marca-pre
           flex-grow: 1;
 }
 
+body .produtos-cards .produto-card .grid-container .Detalhes .detalhes-marca-preco .marca-item .tipodeProduto {
+  margin: 0 0 5px 0;
+}
+
 body .produtos-cards .produto-card .grid-container .Detalhes .detalhes-marca-preco .marca-item .marca {
-  padding: 0 5px;
   word-break: break-word;
 }
 
@@ -547,13 +555,9 @@ body .alerta[fu='1'] {
   0%,
   100% {
     opacity: 0;
-    -webkit-transform: scale(0);
-            transform: scale(0);
   }
   50% {
     opacity: 1;
-    -webkit-transform: scale(1);
-            transform: scale(1);
   }
 }
 
@@ -561,13 +565,9 @@ body .alerta[fu='1'] {
   0%,
   100% {
     opacity: 0;
-    -webkit-transform: scale(0);
-            transform: scale(0);
   }
   50% {
     opacity: 1;
-    -webkit-transform: scale(1);
-            transform: scale(1);
   }
 }
 
