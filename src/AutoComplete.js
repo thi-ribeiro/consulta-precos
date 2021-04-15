@@ -133,43 +133,6 @@ export default function AutoComplete({
 		}
 	};
 
-	const ab = _ => {
-		let a = [
-			{
-				id: 155,
-				marca: 'Lívia',
-				preco: 10.53,
-				empresa: 'Carone - Santa Lúcia',
-				tipoProduto: 'FEIJÃO',
-				peso: '',
-				coleta: '2021-04-15T02:17:40.000Z',
-				coletaFormatada: '14/04/2021'
-			},
-			{
-				id: 153,
-				marca: 'Lívia',
-				preco: 9,
-				empresa: 'Mercearia Goldner',
-				tipoProduto: 'FEIJÃO',
-				peso: '',
-				coleta: '2021-04-15T02:15:34.000Z',
-				coletaFormatada: '14/04/2021'
-			},
-			{
-				id: 154,
-				marca: 'Lívia',
-				preco: 8,
-				empresa: 'Ok Super Atacado',
-				tipoProduto: 'FEIJÃO',
-				peso: '',
-				coleta: '2021-04-15T02:16:48.000Z',
-				coletaFormatada: '14/04/2021'
-			}
-		];
-
-		console.log(a.id);
-	};
-
 	return (
 		<div style={style.dadosBusca} ref={referencia}>
 			<input
