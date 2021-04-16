@@ -177,7 +177,7 @@ export default function Consulta_produtos() {
 			<ListaProdutos
 				lista={listaProdutosAtual}
 				loading={LoadingProds}
-				atualizar={atualizar}
+				atualizarFetch={atualizar}
 			/>
 		</div>
 	);

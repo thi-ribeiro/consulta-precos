@@ -5,7 +5,7 @@ import ListaItens from './Lista_produtos_itens';
 export default function Lista_produtos({
 	lista,
 	loading,
-	atualizar,
+	atualizarFetch,
 	popupAtivo
 }) {
 	const [listaDatasFiltrada, setlistaDatasFiltrada] = useState([]);
@@ -63,7 +63,7 @@ export default function Lista_produtos({
 							ativo={popupAtivo}
 							lista={lista}
 							dataFiltrada={dataFiltrada}
-							atualizar={atualizar}
+							atualizarFetch={atualizarFetch}
 						/>
 					</div>
 				))}

@@ -519,6 +519,7 @@ body .background-adicionar-dados input[type='text'] {
 }
 
 body .alerta {
+  opacity: 0;
   padding: 10px;
   text-align: center;
   background-color: rgba(0, 0, 0, 0.4);
@@ -531,6 +532,8 @@ body .alerta {
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
+  -webkit-transition: opacity 500ms ease-in-out 0s;
+  transition: opacity 500ms ease-in-out 0s;
   width: 90%;
   border: 1px solid rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.24);
@@ -538,29 +541,31 @@ body .alerta {
   z-index: 9;
 }
 
-body .alerta[fu='1'] {
+body .alerta-anim {
   -webkit-animation: fadeIn;
           animation: fadeIn;
   -webkit-animation-timing-function: linear;
           animation-timing-function: linear;
-  -webkit-animation-duration: 0.5s;
-          animation-duration: 0.5s;
+  -webkit-animation-duration: 1s;
+          animation-duration: 1s;
+  -webkit-animation-fill-mode: forwards;
+          animation-fill-mode: forwards;
 }
 
 @-webkit-keyframes fadeIn {
-  0% {
+  0%, 100% {
     opacity: 0;
   }
-  100% {
+  50% {
     opacity: 1;
   }
 }
 
 @keyframes fadeIn {
-  0% {
+  0%, 100% {
     opacity: 0;
   }
-  100% {
+  50% {
     opacity: 1;
   }
 }

@@ -9,7 +9,7 @@ import Menu from './Menu';
 import ConsultaProdutos from './Consulta_produtos';
 import Coleta from './Coleta';
 
-import Teste from './testeFc';
+import Teste from './testes/testeFc';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 

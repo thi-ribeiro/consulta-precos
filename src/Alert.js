@@ -19,7 +19,6 @@ export default function Alert({ status, texto }) {
 		return { ...style.div, ...ret };
 	};
 
-    
 	return (
 		<div className='alerta' style={styleStatus(status)}>
 			{texto}
