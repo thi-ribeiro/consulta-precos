@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, createContext } from 'react';
 import Alerta from '../Alert';
 import EachItem from './EachItem';
-import Each from './EachItem';
+
+import Comp1 from './comp1';
+
+import { ProviderTests } from './providerTests';
 
 export default function TesteFc() {
 	const [status, setstatus] = useState(false);
 	const [fu, setfu] = useState(0);
-
 	const [arrayTeste, setarrayTeste] = useState([
 		{
 			nome: 'thiago'
@@ -42,23 +44,25 @@ export default function TesteFc() {
 		console.log(filtrado);
 	};
 
-	useEffect(() => {}, []);
+	return <Comp1 />;
 
-	return (
-		<div>
-			<Alerta status={status} texto={'ALERTA TESTE !'} />
-			<div style={{ position: 'absolute', bottom: '0' }}>
-				<button onClick={change}>CHANGE</button>
-			</div>
+	// return (
+	// 	<ProviderTests value='teste'>
+	// 		<div>
+	// 			<Alerta status={status} texto={'ALERTA TESTE !'} />
+	// 			<div style={{ position: 'absolute', bottom: '0' }}>
+	// 				<button onClick={change}>CHANGE</button>
+	// 			</div>
 
-			{arrayTeste.map((i, ind) => (
-				<EachItem
-					key={ind}
-					nome={i.nome}
-					clickItem={clickTeste}
-					deteleFromArray={deteleFromArray}
-				/>
-			))}
-		</div>
-	);
+	// 			{arrayTeste.map((i, ind) => (
+	// 				<EachItem
+	// 					key={ind}
+	// 					nome={i.nome}
+	// 					clickItem={clickTeste}
+	// 					deteleFromArray={deteleFromArray}
+	// 				/>
+	// 			))}
+	// 		</div>
+	// 	</ProviderTests>
+	// );
 }

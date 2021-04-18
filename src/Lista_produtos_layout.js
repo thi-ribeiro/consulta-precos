@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Icon from '@mdi/react';
 import { mdiFileDocumentEditOutline, mdiTextBoxRemoveOutline } from '@mdi/js';
-import Alerta from './Produto_removido_alerta';
+//import Alerta from './Produto_removido_alerta';
 
 export default function Lista_produtos_layout({
 	item,
@@ -10,9 +10,16 @@ export default function Lista_produtos_layout({
 	ativoPopup,
 	atualizaLista
 }) {
-	//const [mensagemAlerta, setmensagemAlerta] = useState();
+	const [mensagemAlerta, setmensagemAlerta] = useState();
 	const [alertaAtivo, setalertaAtivo] = useState(false);
 	//const [idEditar, setidEditar] = useState();
+
+	const [style] = useState({
+		active: { opacity: '1' },
+		desactive: {
+			opacity: '0'
+		}
+	});
 
 	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
 		let formatter = new Intl.NumberFormat('pt-BR', {
@@ -42,7 +49,7 @@ export default function Lista_produtos_layout({
 		// 	setmensagemAlerta(resJson.response);
 		// }
 
-		mensagemPopup(`ITEM DELETADO TESTE! ID:${id}`);
+		setmensagemAlerta(`ITEM DELETADO TESTE! ID:${id}`);
 
 		//setmensagemAlerta(`ITEM DELETADO TESTE! ID:${id}`);
 		atualizaLista(id);
@@ -96,6 +103,11 @@ export default function Lista_produtos_layout({
 							/>
 						</button>
 					</div>
+				</div>
+				<div
+					style={ativoPopup ? style.active : style.desactive}
+					className='alerta alerta-anim'>
+					{mensagemAlerta}
 				</div>
 			</div>
 		</React.Fragment>

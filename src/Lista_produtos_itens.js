@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 // import Icon from '@mdi/react';
 // import { mdiFileDocumentEditOutline, mdiTextBoxRemoveOutline } from '@mdi/js';
-import Alerta from './Produto_removido_alerta';
+//import Alerta from './Produto_removido_alerta';
 import FormDadosColeta from './Form_dados_coleta';
 import ListaProdutosLayout from './Lista_produtos_layout';
 
@@ -63,7 +63,7 @@ export default function Lista_produtos_itens({
 				editarItem={editarItem}
 				atualizarColeta={atualizarFetch}
 			/>
-			<Alerta mensagem={mensagemAlerta} ativo={popupAtivo} />
+			
 		</React.Fragment>
 	);
 }
