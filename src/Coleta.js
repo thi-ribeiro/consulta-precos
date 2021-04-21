@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import IconeAdicionarColeta from './Icone_adicionar_coleta';
 import ListaProdutos from './Lista_produtos';
 import Icon from '@mdi/react';
@@ -6,7 +6,12 @@ import { mdiTextSearch } from '@mdi/js';
 
 import FormDadosColeta from './Form_dados_coleta';
 
+import Toast from './Context/Toast/Toast';
+import { ToastContext } from './Context/Toast/ToastProvider';
+
 export default function Coleta() {
+	const { clearToastMessages } = useContext(ToastContext);
+
 	const [formularioAtivo, setformularioAtivo] = useState(false);
 	const [coletaDadosAtual, setcoletaDadosAtual] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -25,11 +30,7 @@ export default function Coleta() {
 	let dia = formatData(data.getDate());
 	let mes = formatData(data.getMonth() + 1);
 	let ano = formatData(data.getFullYear());
-	// let hora = formatData(data.getHours());
-	// let minuto = formatData(data.getMinutes());
-	// let sec = formatData(data.getSeconds());
 
-	//let dataCompleta = `${ano}-${mes}-${dia} ${hora}:${minuto}:${sec}`;
 	let dataCompletaEscape = `${dia}-${mes}-${ano}`;
 
 	const alternaForm = _ => {
@@ -58,6 +59,8 @@ export default function Coleta() {
 
 	const filtrarResultados = async e => {
 		e.preventDefault();
+
+		clearToastMessages();
 
 		setLoading(true);
 		let filtroTexto = e.target.filtroBusca.value || 'all'; //TEXTO DA BUSCA
@@ -160,6 +163,7 @@ export default function Coleta() {
 				atualizarColeta={listagemColeta}
 			/>
 
+			<Toast />
 			<div className='avoid-overlaping'></div>
 		</div>
 	);

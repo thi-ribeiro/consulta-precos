@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Icon from '@mdi/react';
 import { mdiClose } from '@mdi/js';
 import AutoComplete from './AutoComplete';
-import Alert from './Alert';
+import Alert from './Context/Toast/Toast';
 
 export default function Form_dados_coleta({
 	ativo,
@@ -112,16 +112,7 @@ export default function Form_dados_coleta({
 				atualizarColeta();
 			}, 2000);
 		}
-		//animPop();
 	};
-
-	// const animPop = _ => {
-	// 	setanim(1);
-
-	// 	setTimeout(() => {
-	// 		setanim(0);
-	// 	}, 3000);
-	// };
 
 	const valorEdicao = chave => {
 		if (editarItem) {

@@ -1,10 +1,6 @@
 import React, { useState, createContext } from 'react';
-import Alerta from '../Alert';
 import EachItem from './EachItem';
-
 import Comp1 from './comp1';
-
-import { ProviderTests } from './providerTests';
 
 export default function TesteFc() {
 	const [status, setstatus] = useState(false);

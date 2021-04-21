@@ -10,6 +10,7 @@ import ConsultaProdutos from './Consulta_produtos';
 import Coleta from './Coleta';
 
 import Teste from './testes/testeFc';
+import { Toast } from './Context/Toast/ToastProvider';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
@@ -18,20 +19,22 @@ ReactDOM.render(
 		<Router>
 			<Menu />
 
-			<Switch>
-				<Route path='/' exact>
-					<Home />
-				</Route>
-				<Route path='/consulta'>
-					<ConsultaProdutos />
-				</Route>
-				<Route path='/coleta'>
-					<Coleta />
-				</Route>
-				<Route path='/testes'>
-					<Teste />
-				</Route>
-			</Switch>
+			<Toast>
+				<Switch>
+					<Route path='/' exact>
+						<Home />
+					</Route>
+					<Route path='/consulta'>
+						<ConsultaProdutos />
+					</Route>
+					<Route path='/coleta'>
+						<Coleta />
+					</Route>
+					<Route path='/testes'>
+						<Teste />
+					</Route>
+				</Switch>
+			</Toast>
 		</Router>
 	</React.StrictMode>,
 	document.getElementById('root')

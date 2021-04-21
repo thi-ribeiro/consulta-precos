@@ -1,11 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import ListaProdutos from './Lista_produtos';
 import Icon from '@mdi/react';
 import { mdiTextSearch } from '@mdi/js';
+import Toast from './Context/Toast/Toast';
+import { ToastContext } from './Context/Toast/ToastProvider';
 
 export default function Consulta_produtos() {
 	const refOrdemList = useRef();
+
+	const { clearToastMessages } = useContext(ToastContext);
 
 	const [lista, setLista] = useState([]);
 
@@ -67,6 +71,8 @@ export default function Consulta_produtos() {
 
 	const getSelectOnChange = e => {
 		e.preventDefault();
+
+		clearToastMessages();
 
 		let selectTipoProduto = e.target.tipoProduto.value;
 		let selectOrdem = e.target.ordem_lista.value;
@@ -179,6 +185,7 @@ export default function Consulta_produtos() {
 				loading={LoadingProds}
 				atualizarFetch={atualizar}
 			/>
+			<Toast />
 		</div>
 	);
 }

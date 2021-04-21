@@ -1,25 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import Icon from '@mdi/react';
 import { mdiFileDocumentEditOutline, mdiTextBoxRemoveOutline } from '@mdi/js';
-//import Alerta from './Produto_removido_alerta';
+import { ToastContext } from './Context/Toast/ToastProvider';
 
 export default function Lista_produtos_layout({
 	item,
 	editarPopup,
-	mensagemPopup,
-	ativoPopup,
 	atualizaLista
 }) {
-	const [mensagemAlerta, setmensagemAlerta] = useState();
-	const [alertaAtivo, setalertaAtivo] = useState(false);
-	//const [idEditar, setidEditar] = useState();
-
-	const [style] = useState({
-		active: { opacity: '1' },
-		desactive: {
-			opacity: '0'
-		}
-	});
+	const { chamaToast } = useContext(ToastContext);
 
 	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
 		let formatter = new Intl.NumberFormat('pt-BR', {
@@ -35,27 +24,16 @@ export default function Lista_produtos_layout({
 	const deletarItemColeta = async e => {
 		let id = parseInt(e.currentTarget.dataset.id);
 
-		//setalertaAtivo(true);
-		ativoPopup(true);
+		const response = await fetch(
+			`http://192.168.2.103:5000/deletar-produto/${id}`
+		);
 
-		//setidEditar(id);
+		if (response.ok) {
+			const resJson = await response.json();
+			chamaToast(`${resJson.response}`);
+		}
 
-		// const response = await fetch(
-		// 	`http://192.168.2.103:5000/deletar-produto/${id}`
-		// );
-
-		// if (response.ok) {
-		// 	const resJson = await response.json();
-		// 	setmensagemAlerta(resJson.response);
-		// }
-
-		setmensagemAlerta(`ITEM DELETADO TESTE! ID:${id}`);
-
-		//setmensagemAlerta(`ITEM DELETADO TESTE! ID:${id}`);
 		atualizaLista(id);
-
-		//console.log('DELETANDO ID: ' + id);
-		//setalertaAtivo(false);
 	};
 
 	return (
@@ -103,11 +81,6 @@ export default function Lista_produtos_layout({
 							/>
 						</button>
 					</div>
-				</div>
-				<div
-					style={ativoPopup ? style.active : style.desactive}
-					className='alerta alerta-anim'>
-					{mensagemAlerta}
 				</div>
 			</div>
 		</React.Fragment>

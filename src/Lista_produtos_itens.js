@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-// import Icon from '@mdi/react';
-// import { mdiFileDocumentEditOutline, mdiTextBoxRemoveOutline } from '@mdi/js';
-//import Alerta from './Produto_removido_alerta';
 import FormDadosColeta from './Form_dados_coleta';
 import ListaProdutosLayout from './Lista_produtos_layout';
 
@@ -13,8 +10,8 @@ export default function Lista_produtos_itens({
 	const [statusPopup, setstatusPopup] = useState(false);
 	const [editarItem, seteditarItem] = useState();
 	const [listaItens, setlistaItens] = useState(lista);
-	const [mensagemAlerta, setmensagemAlerta] = useState();
-	const [popupAtivo, setpopupAtivo] = useState();
+	// const [mensagemAlerta, setmensagemAlerta] = useState();
+	// const [popupAtivo, setpopupAtivo] = useState();
 
 	const carregaDadosEditarPopup = e => {
 		setstatusPopup(!statusPopup);
@@ -37,7 +34,7 @@ export default function Lista_produtos_itens({
 
 	const atualizaListaRemocao = item => {
 		let filtrado = listaItens.filter(i => i.id !== item);
-		console.log('DELETANDO: ' + item);
+		//console.log('DELETANDO: ' + item);
 		setlistaItens(filtrado);
 	};
 
@@ -52,18 +49,16 @@ export default function Lista_produtos_itens({
 						indexItem={index}
 						editarPopup={carregaDadosEditarPopup}
 						atualizaLista={atualizaListaRemocao}
-						mensagemPopup={e => setmensagemAlerta(e)}
-						ativoPopup={e => setpopupAtivo(e)}
+						//mensagemPopup={e => setmensagemAlerta(e)}
+						//ativoPopup={e => setpopupAtivo(e)}
 					/>
 				))}
-
 			<FormDadosColeta
 				ativo={statusPopup}
 				fecharForm={carregaDadosEditarPopup}
 				editarItem={editarItem}
 				atualizarColeta={atualizarFetch}
 			/>
-			
 		</React.Fragment>
 	);
 }
