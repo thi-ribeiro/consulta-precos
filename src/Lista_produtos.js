@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import ListaItens from './Lista_produtos_itens';
+import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
-export default function Lista_produtos({ lista, loading, atualizarFetch }) {
+export default function Lista_produtos({ loading }) {
+	const { listaProdutos } = useContext(FormDadosContext);
 	const [listaDatasFiltrada, setlistaDatasFiltrada] = useState([]);
 
 	const groupByDatas = array => {
@@ -23,9 +25,9 @@ export default function Lista_produtos({ lista, loading, atualizarFetch }) {
 	};
 
 	useEffect(() => {
-		groupByDatas(lista);
+		groupByDatas(listaProdutos);
 		//console.log(loading);
-	}, [lista]);
+	}, [listaProdutos]);
 
 	return loading ? (
 		<div className='loading-centralizar'>
@@ -41,8 +43,8 @@ export default function Lista_produtos({ lista, loading, atualizarFetch }) {
 		<div className='produtos-cards'>
 			<React.Fragment>
 				<div className='counterLista'>
-					{lista.length ? (
-						lista.length + ' resultado(s)'
+					{listaProdutos.length ? (
+						listaProdutos.length + ' resultado(s)'
 					) : (
 						<div className='coleta-vazia'>
 							Nenhum item adicionado ou para listar.
@@ -54,11 +56,7 @@ export default function Lista_produtos({ lista, loading, atualizarFetch }) {
 						<div className='hl_data'>
 							<span className='dataSpan'>Coleta {dataFiltrada}</span>
 						</div>
-						<ListaItens
-							lista={lista}
-							dataFiltrada={dataFiltrada}
-							atualizarFetch={atualizarFetch}
-						/>
+						<ListaItens dataFiltrada={dataFiltrada} />
 					</div>
 				))}
 			</React.Fragment>

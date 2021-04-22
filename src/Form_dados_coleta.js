@@ -4,14 +4,12 @@ import { mdiClose } from '@mdi/js';
 import AutoComplete from './AutoComplete';
 
 import { ToastContext } from './Context/Toast/ToastProvider';
+import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
-export default function Form_dados_coleta({
-	ativo,
-	fecharForm,
-	editarItem,
-	atualizarColeta
-	//desativaEdicao
-}) {
+export default function Form_dados_coleta({ atualizarColeta }) {
+	const { setaStatusPopup, popupStatus, editarChave } = useContext(
+		FormDadosContext
+	);
 	const { chamaToast, clearToastMessages } = useContext(ToastContext);
 	const [postarDadosController, setpostarDadosController] = useState(false);
 
@@ -48,8 +46,7 @@ export default function Form_dados_coleta({
 
 	const postarDados = async e => {
 		e.preventDefault();
-		clearToastMessages();
-		
+		//clearToastMessages();
 		setpostarDadosController(true);
 
 		let empresa = e.target.ac_empresa.value;
@@ -59,8 +56,8 @@ export default function Form_dados_coleta({
 		let preco = e.target.preco.value.replace(',', '.');
 
 		if (!postarDadosController) {
-			if (editarItem) {
-				let id = editarItem.id;
+			if (editarChave) {
+				let id = editarChave.id;
 
 				let response = await fetch(
 					`http://192.168.2.103:5000/atualizar-coleta`,
@@ -83,7 +80,6 @@ export default function Form_dados_coleta({
 				if (response.ok) {
 					let jsonRes = await response.json();
 					chamaToast(jsonRes.response);
-					//desativaEdicao();
 				}
 			} else {
 				let response = await fetch('http://192.168.2.103:5000/postar-coleta', {
@@ -108,31 +104,35 @@ export default function Form_dados_coleta({
 
 			setTimeout(() => {
 				setpostarDadosController(false);
-				fecharForm();
+				clearToastMessages();
+				setaStatusPopup();
 				atualizarColeta();
 			}, 2000);
 		}
 	};
 
 	const valorEdicao = chave => {
-		if (editarItem) {
-			//console.log(props.editarItem);
-			return editarItem[chave];
+		console.log(editarChave);
+		if (editarChave) {
+			//console.log(props.editarChave);
+			return editarChave[chave];
 			//return null;
 		} else {
 			return null;
 		}
 	};
 
-	return ativo ? (
+	return popupStatus ? (
 		<form className='formulario-coleta-dados' onSubmit={postarDados}>
 			<div className='background-adicionar-dados'>
-				<div className='fechar-form-coleta' onClick={fecharForm}>
+				<div className='fechar-form-coleta' onClick={e => setaStatusPopup()}>
 					<Icon path={mdiClose} title='Filtrar' size={1} color='#000' />
 				</div>
 
 				<div className='adicionar-dados-coleta'>
-					<h1>{editarItem ? 'Editar informações' : 'Adicionar informações'}</h1>
+					<h1>
+						{editarChave ? 'Editar informações' : 'Adicionar informações'}
+					</h1>
 
 					<div className='coleta-empresa'>
 						<span>Empresa</span>
@@ -143,7 +143,7 @@ export default function Form_dados_coleta({
 						<span>Data coleta</span>
 						<div className='dados-empresa-data'>
 							<input
-								{...(editarItem ? null : { disabled: 'disabled' })}
+								{...(editarChave ? null : { disabled: 'disabled' })}
 								type='text'
 								name='dataColeta'
 								defaultValue={dataCompleta}
@@ -184,7 +184,7 @@ export default function Form_dados_coleta({
 						</div>
 					</div>
 
-					{editarItem ? <button>Atualizar</button> : <button>Inserir</button>}
+					{editarChave ? <button>Atualizar</button> : <button>Inserir</button>}
 				</div>
 			</div>
 		</form>

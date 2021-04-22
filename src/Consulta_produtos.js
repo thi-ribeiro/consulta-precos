@@ -4,16 +4,19 @@ import ListaProdutos from './Lista_produtos';
 import Icon from '@mdi/react';
 import { mdiTextSearch } from '@mdi/js';
 import Toast from './Context/Toast/Toast';
+
+import FormDadosColeta from './Form_dados_coleta';
 import { ToastContext } from './Context/Toast/ToastProvider';
+import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Consulta_produtos() {
 	const refOrdemList = useRef();
 
+	const { definirListaProdutos } = useContext(FormDadosContext);
 	const { clearToastMessages } = useContext(ToastContext);
 
-	const [lista, setLista] = useState([]);
+	const [listaTipoProduto, setlistaTipoProduto] = useState([]);
 
-	const [listaProdutosAtual, setListaProdutosAtual] = useState([]);
 	const [listagemAtiva, setListagemAtiva] = useState(false);
 	const [configBusca, setConfigBusca] = useState([]);
 	const [Loading, setLoading] = useState(true);
@@ -30,7 +33,7 @@ export default function Consulta_produtos() {
 		if (response.ok) {
 			const jsonRes = await response.json();
 			setLoading(false);
-			setLista(jsonRes);
+			setlistaTipoProduto(jsonRes);
 		}
 	};
 
@@ -41,7 +44,8 @@ export default function Consulta_produtos() {
 		fetch(`http://192.168.2.103:5000/produtos-listagem/${tipoProduto}/${ordem}`)
 			.then(response => response.json())
 			.then(data => {
-				setListaProdutosAtual(data);
+				//setListaProdutosAtual(data);
+				definirListaProdutos(data);
 				setLoadingProds(false);
 				//setFiltro(false);
 				listagemTipoProduto();
@@ -63,7 +67,8 @@ export default function Consulta_produtos() {
 
 		if (response.ok) {
 			const jsonRes = await response.json();
-			setListaProdutosAtual(jsonRes);
+			//setListaProdutosAtual(jsonRes);
+			definirListaProdutos(jsonRes);
 			setLoadingProds(false);
 			listagemTipoProduto();
 		}
@@ -134,7 +139,7 @@ export default function Consulta_produtos() {
 	) : (
 		<div className='tabelas-select'>
 			<h1>Consulta de Produto</h1>
-			{lista.length ? (
+			{listaTipoProduto.length ? (
 				<form className='tabelas-select-form' onSubmit={getSelectOnChange}>
 					<div className='tabelas-select-tabelas-filtro'>
 						<select
@@ -142,11 +147,10 @@ export default function Consulta_produtos() {
 							className='tabela-select'
 							onChange={setTipoProduto}
 							defaultValue={tipoProdutoState}>
-							{lista.map((item, index) => (
+							{listaTipoProduto.map((item, index) => (
 								<option key={index}>{item.tipoProduto}</option>
 							))}
 						</select>
-
 						<select
 							ref={refOrdemList}
 							name='ordem_lista'
@@ -156,7 +160,6 @@ export default function Consulta_produtos() {
 							<option value='coleta_desc'>Coleta Recente</option>
 							<option value='coleta_asc'>Coleta Antiga</option>
 						</select>
-
 						<button>
 							<Icon
 								path={mdiTextSearch}
@@ -180,11 +183,8 @@ export default function Consulta_produtos() {
 				</form>
 			) : null}
 
-			<ListaProdutos
-				lista={listaProdutosAtual}
-				loading={LoadingProds}
-				atualizarFetch={atualizar}
-			/>
+			<ListaProdutos loading={LoadingProds} />
+			<FormDadosColeta atualizarColeta={atualizar} />
 			<Toast />
 		</div>
 	);

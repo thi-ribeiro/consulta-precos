@@ -1,13 +1,18 @@
 import React, { useContext } from 'react';
 import Icon from '@mdi/react';
 import { mdiFileDocumentEditOutline, mdiTextBoxRemoveOutline } from '@mdi/js';
+
 import { ToastContext } from './Context/Toast/ToastProvider';
+import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Lista_produtos_layout({
 	item,
-	editarPopup,
+	//editarPopup,
 	atualizaLista
 }) {
+	const { setaStatusPopup, editarItemArray, listaProdutos } = useContext(
+		FormDadosContext
+	);
 	const { chamaToast } = useContext(ToastContext);
 
 	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
@@ -36,6 +41,12 @@ export default function Lista_produtos_layout({
 		atualizaLista(id);
 	};
 
+	const editarItemColeta = e => {
+		setaStatusPopup();
+
+		editarItemArray(listaProdutos, e.currentTarget.dataset.id);
+	};
+
 	return (
 		<React.Fragment>
 			<div className='produto-card'>
@@ -62,7 +73,7 @@ export default function Lista_produtos_layout({
 						<div className='detalhes-data'>{item.coletaFormatada}</div>
 					</div>
 					<div className='Funcoes'>
-						<button data-id={item.id} onClick={editarPopup}>
+						<button data-id={item.id} onClick={editarItemColeta}>
 							EDT
 							<Icon
 								path={mdiFileDocumentEditOutline}

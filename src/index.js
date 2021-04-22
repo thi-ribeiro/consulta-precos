@@ -11,6 +11,7 @@ import Coleta from './Coleta';
 
 import Teste from './testes/testeFc';
 import { Toast } from './Context/Toast/ToastProvider';
+import { FormDadosProvider } from './Context/FormDadosContext/FormDadosProvider';
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
@@ -24,12 +25,17 @@ ReactDOM.render(
 					<Route path='/' exact>
 						<Home />
 					</Route>
+
 					<Route path='/consulta'>
-						<ConsultaProdutos />
+						<FormDadosProvider>
+							<ConsultaProdutos />
+						</FormDadosProvider>
 					</Route>
+
 					<Route path='/coleta'>
 						<Coleta />
 					</Route>
+
 					<Route path='/testes'>
 						<Teste />
 					</Route>

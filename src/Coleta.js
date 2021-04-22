@@ -45,7 +45,12 @@ export default function Coleta() {
 		}
 	};
 
+	const testeThiago = _ => {
+		console.log('OLOCO MEU!');
+	};
+
 	const listagemColeta = async _ => {
+		console.log('cheguei aki dentro de coleta!');
 		setLoading(true);
 		const response = await fetch(
 			`http://192.168.2.103:5000/consulta-coleta-atual/${dataCompletaEscape}`
@@ -157,12 +162,6 @@ export default function Coleta() {
 			/>
 
 			<IconeAdicionarColeta adicionarForm={alternaForm} />
-
-			<FormDadosColeta
-				ativo={formularioAtivo}
-				fecharForm={alternaForm}
-				atualizarColeta={listagemColeta}
-			/>
 
 			<Toast />
 			<div className='avoid-overlaping'></div>
