@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Icon from '@mdi/react';
 import { mdiClose } from '@mdi/js';
 import AutoComplete from './AutoComplete';
-import Alert from './Context/Toast/Toast';
+
+import { ToastContext } from './Context/Toast/ToastProvider';
 
 export default function Form_dados_coleta({
 	ativo,
@@ -11,9 +12,8 @@ export default function Form_dados_coleta({
 	atualizarColeta
 	//desativaEdicao
 }) {
-	const [resposta, setresposta] = useState();
+	const { chamaToast, clearToastMessages } = useContext(ToastContext);
 	const [postarDadosController, setpostarDadosController] = useState(false);
-	//const [anim, setanim] = useState(0);
 
 	let data = new Date();
 
@@ -48,7 +48,8 @@ export default function Form_dados_coleta({
 
 	const postarDados = async e => {
 		e.preventDefault();
-
+		clearToastMessages();
+		
 		setpostarDadosController(true);
 
 		let empresa = e.target.ac_empresa.value;
@@ -81,7 +82,7 @@ export default function Form_dados_coleta({
 
 				if (response.ok) {
 					let jsonRes = await response.json();
-					setresposta(jsonRes.response);
+					chamaToast(jsonRes.response);
 					//desativaEdicao();
 				}
 			} else {
@@ -101,13 +102,12 @@ export default function Form_dados_coleta({
 
 				if (response.ok) {
 					let jsonRes = await response.json();
-					setresposta(jsonRes.response);
+					chamaToast(jsonRes.response);
 				}
 			}
 
 			setTimeout(() => {
 				setpostarDadosController(false);
-				setresposta();
 				fecharForm();
 				atualizarColeta();
 			}, 2000);
@@ -183,7 +183,7 @@ export default function Form_dados_coleta({
 							/>
 						</div>
 					</div>
-					<Alert status={postarDadosController} texto={resposta} />
+
 					{editarItem ? <button>Atualizar</button> : <button>Inserir</button>}
 				</div>
 			</div>

@@ -10,8 +10,6 @@ export default function Lista_produtos_itens({
 	const [statusPopup, setstatusPopup] = useState(false);
 	const [editarItem, seteditarItem] = useState();
 	const [listaItens, setlistaItens] = useState(lista);
-	// const [mensagemAlerta, setmensagemAlerta] = useState();
-	// const [popupAtivo, setpopupAtivo] = useState();
 
 	const carregaDadosEditarPopup = e => {
 		setstatusPopup(!statusPopup);
@@ -49,8 +47,6 @@ export default function Lista_produtos_itens({
 						indexItem={index}
 						editarPopup={carregaDadosEditarPopup}
 						atualizaLista={atualizaListaRemocao}
-						//mensagemPopup={e => setmensagemAlerta(e)}
-						//ativoPopup={e => setpopupAtivo(e)}
 					/>
 				))}
 			<FormDadosColeta

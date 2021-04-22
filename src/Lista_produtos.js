@@ -2,12 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import ListaItens from './Lista_produtos_itens';
 
-export default function Lista_produtos({
-	lista,
-	loading,
-	atualizarFetch,
-	popupAtivo
-}) {
+export default function Lista_produtos({ lista, loading, atualizarFetch }) {
 	const [listaDatasFiltrada, setlistaDatasFiltrada] = useState([]);
 
 	const groupByDatas = array => {
@@ -60,7 +55,6 @@ export default function Lista_produtos({
 							<span className='dataSpan'>Coleta {dataFiltrada}</span>
 						</div>
 						<ListaItens
-							ativo={popupAtivo}
 							lista={lista}
 							dataFiltrada={dataFiltrada}
 							atualizarFetch={atualizarFetch}

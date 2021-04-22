@@ -8,7 +8,8 @@ export default function Toast(props) {
 		display: 'flex',
 		flexDirection: 'column',
 		position: 'fixed',
-		bottom: '15px'
+		bottom: '15px',
+		zIndex: '9'
 	};
 
 	return <div style={styleWrapper}>{childrens.map(child => child)}</div>;

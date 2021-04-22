@@ -34,6 +34,7 @@ export default function Coleta() {
 	let dataCompletaEscape = `${dia}-${mes}-${ano}`;
 
 	const alternaForm = _ => {
+		clearToastMessages();
 		setformularioAtivo(!formularioAtivo);
 
 		if (formularioAtivo) {
