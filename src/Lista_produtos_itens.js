@@ -7,9 +7,12 @@ import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 import { ToastContext } from './Context/Toast/ToastProvider';
 
 export default function Lista_produtos_itens({ dataFiltrada }) {
-	const { setaStatusPopup, editarItemArray, listaProdutos } = useContext(
-		FormDadosContext
-	);
+	const {
+		setaStatusPopup,
+		editarItemArray,
+		listaProdutos,
+		clearItens
+	} = useContext(FormDadosContext);
 	const { chamaToast } = useContext(ToastContext);
 	const [listaItens, setlistaItens] = useState(listaProdutos);
 
@@ -34,6 +37,9 @@ export default function Lista_produtos_itens({ dataFiltrada }) {
 		if (response.ok) {
 			const resJson = await response.json();
 			chamaToast(`${resJson.response}`);
+			if (!dataFiltrada.length) {
+				clearItens();
+			}
 		}
 
 		atualizaListaRemocao(id);

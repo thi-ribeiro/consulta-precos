@@ -6,9 +6,12 @@ export const FormDadosProvider = ({ children }) => {
 	const [popupStatus, setpopupStatus] = useState(false);
 	const [editarChave, seteditarChave] = useState([]);
 	const [listaProdutos, setlistaProdutos] = useState([]);
+	const [configuracaoBusca, setconfiguracaoBusca] = useState([]);
 
 	const setaStatusPopup = e => {
 		setpopupStatus(!popupStatus);
+
+		seteditarChave([]);
 
 		popupStatus
 			? (document.body.style.overflow = 'unset')
@@ -22,6 +25,15 @@ export const FormDadosProvider = ({ children }) => {
 
 	const definirListaProdutos = lista => {
 		setlistaProdutos(lista);
+		//seteditarChave([]);
+	};
+
+	const clearItens = () => {
+		setlistaProdutos([]);
+	};
+
+	const configurarBusca = valores => {
+		setconfiguracaoBusca(valores);
 	};
 
 	return (
@@ -32,7 +44,10 @@ export const FormDadosProvider = ({ children }) => {
 				editarItemArray,
 				editarChave,
 				definirListaProdutos,
-				listaProdutos
+				listaProdutos,
+				clearItens,
+				configurarBusca,
+				configuracaoBusca
 			}}>
 			{children}
 		</FormDadosContext.Provider>

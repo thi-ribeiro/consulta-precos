@@ -6,7 +6,7 @@ import AutoComplete from './AutoComplete';
 import { ToastContext } from './Context/Toast/ToastProvider';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
-export default function Form_dados_coleta({ atualizarColeta }) {
+export default function Form_dados_coleta({ atualizar }) {
 	const { setaStatusPopup, popupStatus, editarChave } = useContext(
 		FormDadosContext
 	);
@@ -34,14 +34,20 @@ export default function Form_dados_coleta({ atualizarColeta }) {
 	let dataCompleta = `${ano}-${mes}-${dia} ${hora}:${minuto}:${sec}`;
 
 	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
-		let formatter = new Intl.NumberFormat('pt-BR', {
-			style: 'currency',
-			currency: 'BRL'
-		});
+		let retorno = '0,00';
 
-		let result = formatter.format(num).replace(replace, replaceTo);
+		if (num) {
+			let formatter = new Intl.NumberFormat('pt-BR', {
+				style: 'currency',
+				currency: 'BRL'
+			});
 
-		return trim ? result.trim() : result;
+			let result = formatter.format(num).replace(replace, replaceTo);
+
+			retorno = trim ? result.trim() : result;
+		}
+
+		return retorno;
 	};
 
 	const postarDados = async e => {
@@ -56,7 +62,7 @@ export default function Form_dados_coleta({ atualizarColeta }) {
 		let preco = e.target.preco.value.replace(',', '.');
 
 		if (!postarDadosController) {
-			if (editarChave) {
+			if (editarChave.id) {
 				let id = editarChave.id;
 
 				let response = await fetch(
@@ -106,13 +112,13 @@ export default function Form_dados_coleta({ atualizarColeta }) {
 				setpostarDadosController(false);
 				clearToastMessages();
 				setaStatusPopup();
-				atualizarColeta();
+				atualizar();
 			}, 2000);
 		}
 	};
 
 	const valorEdicao = chave => {
-		console.log(editarChave);
+		//console.log(editarChave.id);
 		if (editarChave) {
 			//console.log(props.editarChave);
 			return editarChave[chave];
@@ -184,7 +190,11 @@ export default function Form_dados_coleta({ atualizarColeta }) {
 						</div>
 					</div>
 
-					{editarChave ? <button>Atualizar</button> : <button>Inserir</button>}
+					{editarChave.id ? (
+						<button>Atualizar</button>
+					) : (
+						<button>Inserir</button>
+					)}
 				</div>
 			</div>
 		</form>

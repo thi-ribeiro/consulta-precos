@@ -33,7 +33,9 @@ ReactDOM.render(
 					</Route>
 
 					<Route path='/coleta'>
-						<Coleta />
+						<FormDadosProvider>
+							<Coleta />
+						</FormDadosProvider>
 					</Route>
 
 					<Route path='/testes'>

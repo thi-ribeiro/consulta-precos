@@ -5,20 +5,24 @@ import Icon from '@mdi/react';
 import { mdiTextSearch } from '@mdi/js';
 import Toast from './Context/Toast/Toast';
 
-import FormDadosColeta from './Form_dados_coleta';
 import { ToastContext } from './Context/Toast/ToastProvider';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Consulta_produtos() {
 	const refOrdemList = useRef();
 
-	const { definirListaProdutos } = useContext(FormDadosContext);
+	const {
+		definirListaProdutos,
+		clearItens,
+		configurarBusca,
+		configuracaoBusca
+	} = useContext(FormDadosContext);
 	const { clearToastMessages } = useContext(ToastContext);
 
 	const [listaTipoProduto, setlistaTipoProduto] = useState([]);
 
-	const [listagemAtiva, setListagemAtiva] = useState(false);
-	const [configBusca, setConfigBusca] = useState([]);
+	// const [listagemAtiva, setListagemAtiva] = useState(false);
+	// const [configBusca, setConfigBusca] = useState([]);
 	const [Loading, setLoading] = useState(true);
 	const [LoadingProds, setLoadingProds] = useState(false);
 	const [tipoProdutoState, settipoProdutoState] = useState();
@@ -39,7 +43,7 @@ export default function Consulta_produtos() {
 
 	const listagemProdutoOrdem = (tipoProduto, ordem) => {
 		setLoadingProds(true);
-		setListagemAtiva(false);
+		//setListagemAtiva(false);
 
 		fetch(`http://192.168.2.103:5000/produtos-listagem/${tipoProduto}/${ordem}`)
 			.then(response => response.json())
@@ -50,11 +54,11 @@ export default function Consulta_produtos() {
 				//setFiltro(false);
 				listagemTipoProduto();
 
-				if (data.length) {
-					setListagemAtiva(true);
-				} else {
-					setListagemAtiva(false);
-				}
+				// if (data.length) {
+				// 	setListagemAtiva(true);
+				// } else {
+				// 	setListagemAtiva(false);
+				// }
 			});
 	};
 
@@ -81,48 +85,73 @@ export default function Consulta_produtos() {
 
 		let selectTipoProduto = e.target.tipoProduto.value;
 		let selectOrdem = e.target.ordem_lista.value;
+		let textoBusca = e.target.buscaMarca.value;
 
-		setConfigBusca({
+		//CONFIG NOVO
+		configurarBusca({
 			tipoProduto: selectTipoProduto,
-			ordem: selectOrdem
+			ordem: selectOrdem,
+			busca: textoBusca
 		});
 
-		if (configBusca.textSearch) {
-			listagemBusca(selectTipoProduto, selectOrdem, configBusca.textSearch);
-		} else {
-			listagemProdutoOrdem(selectTipoProduto, selectOrdem);
-		}
+		// setConfigBusca({
+		// 	tipoProduto: selectTipoProduto,
+		// 	ordem: selectOrdem
+		// });
+
+		textoBusca
+			? listagemBusca(selectTipoProduto, selectOrdem, textoBusca)
+			: listagemProdutoOrdem(selectTipoProduto, selectOrdem);
 	};
 
 	const handlerText = e => {
-		setConfigBusca({ ...configBusca, textSearch: e.target.value });
+		//setConfigBusca({ ...configBusca, textinput: e.target.value });
+		//NOVA VARIAVEL
+		configurarBusca({ ...configuracaoBusca, busca: e.target.value });
+		console.log(configuracaoBusca);
 	};
 
 	const atualizar = e => {
-		if (configBusca.filtroInput) {
-			//console.log('FILTRO listagemBusca');
+		console.log(configuracaoBusca);
+
+		if (configuracaoBusca.busca) {
 			listagemBusca(
-				configBusca.tipoProduto,
-				configBusca.ordem,
-				configBusca.filtroInput
+				configuracaoBusca.tipoProduto,
+				configuracaoBusca.ordem,
+				configuracaoBusca.busca
 			);
-			//console.log(configBusca);
 		} else {
-			//console.log(configBusca);
-			//console.log('FILTRO listagemProdutoOrdem');
-			listagemProdutoOrdem(configBusca.tipoProduto, configBusca.ordem);
+			listagemProdutoOrdem(
+				configuracaoBusca.tipoProduto,
+				configuracaoBusca.ordem
+			);
 		}
+		// if (configBusca.filtroInput) {
+		// 	//console.log('FILTRO listagemBusca');
+		// 	listagemBusca(
+		// 		configBusca.tipoProduto,
+		// 		configBusca.ordem,
+		// 		configBusca.filtroInput
+		// 	);
+		// 	//console.log(configBusca);
+		// } else {
+		// 	//console.log(configBusca);
+		// 	//console.log('FILTRO listagemProdutoOrdem');
+		// 	listagemProdutoOrdem(configBusca.tipoProduto, configBusca.ordem);
+		// }
 	};
 
 	const setTipoProduto = e => {
 		settipoProdutoState(e.target.value);
-		setConfigBusca({
-			...configBusca,
-			tipoProduto: e.target.value
-		});
+		configurarBusca({ ...configuracaoBusca, tipoProduto: e.target.value });
+		// setConfigBusca({
+		// 	...configBusca,
+		// 	tipoProduto: e.target.value
+		// });
 	};
 
 	useEffect(() => {
+		clearItens();
 		listagemTipoProduto();
 	}, []);
 
@@ -170,21 +199,20 @@ export default function Consulta_produtos() {
 						</button>
 					</div>
 
-					{listagemAtiva ? (
-						<div className='filtro_produtos_marca'>
-							<input
-								type='text'
-								name='buscaMarca'
-								placeholder='Buscar marca...'
-								onChange={handlerText}
-							/>
-						</div>
-					) : null}
+					<div className='filtro_produtos_marca'>
+						<input
+							type='text'
+							name='buscaMarca'
+							placeholder='Buscar marca...'
+							defaultValue={configuracaoBusca.busca}
+							onChange={handlerText}
+						/>
+					</div>
 				</form>
 			) : null}
 
-			<ListaProdutos loading={LoadingProds} />
-			<FormDadosColeta atualizarColeta={atualizar} />
+			<ListaProdutos loading={LoadingProds} atualizar={atualizar} />
+
 			<Toast />
 		</div>
 	);

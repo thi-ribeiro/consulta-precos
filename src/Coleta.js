@@ -4,16 +4,19 @@ import ListaProdutos from './Lista_produtos';
 import Icon from '@mdi/react';
 import { mdiTextSearch } from '@mdi/js';
 
-import FormDadosColeta from './Form_dados_coleta';
+//import FormDadosColeta from './Form_dados_coleta';
 
 import Toast from './Context/Toast/Toast';
 import { ToastContext } from './Context/Toast/ToastProvider';
+import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Coleta() {
 	const { clearToastMessages } = useContext(ToastContext);
+	const { definirListaProdutos, setaStatusPopup } = useContext(
+		FormDadosContext
+	);
 
-	const [formularioAtivo, setformularioAtivo] = useState(false);
-	const [coletaDadosAtual, setcoletaDadosAtual] = useState([]);
+	//const [formularioAtivo, setformularioAtivo] = useState(false);
 	const [loading, setLoading] = useState(false);
 
 	let data = new Date();
@@ -33,20 +36,9 @@ export default function Coleta() {
 
 	let dataCompletaEscape = `${dia}-${mes}-${ano}`;
 
-	const alternaForm = _ => {
+	const formEditar = _ => {
 		clearToastMessages();
-		setformularioAtivo(!formularioAtivo);
-
-		if (formularioAtivo) {
-			document.body.style.overflow = 'unset';
-		} else {
-			//fetchListaEmpresas();
-			document.body.style.overflow = 'hidden';
-		}
-	};
-
-	const testeThiago = _ => {
-		console.log('OLOCO MEU!');
+		setaStatusPopup();
 	};
 
 	const listagemColeta = async _ => {
@@ -58,7 +50,7 @@ export default function Coleta() {
 
 		if (response.ok) {
 			const jsonRes = await response.json();
-			setcoletaDadosAtual(jsonRes);
+			definirListaProdutos(jsonRes);
 			setLoading(false);
 		}
 	};
@@ -80,7 +72,7 @@ export default function Coleta() {
 
 		if (response.ok) {
 			const jsonRes = await response.json();
-			setcoletaDadosAtual(jsonRes);
+			definirListaProdutos(jsonRes);
 			setLoading(false);
 		}
 		//}
@@ -92,21 +84,22 @@ export default function Coleta() {
 		}
 	};
 
-	useEffect(() => {
-		const listaColeta = async _ => {
-			setLoading(true);
-			const response = await fetch(
-				`http://192.168.2.103:5000/consulta-coleta-atual/${dataCompletaEscape}`
-			);
+	const listaColeta = async _ => {
+		setLoading(true);
+		const response = await fetch(
+			`http://192.168.2.103:5000/consulta-coleta-atual/${dataCompletaEscape}`
+		);
 
-			if (response.ok) {
-				const jsonRes = await response.json();
-				setcoletaDadosAtual(jsonRes);
-				setLoading(false);
-			}
-		};
+		if (response.ok) {
+			const jsonRes = await response.json();
+			definirListaProdutos(jsonRes);
+			setLoading(false);
+		}
+	};
+
+	useEffect(() => {
 		listaColeta();
-	}, [dataCompletaEscape]);
+	}, []);
 
 	return (
 		<div className='coleta-selecao'>
@@ -155,15 +148,10 @@ export default function Coleta() {
 				</div>
 			</form>
 
-			<ListaProdutos
-				lista={coletaDadosAtual}
-				loading={loading}
-				atualizar={listagemColeta}
-			/>
-
-			<IconeAdicionarColeta adicionarForm={alternaForm} />
-
+			<ListaProdutos loading={loading} atualizar={listaColeta} />
+			<IconeAdicionarColeta adicionarForm={formEditar} />
 			<Toast />
+
 			<div className='avoid-overlaping'></div>
 		</div>
 	);
