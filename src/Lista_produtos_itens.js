@@ -30,17 +30,19 @@ export default function Lista_produtos_itens({ dataFiltrada }) {
 	const deletarItemColeta = async e => {
 		let id = parseInt(e.currentTarget.dataset.id);
 
-		const response = await fetch(
-			`http://192.168.2.103:5000/deletar-produto/${id}`
-		);
+		chamaToast('FAZ DE CONTA Q APAGOU!');
 
-		if (response.ok) {
-			const resJson = await response.json();
-			chamaToast(`${resJson.response}`);
-			if (!dataFiltrada.length) {
-				clearItens();
-			}
+		// const response = await fetch(
+		// 	`http://192.168.2.103:5000/deletar-produto/${id}`
+		// );
+
+		// if (response.ok) {
+		// 	const resJson = await response.json();
+		// 	chamaToast(`${resJson.response}`);
+		if (!dataFiltrada.length) {
+			clearItens();
 		}
+		// }
 
 		atualizaListaRemocao(id);
 	};
@@ -54,6 +56,8 @@ export default function Lista_produtos_itens({ dataFiltrada }) {
 	const atualizaListaRemocao = item => {
 		let filtrado = listaItens.filter(i => i.id !== item);
 		//console.log('DELETANDO: ' + item);
+
+		console.log(filtrado);
 		setlistaItens(filtrado);
 	};
 

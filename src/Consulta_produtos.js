@@ -15,68 +15,28 @@ export default function Consulta_produtos() {
 		definirListaProdutos,
 		clearItens,
 		configurarBusca,
-		configuracaoBusca
+		configuracaoBusca,
+		buscaFiltrada,
+		busca,
+		carregarTipodeProdutos,
+		listaTipoprodutos,
+		loading
 	} = useContext(FormDadosContext);
 	const { clearToastMessages } = useContext(ToastContext);
 
-	const [listaTipoProduto, setlistaTipoProduto] = useState([]);
-
+	//const [listaTipoProduto, setlistaTipoProduto] = useState([]);
 	// const [listagemAtiva, setListagemAtiva] = useState(false);
 	// const [configBusca, setConfigBusca] = useState([]);
-	const [Loading, setLoading] = useState(true);
-	const [LoadingProds, setLoadingProds] = useState(false);
+	//const [LoadingProds, setLoadingProds] = useState(false);
 	const [tipoProdutoState, settipoProdutoState] = useState();
+	const [ordemState, setordemState] = useState();
 
-	const listagemTipoProduto = async _ => {
-		setLoading(true);
-
-		const response = await fetch(
-			'http://192.168.2.103:5000/lista-tipo-produto'
-		);
-
-		if (response.ok) {
-			const jsonRes = await response.json();
-			setLoading(false);
-			setlistaTipoProduto(jsonRes);
-		}
-	};
-
-	const listagemProdutoOrdem = (tipoProduto, ordem) => {
-		setLoadingProds(true);
-		//setListagemAtiva(false);
-
-		fetch(`http://192.168.2.103:5000/produtos-listagem/${tipoProduto}/${ordem}`)
-			.then(response => response.json())
-			.then(data => {
-				//setListaProdutosAtual(data);
-				definirListaProdutos(data);
-				setLoadingProds(false);
-				//setFiltro(false);
-				listagemTipoProduto();
-
-				// if (data.length) {
-				// 	setListagemAtiva(true);
-				// } else {
-				// 	setListagemAtiva(false);
-				// }
-			});
-	};
-
-	const listagemBusca = async (tipoProduto, ordem, busca) => {
-		setLoadingProds(true);
-		//setListagemAtiva(false);
-		const response = await fetch(
-			`http://192.168.2.103:5000/filtro-produto/${tipoProduto}/${ordem}/${busca}`
-		);
-
-		if (response.ok) {
-			const jsonRes = await response.json();
-			//setListaProdutosAtual(jsonRes);
-			definirListaProdutos(jsonRes);
-			setLoadingProds(false);
-			listagemTipoProduto();
-		}
-	};
+	const organizacao = [
+		{ ordem: 'preco_desc', desc: 'Preço Maior' },
+		{ ordem: 'preco_asc', desc: 'Preço Menor' },
+		{ ordem: 'coleta_desc', desc: 'Coleta Recente' },
+		{ ordem: 'coleta_asc', desc: 'Coleta Antiga' }
+	];
 
 	const getSelectOnChange = e => {
 		e.preventDefault();
@@ -94,68 +54,47 @@ export default function Consulta_produtos() {
 			busca: textoBusca
 		});
 
-		// setConfigBusca({
-		// 	tipoProduto: selectTipoProduto,
-		// 	ordem: selectOrdem
-		// });
-
 		textoBusca
-			? listagemBusca(selectTipoProduto, selectOrdem, textoBusca)
-			: listagemProdutoOrdem(selectTipoProduto, selectOrdem);
+			? buscaFiltrada(selectTipoProduto, selectOrdem, textoBusca)
+			: busca(selectTipoProduto, selectOrdem);
 	};
 
 	const handlerText = e => {
-		//setConfigBusca({ ...configBusca, textinput: e.target.value });
-		//NOVA VARIAVEL
 		configurarBusca({ ...configuracaoBusca, busca: e.target.value });
 		console.log(configuracaoBusca);
 	};
 
 	const atualizar = e => {
-		console.log(configuracaoBusca);
+		//console.log(configuracaoBusca);
 
 		if (configuracaoBusca.busca) {
-			listagemBusca(
+			buscaFiltrada(
 				configuracaoBusca.tipoProduto,
 				configuracaoBusca.ordem,
 				configuracaoBusca.busca
 			);
 		} else {
-			listagemProdutoOrdem(
-				configuracaoBusca.tipoProduto,
-				configuracaoBusca.ordem
-			);
+			busca(configuracaoBusca.tipoProduto, configuracaoBusca.ordem);
 		}
-		// if (configBusca.filtroInput) {
-		// 	//console.log('FILTRO listagemBusca');
-		// 	listagemBusca(
-		// 		configBusca.tipoProduto,
-		// 		configBusca.ordem,
-		// 		configBusca.filtroInput
-		// 	);
-		// 	//console.log(configBusca);
-		// } else {
-		// 	//console.log(configBusca);
-		// 	//console.log('FILTRO listagemProdutoOrdem');
-		// 	listagemProdutoOrdem(configBusca.tipoProduto, configBusca.ordem);
-		// }
+	};
+
+	const ordemSelecionada = e => {
+		setordemState(e.target.value);
 	};
 
 	const setTipoProduto = e => {
 		settipoProdutoState(e.target.value);
 		configurarBusca({ ...configuracaoBusca, tipoProduto: e.target.value });
-		// setConfigBusca({
-		// 	...configBusca,
-		// 	tipoProduto: e.target.value
-		// });
 	};
 
 	useEffect(() => {
 		clearItens();
-		listagemTipoProduto();
+		carregarTipodeProdutos(); //FROM PROVIDER
+
+		//console.log(listaTipoprodutos);
 	}, []);
 
-	return Loading ? (
+	return loading ? (
 		<div className='tabelas-centralizar'>
 			<ScaleLoader
 				color='silver'
@@ -168,7 +107,7 @@ export default function Consulta_produtos() {
 	) : (
 		<div className='tabelas-select'>
 			<h1>Consulta de Produto</h1>
-			{listaTipoProduto.length ? (
+			{listaTipoprodutos.length ? (
 				<form className='tabelas-select-form' onSubmit={getSelectOnChange}>
 					<div className='tabelas-select-tabelas-filtro'>
 						<select
@@ -176,18 +115,23 @@ export default function Consulta_produtos() {
 							className='tabela-select'
 							onChange={setTipoProduto}
 							defaultValue={tipoProdutoState}>
-							{listaTipoProduto.map((item, index) => (
+							{listaTipoprodutos.map((item, index) => (
 								<option key={index}>{item.tipoProduto}</option>
 							))}
 						</select>
 						<select
 							ref={refOrdemList}
 							name='ordem_lista'
-							className='ordem_lista'>
-							<option value='preco_desc'>Preço Maior</option>
-							<option value='preco_asc'>Preço Menor</option>
-							<option value='coleta_desc'>Coleta Recente</option>
-							<option value='coleta_asc'>Coleta Antiga</option>
+							className='ordem_lista'
+							onChange={ordemSelecionada}
+							defaultValue={ordemState}>
+							{organizacao.map((i, index) => {
+								return (
+									<option key={index} value={i.ordem}>
+										{i.desc}
+									</option>
+								);
+							})}
 						</select>
 						<button>
 							<Icon
@@ -205,13 +149,14 @@ export default function Consulta_produtos() {
 							name='buscaMarca'
 							placeholder='Buscar marca...'
 							defaultValue={configuracaoBusca.busca}
+							autoComplete='off'
 							onChange={handlerText}
 						/>
 					</div>
 				</form>
 			) : null}
 
-			<ListaProdutos loading={LoadingProds} atualizar={atualizar} />
+			<ListaProdutos loading={loading} atualizar={atualizar} />
 
 			<Toast />
 		</div>
