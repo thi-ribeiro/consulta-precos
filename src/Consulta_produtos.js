@@ -10,9 +10,10 @@ import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Consulta_produtos() {
 	const refOrdemList = useRef();
+	const refTipoProd = useRef();
+	const refTextoBusca = useRef();
 
 	const {
-		definirListaProdutos,
 		clearItens,
 		configurarBusca,
 		configuracaoBusca,
@@ -24,13 +25,6 @@ export default function Consulta_produtos() {
 	} = useContext(FormDadosContext);
 	const { clearToastMessages } = useContext(ToastContext);
 
-	//const [listaTipoProduto, setlistaTipoProduto] = useState([]);
-	// const [listagemAtiva, setListagemAtiva] = useState(false);
-	// const [configBusca, setConfigBusca] = useState([]);
-	//const [LoadingProds, setLoadingProds] = useState(false);
-	const [tipoProdutoState, settipoProdutoState] = useState();
-	const [ordemState, setordemState] = useState();
-
 	const organizacao = [
 		{ ordem: 'preco_desc', desc: 'Preço Maior' },
 		{ ordem: 'preco_asc', desc: 'Preço Menor' },
@@ -38,14 +32,14 @@ export default function Consulta_produtos() {
 		{ ordem: 'coleta_asc', desc: 'Coleta Antiga' }
 	];
 
-	const getSelectOnChange = e => {
+	const Busca = e => {
 		e.preventDefault();
 
 		clearToastMessages();
 
-		let selectTipoProduto = e.target.tipoProduto.value;
-		let selectOrdem = e.target.ordem_lista.value;
-		let textoBusca = e.target.buscaMarca.value;
+		let selectTipoProduto = refTipoProd.current.value;
+		let selectOrdem = refOrdemList.current.value;
+		let textoBusca = refTextoBusca.current.value;
 
 		//CONFIG NOVO
 		configurarBusca({
@@ -57,11 +51,6 @@ export default function Consulta_produtos() {
 		textoBusca
 			? buscaFiltrada(selectTipoProduto, selectOrdem, textoBusca)
 			: busca(selectTipoProduto, selectOrdem);
-	};
-
-	const handlerText = e => {
-		configurarBusca({ ...configuracaoBusca, busca: e.target.value });
-		console.log(configuracaoBusca);
 	};
 
 	const atualizar = e => {
@@ -78,17 +67,9 @@ export default function Consulta_produtos() {
 		}
 	};
 
-	const ordemSelecionada = e => {
-		setordemState(e.target.value);
-	};
-
-	const setTipoProduto = e => {
-		settipoProdutoState(e.target.value);
-		configurarBusca({ ...configuracaoBusca, tipoProduto: e.target.value });
-	};
-
 	useEffect(() => {
 		clearItens();
+		clearToastMessages();
 		carregarTipodeProdutos(); //FROM PROVIDER
 
 		//console.log(listaTipoprodutos);
@@ -108,23 +89,22 @@ export default function Consulta_produtos() {
 		<div className='tabelas-select'>
 			<h1>Consulta de Produto</h1>
 			{listaTipoprodutos.length ? (
-				<form className='tabelas-select-form' onSubmit={getSelectOnChange}>
+				<form className='tabelas-select-form' onSubmit={Busca}>
 					<div className='tabelas-select-tabelas-filtro'>
 						<select
+							ref={refTipoProd}
 							name='tipoProduto'
 							className='tabela-select'
-							onChange={setTipoProduto}
-							defaultValue={tipoProdutoState}>
+							defaultValue={configuracaoBusca.tipoProduto}>
 							{listaTipoprodutos.map((item, index) => (
 								<option key={index}>{item.tipoProduto}</option>
 							))}
 						</select>
 						<select
 							ref={refOrdemList}
-							name='ordem_lista'
+							name='ordemLista'
 							className='ordem_lista'
-							onChange={ordemSelecionada}
-							defaultValue={ordemState}>
+							defaultValue={configuracaoBusca.ordem}>
 							{organizacao.map((i, index) => {
 								return (
 									<option key={index} value={i.ordem}>
@@ -145,12 +125,12 @@ export default function Consulta_produtos() {
 
 					<div className='filtro_produtos_marca'>
 						<input
+							ref={refTextoBusca}
 							type='text'
 							name='buscaMarca'
 							placeholder='Buscar marca...'
 							defaultValue={configuracaoBusca.busca}
 							autoComplete='off'
-							onChange={handlerText}
 						/>
 					</div>
 				</form>

@@ -7,11 +7,14 @@ import { ToastContext } from './Context/Toast/ToastProvider';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Form_dados_coleta({ atualizar }) {
-	const { setaStatusPopup, popupStatus, editarChave } = useContext(
-		FormDadosContext
-	);
+	const {
+		setaStatusPopup,
+		popupStatus,
+		editarChave,
+		atualizaItemArray
+	} = useContext(FormDadosContext);
 	const { chamaToast, clearToastMessages } = useContext(ToastContext);
-	const [postarDadosController, setpostarDadosController] = useState(false);
+	//const [postarDadosController, setpostarDadosController] = useState(false);
 
 	let data = new Date();
 
@@ -53,7 +56,7 @@ export default function Form_dados_coleta({ atualizar }) {
 	const postarDados = async e => {
 		e.preventDefault();
 		//clearToastMessages();
-		setpostarDadosController(true);
+		//setpostarDadosController(true);
 
 		let empresa = e.target.ac_empresa.value;
 		let dataColeta = e.target.dataColeta.value;
@@ -61,70 +64,63 @@ export default function Form_dados_coleta({ atualizar }) {
 		let tipoProduto = e.target.ac_tipoProduto.value.toUpperCase();
 		let preco = e.target.preco.value.replace(',', '.');
 
-		if (!postarDadosController) {
-			if (editarChave.id) {
-				let id = editarChave.id;
+		//if (!postarDadosController) {
+		if (editarChave.id) {
+			let id = editarChave.id;
 
-				let response = await fetch(
-					`http://192.168.2.103:5000/atualizar-coleta`,
-					{
-						method: 'POST',
-						body: JSON.stringify({
-							id: id,
-							empresa: empresa,
-							dataColeta: dataColeta,
-							marca: marca,
-							tipoProduto: tipoProduto,
-							preco: preco
-						}),
-						headers: {
-							'Content-Type': 'application/json'
-						}
-					}
-				);
-
-				if (response.ok) {
-					let jsonRes = await response.json();
-					chamaToast(jsonRes.response);
+			let response = await fetch(`http://192.168.2.103:5000/atualizar-coleta`, {
+				method: 'POST',
+				body: JSON.stringify({
+					id: id,
+					empresa: empresa,
+					dataColeta: dataColeta,
+					marca: marca,
+					tipoProduto: tipoProduto,
+					preco: preco
+				}),
+				headers: {
+					'Content-Type': 'application/json'
 				}
-			} else {
-				let response = await fetch('http://192.168.2.103:5000/postar-coleta', {
-					method: 'POST',
-					body: JSON.stringify({
-						empresa: empresa,
-						dataColeta: dataColeta,
-						marca: marca,
-						tipoProduto: tipoProduto,
-						preco: preco
-					}),
-					headers: {
-						'Content-Type': 'application/json'
-					}
-				});
+			});
 
-				if (response.ok) {
-					let jsonRes = await response.json();
-					chamaToast(jsonRes.response);
-				}
+			if (response.ok) {
+				let jsonRes = await response.json();
+				chamaToast(jsonRes.response);
 			}
+		} else {
+			let response = await fetch('http://192.168.2.103:5000/postar-coleta', {
+				method: 'POST',
+				body: JSON.stringify({
+					empresa: empresa,
+					dataColeta: dataColeta,
+					marca: marca,
+					tipoProduto: tipoProduto,
+					preco: preco
+				}),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
 
-			setTimeout(() => {
-				setpostarDadosController(false);
-				clearToastMessages();
-				setaStatusPopup();
-				atualizar();
-			}, 2000);
+			if (response.ok) {
+				let jsonRes = await response.json();
+				chamaToast(jsonRes.response);
+			}
 		}
+
+		setTimeout(() => {
+			//setpostarDadosController(false);
+			clearToastMessages();
+			setaStatusPopup();
+			atualizar();
+		}, 2000);
+		//}
 	};
 
 	const valorEdicao = chave => {
-		//console.log(editarChave.id);
-		if (editarChave) {
-			//console.log(props.editarChave);
+		//console.log(editarChave['id']);
+		if (editarChave.id) {
 			return editarChave[chave];
-			//return null;
-		} else {
-			return null;
 		}
 	};
 
@@ -137,7 +133,9 @@ export default function Form_dados_coleta({ atualizar }) {
 
 				<div className='adicionar-dados-coleta'>
 					<h1>
-						{editarChave ? 'Editar informações' : 'Adicionar informações'}
+						{editarChave.length
+							? 'Editar informações'
+							: 'Adicionar informações'}
 					</h1>
 
 					<div className='coleta-empresa'>
@@ -149,7 +147,7 @@ export default function Form_dados_coleta({ atualizar }) {
 						<span>Data coleta</span>
 						<div className='dados-empresa-data'>
 							<input
-								{...(editarChave ? null : { disabled: 'disabled' })}
+								{...(editarChave.length ? null : { disabled: 'disabled' })}
 								type='text'
 								name='dataColeta'
 								defaultValue={dataCompleta}

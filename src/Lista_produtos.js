@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import ListaItens from './Lista_produtos_itens';
 import FormDadosColeta from './Form_dados_coleta';
@@ -6,30 +6,36 @@ import FormDadosColeta from './Form_dados_coleta';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Lista_produtos({ loading, atualizar }) {
-	const { listaProdutos } = useContext(FormDadosContext);
-	const [listaDatasFiltrada, setlistaDatasFiltrada] = useState([]);
+	const { definirListaProdutos, listaProdutos, qntidadeItens } = useContext(
+		FormDadosContext
+	);
 
-	const groupByDatas = array => {
-		let novoArrayDatas = [];
+	const [state, setstate] = useState(listaProdutos);
 
-		if (array.length) {
-			array.forEach(e => {
-				novoArrayDatas.push(e.coletaFormatada);
+	const groupBy = _ => {
+		let datas = [];
+		let produtosPorData = [];
+
+		if (listaProdutos.length) {
+			listaProdutos.map(e => {
+				return datas.push(e.coletaFormatada);
 			});
 		}
 
-		var unique = novoArrayDatas.filter(function(elem, index, self) {
+		let unique = datas.filter(function(elem, index, self) {
 			return index === self.indexOf(elem);
 		});
 
-		setlistaDatasFiltrada(unique);
-		//console.log(unique);
-	};
+		unique.filter(i1 => {
+			return (produtosPorData[i1] = listaProdutos.filter(
+				i => i.coletaFormatada === i1
+			));
+		});
 
-	useEffect(() => {
-		groupByDatas(listaProdutos);
-		//console.log(loading);
-	}, [listaProdutos]);
+		console.log(listaProdutos);
+		definirListaProdutos([produtosPorData]);
+		console.log(produtosPorData);
+	};
 
 	return loading ? (
 		<div className='loading-centralizar'>
@@ -44,23 +50,15 @@ export default function Lista_produtos({ loading, atualizar }) {
 	) : (
 		<div className='produtos-cards'>
 			<div className='counterLista'>
-				{listaProdutos.length ? (
-					listaProdutos.length + ' resultado(s)'
+				{listaProdutos ? (
+					qntidadeItens + ' resultado(s)'
 				) : (
 					<div className='coleta-vazia'>
 						Nenhum item adicionado ou para listar.
 					</div>
 				)}
 			</div>
-			{listaDatasFiltrada.map((dataFiltrada, indexColeta) => (
-				<div key={indexColeta}>
-					<div className='hl_data'>
-						<span className='dataSpan'>Coleta {dataFiltrada}</span>
-					</div>
-					<ListaItens dataFiltrada={dataFiltrada} />
-				</div>
-			))}
-
+			<ListaItens />
 			<FormDadosColeta atualizar={atualizar} />
 		</div>
 	);

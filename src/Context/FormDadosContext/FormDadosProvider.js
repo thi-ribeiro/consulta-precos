@@ -9,6 +9,9 @@ export const FormDadosProvider = ({ children }) => {
 	const [configuracaoBusca, setconfiguracaoBusca] = useState([]);
 	const [listaTipoprodutos, setlistaTipoprodutos] = useState([]);
 	const [loading, setloading] = useState(false);
+	const [qntidadeItens, setqntidadeItens] = useState(0);
+
+	//const [produtoPorData, setprodutoPorData] = useState([]);
 
 	const carregarTipodeProdutos = async _ => {
 		setloading(true);
@@ -19,8 +22,9 @@ export const FormDadosProvider = ({ children }) => {
 
 		if (response.ok) {
 			const jsonRes = await response.json();
-			setloading(false);
+
 			setlistaTipoprodutos(jsonRes);
+			setloading(false);
 		}
 	};
 
@@ -31,9 +35,9 @@ export const FormDadosProvider = ({ children }) => {
 			`http://192.168.2.103:5000/produtos-listagem/${tipoProduto}/${ordem}`
 		);
 		if (response.ok) {
-			const resJason = await response.json();
+			const jsonRes = await response.json();
 
-			definirListaProdutos(resJason);
+			definirListaProdutos(jsonRes);
 
 			carregarTipodeProdutos();
 			setloading(false);
@@ -48,6 +52,7 @@ export const FormDadosProvider = ({ children }) => {
 
 		if (response.ok) {
 			const jsonRes = await response.json();
+
 			definirListaProdutos(jsonRes);
 
 			carregarTipodeProdutos();
@@ -65,14 +70,52 @@ export const FormDadosProvider = ({ children }) => {
 			: (document.body.style.overflow = 'hidden');
 	};
 
-	const editarItemArray = (lista, idItem) => {
-		let filtro = lista.filter(item => item.id === parseInt(idItem));
-		seteditarChave(filtro[0]);
+	const editarItemArray = idItem => {
+		setaStatusPopup();
+		//let filtro = lista.filter(item => item.id === parseInt(idItem));
+		seteditarChave(idItem);
+
+		// let target = parseInt(currentTarget.dataset.id);
+		// let tar = [];
+
+		// Object.keys(listaProdutos).map(datas => {
+		// 	listaProdutos[datas].map(item => {
+		// 		if (item.id === target) {
+		// 			item.marca = 'TESTE!';
+		// 		}
+		// 	});
+
+		// 	tar = listaProdutos[datas].filter(item => item.id === target);
+		// });
+
+		// seteditarChave(tar);
+		// setlistaProdutos({ listaProdutos });
+	};
+
+	const atualizaItemArray = idItem => {
+		let listaItens = listaProdutos;
+		let target = parseInt(idItem);
+
+		Object.keys(listaItens).map(datas => {
+			listaItens[datas].map((item, index) => {
+				if (item.id === target) {
+					//console.log(Object.keys(listaItens[datas][0]));
+					let keys = Object.keys(item);
+					keys.map(i => {
+						//console.log(i);
+						listaItens[i] = editarChave[i];
+					});
+					//console.log(Object.keys(item));
+					// item.marca = 'TESTE!';
+				}
+			});
+		});
+		//console.log(listaItens);
+		definirListaProdutos({ listaItens });
 	};
 
 	const definirListaProdutos = lista => {
-		setlistaProdutos(lista);
-		//seteditarChave([]);
+		setlistaProdutos(groupBy(lista));
 	};
 
 	const clearItens = () => {
@@ -83,6 +126,33 @@ export const FormDadosProvider = ({ children }) => {
 		setconfiguracaoBusca(valores);
 	};
 
+	const groupBy = array => {
+		let datas = [];
+		let produtosPorData = [];
+		let qnt = 0;
+
+		if (array.length) {
+			array.map((e, ind) => {
+				return (datas[ind] = e.coletaFormatada);
+			});
+		}
+
+		let unique = datas.filter(function(elem, index, self) {
+			return index === self.indexOf(elem);
+		});
+
+		unique.filter(i1 => {
+			produtosPorData[i1] = array.filter(i => {
+				if (i.coletaFormatada === i1) {
+					qnt += 1;
+					return i.coletaFormatada === i1;
+				}
+			});
+		});
+		setqntidadeItens(qnt);
+		return produtosPorData;
+	};
+
 	return (
 		<FormDadosContext.Provider
 			value={{
@@ -91,7 +161,10 @@ export const FormDadosProvider = ({ children }) => {
 				editarItemArray,
 				editarChave,
 				definirListaProdutos,
+				setlistaProdutos,
+				atualizaItemArray,
 				listaProdutos,
+				qntidadeItens,
 				clearItens,
 				configurarBusca,
 				configuracaoBusca,
