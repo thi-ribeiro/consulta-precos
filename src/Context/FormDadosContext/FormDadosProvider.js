@@ -72,24 +72,7 @@ export const FormDadosProvider = ({ children }) => {
 
 	const editarItemArray = idItem => {
 		setaStatusPopup();
-		//let filtro = lista.filter(item => item.id === parseInt(idItem));
 		seteditarChave(idItem);
-
-		// let target = parseInt(currentTarget.dataset.id);
-		// let tar = [];
-
-		// Object.keys(listaProdutos).map(datas => {
-		// 	listaProdutos[datas].map(item => {
-		// 		if (item.id === target) {
-		// 			item.marca = 'TESTE!';
-		// 		}
-		// 	});
-
-		// 	tar = listaProdutos[datas].filter(item => item.id === target);
-		// });
-
-		// seteditarChave(tar);
-		// setlistaProdutos({ listaProdutos });
 	};
 
 	const atualizaItemArray = idItem => {
@@ -165,6 +148,7 @@ export const FormDadosProvider = ({ children }) => {
 				atualizaItemArray,
 				listaProdutos,
 				qntidadeItens,
+				setqntidadeItens,
 				clearItens,
 				configurarBusca,
 				configuracaoBusca,

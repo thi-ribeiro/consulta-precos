@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import ScaleLoader from 'react-spinners/ScaleLoader';
 import ListaProdutos from './Lista_produtos';
 import Icon from '@mdi/react';

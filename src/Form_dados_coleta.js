@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useContext } from 'react';
 import Icon from '@mdi/react';
 import { mdiClose } from '@mdi/js';
 import AutoComplete from './AutoComplete';
@@ -7,14 +7,10 @@ import { ToastContext } from './Context/Toast/ToastProvider';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Form_dados_coleta({ atualizar }) {
-	const {
-		setaStatusPopup,
-		popupStatus,
-		editarChave,
-		atualizaItemArray
-	} = useContext(FormDadosContext);
+	const { setaStatusPopup, popupStatus, editarChave } = useContext(
+		FormDadosContext
+	);
 	const { chamaToast, clearToastMessages } = useContext(ToastContext);
-	//const [postarDadosController, setpostarDadosController] = useState(false);
 
 	let data = new Date();
 

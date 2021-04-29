@@ -1,4 +1,4 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 
 import Icon from '@mdi/react';
 import { mdiFileDocumentEditOutline, mdiTextBoxRemoveOutline } from '@mdi/js';
@@ -6,16 +6,12 @@ import { mdiFileDocumentEditOutline, mdiTextBoxRemoveOutline } from '@mdi/js';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 import { ToastContext } from './Context/Toast/ToastProvider';
 
-export default function Lista_produtos_itens({ dataFiltrada }) {
-	const {
-		editarItemArray,
-		listaProdutos,
-		busca,
-		buscaFiltrada,
-		configuracaoBusca
-	} = useContext(FormDadosContext);
+export default function Lista_produtos_itens() {
+	const { editarItemArray, listaProdutos, setqntidadeItens } = useContext(
+		FormDadosContext
+	);
 	const { chamaToast } = useContext(ToastContext);
-	const [listaItens, setlistaItens] = useState(listaProdutos);
+	const [listaItens] = useState(listaProdutos);
 
 	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
 		let formatter = new Intl.NumberFormat('pt-BR', {
@@ -30,8 +26,7 @@ export default function Lista_produtos_itens({ dataFiltrada }) {
 
 	const deletarItemColeta = async e => {
 		let id = parseInt(e.currentTarget.dataset.id);
-
-		//chamaToast('FAZ DE CONTA Q APAGOU!');
+		let qnt = 0;
 
 		Object.keys(listaItens).map(datas => {
 			listaItens[datas].map((itm, index) => {
@@ -45,8 +40,12 @@ export default function Lista_produtos_itens({ dataFiltrada }) {
 			if (!listaItens[datas].length) {
 				delete listaItens[datas];
 			}
+			qnt += 1;
 		});
 
+		setqntidadeItens(qnt);
+
+		//FETCH SOMENTE ATUALIZA O BD A ATUALIZACAO VISUAL DEPENDE DO ARRAY A CIMA
 		const response = await fetch(
 			`http://192.168.2.103:5000/deletar-produto/${id}`
 		);
@@ -78,48 +77,12 @@ export default function Lista_produtos_itens({ dataFiltrada }) {
 		editarItemArray(tar);
 	};
 
-	const atualizaListaRemocao = item => {
-		//let filtrado = listaItens.filter(i => i.id !== item);
-		//console.log('DELETANDO: ' + item);
-		//let arrayAtual = listaProdutos;
-		//let qntInArray = 0;
-		//console.log(arrayAtual);
-		// Object.keys(listaItens).map(datas => {
-		// 	if (!listaItens[datas].length) {
-		// 		return delete listaItens[datas];
-		// 	} else {
-		// 		listaItens[datas].map((itm, index) => {
-		// 			//qntInArray += arrayAtual[datas].length;
-		// 			//console.log(arrayAtual[datas].length);
-		// 			if (itm.id === item) {
-		// 				listaItens[datas].splice(index, 1);
-		// 			}
-		// 		});
-		// 	}
-		// });
-		// console.log(listaItens);
-		//rota();
-		//console.log(qntInArray);
-		//console.log(arrayAtual);
-	};
-
-	const rota = e => {
-		configuracaoBusca.textoBusca
-			? buscaFiltrada(
-					configuracaoBusca.tipoProduto,
-					configuracaoBusca.ordem,
-					configuracaoBusca.busca
-			  )
-			: busca(configuracaoBusca.tipoProduto, configuracaoBusca.ordem);
-	};
-
 	return Object.keys(listaItens).map((data, index) => (
 		<div key={index}>
-			<div>
-				<div className='hl_data'>
-					<span className='dataSpan'>Coleta {data}</span>
-				</div>
+			<div className='hl_data'>
+				<span className='dataSpan'>Coleta {data}</span>
 			</div>
+
 			{listaItens[data].map((item, index2) => (
 				<div key={index2} className='produto-card'>
 					<div className='grid-container'>
