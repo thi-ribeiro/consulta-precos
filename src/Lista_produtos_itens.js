@@ -7,9 +7,12 @@ import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 import { ToastContext } from './Context/Toast/ToastProvider';
 
 export default function Lista_produtos_itens() {
-	const { editarItemArray, listaProdutos, setqntidadeItens } = useContext(
-		FormDadosContext
-	);
+	const {
+		editarItemArray,
+		listaProdutos,
+		setqntidadeItens,
+		qntidadeItens
+	} = useContext(FormDadosContext);
 	const { chamaToast } = useContext(ToastContext);
 	const [listaItens] = useState(listaProdutos);
 
@@ -24,9 +27,11 @@ export default function Lista_produtos_itens() {
 		return trim ? result.trim() : result;
 	};
 
+	console.log(qntidadeItens);
+
 	const deletarItemColeta = async e => {
 		let id = parseInt(e.currentTarget.dataset.id);
-		let qnt = 0;
+		let qnt = qntidadeItens;
 
 		Object.keys(listaItens).map(datas => {
 			listaItens[datas].map((itm, index) => {
@@ -40,9 +45,12 @@ export default function Lista_produtos_itens() {
 			if (!listaItens[datas].length) {
 				delete listaItens[datas];
 			}
-			qnt += 1;
+			//qnt = qnt >= 1 ? qnt - 1 : 0;
 		});
 
+		qnt -= 1;
+
+		//chamaToast(`Faz de conta q apagou!`);
 		setqntidadeItens(qnt);
 
 		//FETCH SOMENTE ATUALIZA O BD A ATUALIZACAO VISUAL DEPENDE DO ARRAY A CIMA
@@ -54,8 +62,6 @@ export default function Lista_produtos_itens() {
 			const resJson = await response.json();
 			chamaToast(`${resJson.response}`);
 		}
-
-		//console.log(listaItens);
 	};
 
 	const editarItemColeta = e => {

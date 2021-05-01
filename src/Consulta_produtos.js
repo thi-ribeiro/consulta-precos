@@ -71,8 +71,6 @@ export default function Consulta_produtos() {
 		clearItens();
 		clearToastMessages();
 		carregarTipodeProdutos(); //FROM PROVIDER
-
-		//console.log(listaTipoprodutos);
 	}, []);
 
 	return loading ? (

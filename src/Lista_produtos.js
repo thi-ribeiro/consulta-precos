@@ -6,7 +6,9 @@ import FormDadosColeta from './Form_dados_coleta';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Lista_produtos({ loading, atualizar }) {
-	const { listaProdutos, qntidadeItens } = useContext(FormDadosContext);
+	const { qntidadeItens } = useContext(
+		FormDadosContext
+	);
 
 	return loading ? (
 		<div className='loading-centralizar'>
@@ -21,7 +23,7 @@ export default function Lista_produtos({ loading, atualizar }) {
 	) : (
 		<div className='produtos-cards'>
 			<div className='counterLista'>
-				{Object.keys(listaProdutos).length ? (
+				{qntidadeItens ? (
 					qntidadeItens + ' resultado(s)'
 				) : (
 					<div className='coleta-vazia'>

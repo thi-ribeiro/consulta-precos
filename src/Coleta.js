@@ -98,6 +98,7 @@ export default function Coleta() {
 	};
 
 	useEffect(() => {
+		clearToastMessages();
 		listaColeta();
 	}, []);
 
