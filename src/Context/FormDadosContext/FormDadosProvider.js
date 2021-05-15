@@ -80,7 +80,7 @@ export const FormDadosProvider = ({ children }) => {
 		let target = parseInt(idItem);
 
 		Object.keys(listaItens).map(datas => {
-			listaItens[datas].map((item, index) => {
+			return listaItens[datas].map(item => {
 				if (item.id === target) {
 					//console.log(Object.keys(listaItens[datas][0]));
 					let keys = Object.keys(item);
@@ -132,7 +132,9 @@ export const FormDadosProvider = ({ children }) => {
 				}
 			});
 		});
+
 		setqntidadeItens(qnt);
+
 		return produtosPorData;
 	};
 

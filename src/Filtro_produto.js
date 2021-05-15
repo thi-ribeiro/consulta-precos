@@ -1,11 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import AutoComplete from './AutoComplete';
 
-export default function Filtro_produto({
-	ativo,
-	onChangetextoFiltro,
-	textoFiltro
-}) {
+export default function Filtro_produto({ ativo, textoFiltro }) {
 	const refe = useRef();
 
 	useEffect(() => {

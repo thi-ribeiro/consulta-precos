@@ -14,7 +14,7 @@ export default function Lista_produtos_itens() {
 		qntidadeItens
 	} = useContext(FormDadosContext);
 	const { chamaToast } = useContext(ToastContext);
-	const [listaItens] = useState(listaProdutos);
+	const [listaItens, setlistaItens] = useState(listaProdutos);
 
 	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
 		let formatter = new Intl.NumberFormat('pt-BR', {
@@ -26,8 +26,6 @@ export default function Lista_produtos_itens() {
 
 		return trim ? result.trim() : result;
 	};
-
-	console.log(qntidadeItens);
 
 	const deletarItemColeta = async e => {
 		let id = parseInt(e.currentTarget.dataset.id);

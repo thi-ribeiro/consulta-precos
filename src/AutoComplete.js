@@ -30,10 +30,10 @@ export default function AutoComplete({
 	// };
 
 	// const handleOutsideClick = e => {
-	// 	handleClick(clickOut.current.closest('form > div'));
+	// 	//handleClick(clickOut.current.closest('form > div'));
 	// 	//PEGO A DIV EXTERNA AO TARGET PRINCIPAL Q EH O INPUT
 	// 	//NO CASO A DIV DO BACKGROUND E CHAMO A FUNCAO HANDLERCLICK
-	// 	console.log(clickOut.current.closest('form > div'));
+	// 	console.log(e);
 	// };
 
 	const autoComplete = ({ target }) => {
@@ -73,8 +73,9 @@ export default function AutoComplete({
 		changeStatusAutoComplete();
 	};
 
-	const changeStatusAutoComplete = _ => {
+	const changeStatusAutoComplete = e => {
 		setautoCompleteStatus(false);
+		//console.log(e);
 		//console.log(valorInicial.current.value);
 	};
 
