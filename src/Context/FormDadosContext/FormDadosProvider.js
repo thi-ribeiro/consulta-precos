@@ -10,15 +10,30 @@ export const FormDadosProvider = ({ children }) => {
 	const [listaTipoprodutos, setlistaTipoprodutos] = useState([]);
 	const [loading, setloading] = useState(false);
 	const [qntidadeItens, setqntidadeItens] = useState(0);
+	const [changelogList, setChangelogList] = useState([]);
 
 	//const [produtoPorData, setprodutoPorData] = useState([]);
 
-	const carregarTipodeProdutos = async _ => {
+	const [contextGlobalFetch] = useState('http://localhost:5000');
+
+	const carregaChangelog = async (ordem) => {
 		setloading(true);
 
 		const response = await fetch(
-			'http://192.168.2.103:5000/lista-tipo-produto'
+			`${contextGlobalFetch}/lista-changelog-asc`
 		);
+
+		if (response.ok) {
+			const jsonRes = await response.json();
+			setChangelogList(jsonRes);
+			setloading(false);
+		}
+	};
+
+	const carregarTipodeProdutos = async (_) => {
+		setloading(true);
+
+		const response = await fetch(`${contextGlobalFetch}/lista-tipo-produto`);
 
 		if (response.ok) {
 			const jsonRes = await response.json();
@@ -32,7 +47,7 @@ export const FormDadosProvider = ({ children }) => {
 		setloading(true);
 
 		const response = await fetch(
-			`http://192.168.2.103:5000/produtos-listagem/${tipoProduto}/${ordem}`
+			`${contextGlobalFetch}/produtos-listagem/${tipoProduto}/${ordem}`
 		);
 		if (response.ok) {
 			const jsonRes = await response.json();
@@ -47,7 +62,7 @@ export const FormDadosProvider = ({ children }) => {
 	const buscaFiltrada = async (tipoProduto, ordem, busca) => {
 		setloading(true);
 		const response = await fetch(
-			`http://192.168.2.103:5000/filtro-produto/${tipoProduto}/${ordem}/${busca}`
+			`${contextGlobalFetch}/filtro-produto/${tipoProduto}/${ordem}/${busca}`
 		);
 
 		if (response.ok) {
@@ -60,7 +75,7 @@ export const FormDadosProvider = ({ children }) => {
 		}
 	};
 
-	const setaStatusPopup = e => {
+	const setaStatusPopup = (e) => {
 		setpopupStatus(!popupStatus);
 
 		seteditarChave([]);
@@ -70,23 +85,23 @@ export const FormDadosProvider = ({ children }) => {
 			: (document.body.style.overflow = 'hidden');
 	};
 
-	const editarItemArray = idItem => {
+	const editarItemArray = (idItem) => {
 		setaStatusPopup();
 		seteditarChave(idItem);
 	};
 
-	const atualizaItemArray = idItem => {
+	const atualizaItemArray = (idItem) => {
 		let listaItens = listaProdutos;
 		let target = parseInt(idItem);
 
-		Object.keys(listaItens).map(datas => {
-			return listaItens[datas].map(item => {
+		Object.keys(listaItens).map((datas) => {
+			return listaItens[datas].map((item) => {
 				if (item.id === target) {
 					//console.log(Object.keys(listaItens[datas][0]));
 					let keys = Object.keys(item);
-					keys.map(i => {
+					keys.map((i) => {
 						//console.log(i);
-						listaItens[i] = editarChave[i];
+						return (listaItens[i] = editarChave[i]);
 					});
 					//console.log(Object.keys(item));
 					// item.marca = 'TESTE!';
@@ -97,7 +112,7 @@ export const FormDadosProvider = ({ children }) => {
 		definirListaProdutos({ listaItens });
 	};
 
-	const definirListaProdutos = lista => {
+	const definirListaProdutos = (lista) => {
 		setlistaProdutos(groupBy(lista));
 	};
 
@@ -105,11 +120,11 @@ export const FormDadosProvider = ({ children }) => {
 		setlistaProdutos([]);
 	};
 
-	const configurarBusca = valores => {
+	const configurarBusca = (valores) => {
 		setconfiguracaoBusca(valores);
 	};
 
-	const groupBy = array => {
+	const groupBy = (array) => {
 		let datas = [];
 		let produtosPorData = [];
 		let qnt = 0;
@@ -120,12 +135,12 @@ export const FormDadosProvider = ({ children }) => {
 			});
 		}
 
-		let unique = datas.filter(function(elem, index, self) {
+		let unique = datas.filter(function (elem, index, self) {
 			return index === self.indexOf(elem);
 		});
 
-		unique.filter(i1 => {
-			produtosPorData[i1] = array.filter(i => {
+		unique.filter((i1) => {
+			produtosPorData[i1] = array.filter((i) => {
 				if (i.coletaFormatada === i1) {
 					qnt += 1;
 					return i.coletaFormatada === i1;
@@ -158,7 +173,10 @@ export const FormDadosProvider = ({ children }) => {
 				busca,
 				carregarTipodeProdutos,
 				listaTipoprodutos,
-				loading
+				loading,
+				carregaChangelog,
+				changelogList,
+				setChangelogList,
 			}}>
 			{children}
 		</FormDadosContext.Provider>

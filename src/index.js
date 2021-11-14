@@ -23,7 +23,9 @@ ReactDOM.render(
 			<Toast>
 				<Switch>
 					<Route path='/' exact>
-						<Home />
+						<FormDadosProvider>
+							<Home />
+						</FormDadosProvider>
 					</Route>
 
 					<Route path='/consulta'>

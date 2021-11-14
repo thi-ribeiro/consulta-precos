@@ -3,7 +3,7 @@ import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
-	NavLink
+	NavLink,
 } from 'react-router-dom';
 
 export default function Menu() {

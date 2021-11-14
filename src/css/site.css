@@ -593,4 +593,31 @@ body .coleta-vazia {
   font-size: larger;
   color: black;
 }
+
+body .container-changelog {
+  margin: 10px;
+}
+
+body .container-changelog .container-changelog-item {
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: #eee;
+  margin: 10px;
+}
+
+body .container-changelog .container-changelog-item-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  background-color: rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  font-weight: bold;
+  padding: 5px;
+}
+
+body .container-changelog .container-changelog-item-conteudo {
+  padding: 5px;
+}
 /*# sourceMappingURL=site.css.map */

@@ -14,7 +14,7 @@ export default function Form_dados_coleta({ atualizar }) {
 
 	let data = new Date();
 
-	const formatData = valor => {
+	const formatData = (valor) => {
 		let valorStr = valor.toString();
 		if (valorStr.length <= 1) {
 			return 0 + valorStr;
@@ -33,12 +33,12 @@ export default function Form_dados_coleta({ atualizar }) {
 	let dataCompleta = `${ano}-${mes}-${dia} ${hora}:${minuto}:${sec}`;
 
 	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
-		let retorno = '0,00';
+		let retorno = null;
 
 		if (num) {
 			let formatter = new Intl.NumberFormat('pt-BR', {
 				style: 'currency',
-				currency: 'BRL'
+				currency: 'BRL',
 			});
 
 			let result = formatter.format(num).replace(replace, replaceTo);
@@ -49,7 +49,7 @@ export default function Form_dados_coleta({ atualizar }) {
 		return retorno;
 	};
 
-	const postarDados = async e => {
+	const postarDados = async (e) => {
 		e.preventDefault();
 		//clearToastMessages();
 		//setpostarDadosController(true);
@@ -72,11 +72,11 @@ export default function Form_dados_coleta({ atualizar }) {
 					dataColeta: dataColeta,
 					marca: marca,
 					tipoProduto: tipoProduto,
-					preco: preco
+					preco: preco,
 				}),
 				headers: {
-					'Content-Type': 'application/json'
-				}
+					'Content-Type': 'application/json',
+				},
 			});
 
 			if (response.ok) {
@@ -91,11 +91,11 @@ export default function Form_dados_coleta({ atualizar }) {
 					dataColeta: dataColeta,
 					marca: marca,
 					tipoProduto: tipoProduto,
-					preco: preco
+					preco: preco,
 				}),
 				headers: {
-					'Content-Type': 'application/json'
-				}
+					'Content-Type': 'application/json',
+				},
 			});
 
 			if (response.ok) {
@@ -113,7 +113,7 @@ export default function Form_dados_coleta({ atualizar }) {
 		//}
 	};
 
-	const valorEdicao = chave => {
+	const valorEdicao = (chave) => {
 		//console.log(editarChave['id']);
 		if (editarChave.id) {
 			return editarChave[chave];
@@ -123,7 +123,7 @@ export default function Form_dados_coleta({ atualizar }) {
 	return popupStatus ? (
 		<form className='formulario-coleta-dados' onSubmit={postarDados}>
 			<div className='background-adicionar-dados'>
-				<div className='fechar-form-coleta' onClick={e => setaStatusPopup()}>
+				<div className='fechar-form-coleta' onClick={(e) => setaStatusPopup()}>
 					<Icon path={mdiClose} title='Filtrar' size={1} color='#000' />
 				</div>
 
@@ -179,6 +179,7 @@ export default function Form_dados_coleta({ atualizar }) {
 									'',
 									true
 								)}
+								placeholder='R$ 0,00'
 								autoComplete='off'
 							/>
 						</div>
