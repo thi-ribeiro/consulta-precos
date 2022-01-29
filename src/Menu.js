@@ -17,12 +17,17 @@ export default function Menu() {
 				</li>
 				<li>
 					<NavLink exact to='/consulta' activeClassName='selected'>
-						Consulta Produtos
+						Consulta
 					</NavLink>
 				</li>
 				<li>
 					<NavLink exact to='/coleta' activeClassName='selected'>
 						Coleta
+					</NavLink>
+				</li>
+				<li>
+					<NavLink exact to='/login' activeClassName='selected'>
+						Login
 					</NavLink>
 				</li>
 			</ul>

@@ -87,7 +87,7 @@ export default function AutoComplete({
 
 	const retornoAutoComplete = async () => {
 		let response = await fetch(
-			`http://192.168.2.103:5000/lista-auto-complete/${colunaBusca}/${tipoProduto}`
+			`http://localhost:5000/lista-auto-complete/${colunaBusca}/${tipoProduto}`
 		);
 
 		if (response.ok) {

@@ -12,16 +12,15 @@ import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Coleta() {
 	const { clearToastMessages } = useContext(ToastContext);
-	const { definirListaProdutos, setaStatusPopup } = useContext(
-		FormDadosContext
-	);
+	const { definirListaProdutos, setaStatusPopup } =
+		useContext(FormDadosContext);
 
 	//const [formularioAtivo, setformularioAtivo] = useState(false);
 	const [loading, setLoading] = useState(false);
 
 	let data = new Date();
 
-	const formatData = valor => {
+	const formatData = (valor) => {
 		let valorStr = valor.toString();
 		if (valorStr.length <= 1) {
 			return 0 + valorStr;
@@ -36,16 +35,16 @@ export default function Coleta() {
 
 	let dataCompletaEscape = `${dia}-${mes}-${ano}`;
 
-	const formEditar = _ => {
+	const formEditar = (_) => {
 		clearToastMessages();
 		setaStatusPopup();
 	};
 
-	const listagemColeta = async _ => {
+	const listagemColeta = async (_) => {
 		console.log('cheguei aki dentro de coleta!');
 		setLoading(true);
 		const response = await fetch(
-			`http://192.168.2.103:5000/consulta-coleta-atual/${dataCompletaEscape}`
+			`http://localhost:5000/consulta-coleta-atual/${dataCompletaEscape}`
 		);
 
 		if (response.ok) {
@@ -55,7 +54,7 @@ export default function Coleta() {
 		}
 	};
 
-	const filtrarResultados = async e => {
+	const filtrarResultados = async (e) => {
 		e.preventDefault();
 
 		clearToastMessages();
@@ -67,7 +66,7 @@ export default function Coleta() {
 
 		//if (filtroTexto) {
 		const response = await fetch(
-			`http://192.168.2.103:5000/filtro-coleta-atual/${dataCompletaEscape}/${filtroOpcoes}/${filtroTexto}/${filtroOrdem}`
+			`http://localhost:5000/filtro-coleta-atual/${dataCompletaEscape}/${filtroOpcoes}/${filtroTexto}/${filtroOrdem}`
 		);
 
 		if (response.ok) {
@@ -78,16 +77,16 @@ export default function Coleta() {
 		//}
 	};
 
-	const filtroBuscaValor = e => {
+	const filtroBuscaValor = (e) => {
 		if (!e.target.value) {
 			listagemColeta();
 		}
 	};
 
-	const listaColeta = async _ => {
+	const listaColeta = async (_) => {
 		setLoading(true);
 		const response = await fetch(
-			`http://192.168.2.103:5000/consulta-coleta-atual/${dataCompletaEscape}`
+			`http://localhost:5000/consulta-coleta-atual/${dataCompletaEscape}`
 		);
 
 		if (response.ok) {

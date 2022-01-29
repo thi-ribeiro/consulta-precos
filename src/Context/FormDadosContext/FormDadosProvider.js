@@ -19,9 +19,7 @@ export const FormDadosProvider = ({ children }) => {
 	const carregaChangelog = async (ordem) => {
 		setloading(true);
 
-		const response = await fetch(
-			`${contextGlobalFetch}/lista-changelog-asc`
-		);
+		const response = await fetch(`${contextGlobalFetch}/lista-changelog-asc`);
 
 		if (response.ok) {
 			const jsonRes = await response.json();
@@ -174,9 +172,11 @@ export const FormDadosProvider = ({ children }) => {
 				carregarTipodeProdutos,
 				listaTipoprodutos,
 				loading,
+				setloading,
 				carregaChangelog,
 				changelogList,
 				setChangelogList,
+				contextGlobalFetch,
 			}}>
 			{children}
 		</FormDadosContext.Provider>

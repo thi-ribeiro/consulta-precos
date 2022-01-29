@@ -1,7 +1,8 @@
 * {
 	box-sizing: border-box;
 	outline: none;
-	font-family: 'Open Sans', 'Roboto', sans-serif;
+	//font-family: 'Open Sans', 'Roboto', sans-serif;
+	font-family: 'Open Sans', sans-serif;
 }
 
 a {
@@ -467,22 +468,27 @@ body {
 		}
 	}
 
-	.addColeta {
+	.floatButton {
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
 		background-color: #eee;
 		border: 1px solid rgba(0, 0, 0, 0.2);
-		box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.2);
+		box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
 		border-radius: 100%;
 		width: 50px;
 		height: 50px;
 		position: fixed;
 		right: 25px;
 		bottom: 25px;
-		//transition: background-color 500ms ease-in-out 0s;
+		transition: border-color, box-shadow 500ms ease-in-out 0s;
 		z-index: 8;
+	}
+
+	.floatButton:hover,
+	.floatButton::selection {
+		box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
 	}
 
 	.coleta-vazia {
@@ -497,22 +503,68 @@ body {
 		margin: 10px;
 
 		.container-changelog-item {
-			border: 1px solid rgba(0, 0, 0, 0.2);
+			font-size: small;
 			background-color: #eee;
+			//border: 1px solid rgba(0, 0, 0, 0.1); //MOD
 			margin: 10px;
+
+			.container-changelog-item-header {
+				//background-color: rgba(0, 0, 0, 0.04);
+				border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+				padding: 5px;
+			}
+
+			.container-changelog-item-conteudo {
+				.item-postagem {
+					list-style: none;
+					display: flex;
+
+					font-weight: bolder;
+					align-items: center;
+					//padding-left: 15px;
+					position: relative;
+					margin: 5px 0 0px 5px;
+					//padding: 0;
+				}
+
+				.list-green,
+				.list-yellow,
+				.list-red {
+					display: flex;
+				}
+
+				.list-green::before,
+				.list-yellow::before,
+				.list-red::before {
+					content: '\203A';
+					font-size: 20px;
+					font-weight: bolder;
+					line-height: 15px;
+					width: 20px;
+				}
+
+				.list-green::before {
+					color: #22a800;
+				}
+
+				.list-yellow::before {
+					color: #dd9104;
+				}
+
+				.list-red::before {
+					color: #ca2104;
+				}
+
+				padding: 5px;
+			}
 		}
 
 		.container-changelog-item-header {
 			display: flex;
-			justify-content: space-between;
-			background-color: rgba(0, 0, 0, 0.05);
-			border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+			//background-color: rgba(0, 0, 0, 0.05);
+			//border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 			font-weight: bold;
-			padding: 5px;
-		}
-
-		.container-changelog-item-conteudo {
-			padding: 5px;
+			//padding-left: 5px;
 		}
 	}
 }

@@ -8,6 +8,7 @@ import Home from './Home';
 import Menu from './Menu';
 import ConsultaProdutos from './Consulta_produtos';
 import Coleta from './Coleta';
+import Login from './Login';
 
 import Teste from './testes/testeFc';
 import { Toast } from './Context/Toast/ToastProvider';
@@ -42,6 +43,10 @@ ReactDOM.render(
 
 					<Route path='/testes'>
 						<Teste />
+					</Route>
+
+					<Route path='/login'>
+						<Login />
 					</Route>
 				</Switch>
 			</Toast>
