@@ -46,7 +46,9 @@ ReactDOM.render(
 					</Route>
 
 					<Route path='/login'>
-						<Login />
+						<FormDadosProvider>
+							<Login />
+						</FormDadosProvider>
 					</Route>
 				</Switch>
 			</Toast>
