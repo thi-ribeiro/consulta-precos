@@ -10,7 +10,7 @@ const ProtectedRoute = ({ isAuth, component: Component, ...rest }) => {
 			render={(props) => {
 				if (isAuth)
 					return (
-						<FormDadosProvider>
+						<FormDadosProvider> 
 							<Component {...props} />
 						</FormDadosProvider>
 					);
