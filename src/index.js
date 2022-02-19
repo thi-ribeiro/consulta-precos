@@ -16,6 +16,8 @@ import { FormDadosProvider } from './Context/FormDadosContext/FormDadosProvider'
 
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
+import ProtectedRoute from './ProtectedRoute';
+
 ReactDOM.render(
 	<React.StrictMode>
 		<Router>
@@ -29,11 +31,17 @@ ReactDOM.render(
 						</FormDadosProvider>
 					</Route>
 
-					<Route path='/consulta'>
-						<FormDadosProvider>
-							<ConsultaProdutos />
-						</FormDadosProvider>
-					</Route>
+					<ProtectedRoute
+						path='/consulta'
+						isAuth={false}
+						component={ConsultaProdutos}
+					/>
+
+					<ProtectedRoute
+						path='/teste'
+						isAuth={false}
+						component={() => <div>TESTE PASSOU!</div>}
+					/>
 
 					<Route path='/coleta'>
 						<FormDadosProvider>
