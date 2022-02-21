@@ -14,7 +14,7 @@ import Teste from './testes/testeFc';
 import { Toast } from './Context/Toast/ToastProvider';
 import { FormDadosProvider } from './Context/FormDadosContext/FormDadosProvider';
 
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import ProtectedRoute from './ProtectedRoute';
 
@@ -24,41 +24,19 @@ ReactDOM.render(
 			<Menu />
 
 			<Toast>
-				<Switch>
-					<Route path='/' exact>
-						<FormDadosProvider>
-							<Home />
-						</FormDadosProvider>
-					</Route>
+				<FormDadosProvider>
+					<Routes>
+						<Route path='/' exact element={<Home />} />
 
-					<ProtectedRoute
-						path='/consulta'
-						isAuth={false}
-						component={ConsultaProdutos}
-					/>
+						<Route path='/' exact element={<ProtectedRoute />}>
+							<Route path='/consulta' element={<ConsultaProdutos />} />
+						</Route>
 
-					<ProtectedRoute
-						path='/teste'
-						isAuth={false}
-						component={() => <div>TESTE PASSOU!</div>}
-					/>
-
-					<Route path='/coleta'>
-						<FormDadosProvider>
-							<Coleta />
-						</FormDadosProvider>
-					</Route>
-
-					<Route path='/testes'>
-						<Teste />
-					</Route>
-
-					<Route path='/login'>
-						<FormDadosProvider>
-							<Login />
-						</FormDadosProvider>
-					</Route>
-				</Switch>
+						<Route path='/coleta' element={<Coleta />} />
+						<Route path='/testes' element={<Teste />} />
+						<Route path='/login' element={<Login />} />
+					</Routes>
+				</FormDadosProvider>
 			</Toast>
 		</Router>
 	</React.StrictMode>,

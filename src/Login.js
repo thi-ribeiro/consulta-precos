@@ -32,6 +32,10 @@ export default function Login() {
 				setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
 				localStorage.setItem('token', jsonRes.token);
 			}
+			setLoginStatus({
+				auth: jsonRes.auth,
+				message: jsonRes.message,
+			});
 		}
 
 		console.log('LOGIN END!');
