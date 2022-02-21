@@ -3,6 +3,7 @@ import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Login() {
 	const [DataUser, setDataUser] = useState({ username: '', userpass: '' });
+	const [LoginStatus, setLoginStatus] = useState(false);
 	const { contextGlobalFetch } = useContext(FormDadosContext);
 
 	const GetData = (e) => {
@@ -26,10 +27,18 @@ export default function Login() {
 		});
 		if (response.ok) {
 			const jsonRes = await response.json();
-			console.log(jsonRes);
+
+			if (jsonRes.token) {
+				setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
+				localStorage.setItem('token', jsonRes.token);
+			}
+			setLoginStatus({
+				auth: jsonRes.auth,
+				message: jsonRes.message,
+			});
 		}
 
-		console.log('CARAI!');
+		console.log('LOGIN END!');
 	};
 
 	return (
@@ -49,6 +58,14 @@ export default function Login() {
 			<input type='button' onClick={Submit} value='Login' />
 
 			<div>{DataUser.username + ' ' + DataUser.userpass}</div>
+			<div style={{ color: 'red', fontWeight: 'bold' }}>
+				Status:
+				{LoginStatus.auth
+					? 'logado!'
+					: LoginStatus.message
+					? LoginStatus.message
+					: 'deslogado!'}
+			</div>
 		</div>
 	);
 }
