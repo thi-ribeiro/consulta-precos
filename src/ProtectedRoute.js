@@ -33,16 +33,17 @@ export default function ProtectedRoute({
 			})
 				.then((res) => res.json())
 				.then((data) => {
-					let { role, username } = data;
-					console.log('usuario ' + username);
+					console.log(data);
+					let { auth } = data;
 
-					if (username) {
-						setAutenticado(true);
+					if (!auth) {
+						navigate('/login');
 					}
+					setAutenticado(auth);
 					//navigate(props.location);
 					//navigate('/consulsta');
 				});
-		} else { 
+		} else {
 			navigate('/login');
 		}
 	}, []);

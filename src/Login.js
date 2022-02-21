@@ -17,6 +17,8 @@ export default function Login() {
 	};
 
 	const Submit = async () => {
+		localStorage.clear();
+		
 		const response = await fetch(`${contextGlobalFetch}/login`, {
 			method: 'POST',
 			headers: {
@@ -25,6 +27,7 @@ export default function Login() {
 			},
 			body: JSON.stringify(DataUser),
 		});
+
 		if (response.ok) {
 			const jsonRes = await response.json();
 
