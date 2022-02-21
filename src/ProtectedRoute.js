@@ -42,7 +42,7 @@ export default function ProtectedRoute({
 					//navigate(props.location);
 					//navigate('/consulsta');
 				});
-		} else {
+		} else { 
 			navigate('/login');
 		}
 	}, []);
