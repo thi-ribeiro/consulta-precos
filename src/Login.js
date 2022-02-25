@@ -18,27 +18,35 @@ export default function Login() {
 
 	const Submit = async () => {
 		localStorage.clear();
-		
+
 		const response = await fetch(`${contextGlobalFetch}/login`, {
-			method: 'POST',
+			method: 'GET',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
+				withCredentials: true,
 			},
 			body: JSON.stringify(DataUser),
 		});
 
 		if (response.ok) {
+			console.log(response);
 			const jsonRes = await response.json();
-
+			
 			if (jsonRes.token) {
 				setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
 				localStorage.setItem('token', jsonRes.token);
+				console.log(jsonRes);
 			}
-			setLoginStatus({
-				auth: jsonRes.auth,
-				message: jsonRes.message,
-			});
+
+			// if (jsonRes.token) {
+			// 	setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
+			// 	localStorage.setItem('token', jsonRes.token);
+			// }
+			// setLoginStatus({
+			// 	auth: jsonRes.auth,
+			// 	message: jsonRes.message,
+			// });
 		}
 
 		console.log('LOGIN END!');
