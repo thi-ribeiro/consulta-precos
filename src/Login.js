@@ -1,5 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
+import axios from 'axios';
+import cookies from 'react-cookie';
 
 export default function Login() {
 	const [DataUser, setDataUser] = useState({ username: '', userpass: '' });
@@ -19,35 +21,67 @@ export default function Login() {
 	const Submit = async () => {
 		localStorage.clear();
 
-		const response = await fetch(`${contextGlobalFetch}/login`, {
-			method: 'GET',
-			headers: {
-				Accept: 'application/json',
-				'Content-Type': 'application/json',
-				withCredentials: true,
-			},
-			body: JSON.stringify(DataUser),
-		});
-
-		if (response.ok) {
-			console.log(response);
-			const jsonRes = await response.json();
-			
-			if (jsonRes.token) {
-				setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
-				localStorage.setItem('token', jsonRes.token);
-				console.log(jsonRes);
+		const response = await axios.post(
+			`${contextGlobalFetch}/login`,
+			{ username: DataUser.username, userpass: DataUser.userpass },
+			{
+				Headers: {
+					//'Access-Control-Allow-Origin': 'htpp://localhost:5000',
+					withCredentials: true,
+				},
 			}
+		);
 
-			// if (jsonRes.token) {
-			// 	setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
-			// 	localStorage.setItem('token', jsonRes.token);
-			// }
-			// setLoginStatus({
-			// 	auth: jsonRes.auth,
-			// 	message: jsonRes.message,
-			// });
+		if (response.status === 200) {
+			console.log(response.data.auth);
+			setLoginStatus({
+				auth: response.data.auth,
+				message: response.data.response,
+			});
 		}
+
+		console.log(response);
+
+		// if (response.ok) {
+		// 	console.log(response);
+		// 	const jsonRes = await response.json();
+
+		// 	console.log(jsonRes);
+
+		// if (jsonRes.token) {
+		// 	setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
+
+		// 	console.log(jsonRes);
+		// }
+		// const response = await fetch(`${contextGlobalFetch}/login`, {
+		// 	method: 'GET',
+		// 	headers: {
+		// 		Accept: 'application/json',
+		// 		'Content-Type': 'application/json',
+		// 		withCredentials: true,
+		// 	},
+		// 	body: JSON.stringify(DataUser),
+		// });
+
+		// if (response.ok) {
+		// 	console.log(response);
+		// 	const jsonRes = await response.json();
+
+		// 	if (jsonRes.token) {
+		// 		setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
+		// 		localStorage.setItem('token', jsonRes.token);
+		// 		console.log(jsonRes);
+		// 	}
+
+		// 	// if (jsonRes.token) {
+		// 	// 	setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
+		// 	// 	localStorage.setItem('token', jsonRes.token);
+		// 	// }
+		// 	// setLoginStatus({
+		// 	// 	auth: jsonRes.auth,
+		// 	// 	message: jsonRes.message,
+		// 	// });
+		//}
 
 		console.log('LOGIN END!');
 	};
