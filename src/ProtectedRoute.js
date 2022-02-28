@@ -6,6 +6,8 @@ import {
 	FormDadosProvider,
 } from './Context/FormDadosContext/FormDadosProvider';
 
+import cookie from 'js-cookie';
+
 export default function ProtectedRoute({
 	// isAuth,
 	// component: Component,
@@ -16,11 +18,14 @@ export default function ProtectedRoute({
 }) {
 	const { contextGlobalFetch } = useContext(FormDadosContext);
 	const [Autenticado, setAutenticado] = useState(false);
+
 	const navigate = useNavigate();
+	let token = cookie.get('token');
 
 	useEffect(() => {
 		//jwt token DO LOCALSTORAGE
-		let token = localStorage.getItem('token');
+
+		console.log(token);
 
 		if (token) {
 			fetch(`${contextGlobalFetch}/auth`, {

@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 import axios from 'axios';
-import cookies from 'react-cookie';
 
 export default function Login() {
 	const [DataUser, setDataUser] = useState({ username: '', userpass: '' });
@@ -21,26 +20,32 @@ export default function Login() {
 	const Submit = async () => {
 		localStorage.clear();
 
-		const response = await axios.post(
-			`${contextGlobalFetch}/login`,
-			{ username: DataUser.username, userpass: DataUser.userpass },
-			{
-				Headers: {
-					//'Access-Control-Allow-Origin': 'htpp://localhost:5000',
-					withCredentials: true,
-				},
-			}
-		);
+		//let dataUsr = { username: DataUser.username, userpass: DataUser.userpass };
 
-		if (response.status === 200) {
-			console.log(response.data.auth);
-			setLoginStatus({
-				auth: response.data.auth,
-				message: response.data.response,
-			});
-		}
+		//const response = await axios.post(`${contextGlobalFetch}/login`, DataUser);
 
-		console.log(response);
+		//axios.defaults.headers['withCredentials'] = true;
+
+		axios
+			.post(`${contextGlobalFetch}/login`, DataUser, {
+				withCredentials: true,
+			})
+			.then((res) =>
+				setLoginStatus({
+					auth: res.data.auth,
+					message: res.data.response,
+				})
+			)
+			.catch((err) => console.log(err));
+
+		// if (response.status === 200) {
+		// 	setLoginStatus({
+		// 		auth: response.data.auth,
+		// 		message: response.data.response,
+		// 	});
+		// }
+
+		//console.log(response);
 
 		// if (response.ok) {
 		// 	console.log(response);
@@ -82,8 +87,6 @@ export default function Login() {
 		// 	// 	message: jsonRes.message,
 		// 	// });
 		//}
-
-		console.log('LOGIN END!');
 	};
 
 	return (
