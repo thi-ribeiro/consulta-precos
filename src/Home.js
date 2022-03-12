@@ -9,17 +9,16 @@ export default function Home(props) {
 	const { contextGlobalFetch, loading, setloading } =
 		useContext(FormDadosContext);
 
-	const carregaChangelog = async (ordem) => {
-		setloading(true);
-		const response = await fetch(`${contextGlobalFetch}/lista-changelog-asc`);
-		if (response.ok) {
-			const jsonRes = await response.json();
-			setlistaChangelog(jsonRes);
-			setloading(false);
-		}
-	};
-
 	useEffect(() => {
+		const carregaChangelog = async (ordem) => {
+			setloading(true);
+			const response = await fetch(`${contextGlobalFetch}/lista-changelog-asc`);
+			if (response.ok) {
+				const jsonRes = await response.json();
+				setlistaChangelog(jsonRes);
+				setloading(false);
+			}
+		};
 		carregaChangelog();
 	}, []);
 

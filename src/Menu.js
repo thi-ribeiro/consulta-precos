@@ -3,6 +3,7 @@ import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
+	Link,
 	NavLink,
 } from 'react-router-dom';
 
@@ -11,22 +12,30 @@ export default function Menu() {
 		<div className='menu'>
 			<ul>
 				<li>
-					<NavLink exact to='/' activeClassName='selected'>
+					<NavLink
+						to='/'
+						className={({ isActive }) => (isActive ? 'selected' : undefined)}>
 						Index
 					</NavLink>
 				</li>
 				<li>
-					<NavLink exact to='/consulta' activeClassName='selected'>
+					<NavLink
+						to='/consulta'
+						className={({ isActive }) => (isActive ? 'selected' : undefined)}>
 						Consulta
 					</NavLink>
 				</li>
 				<li>
-					<NavLink exact to='/coleta' activeClassName='selected'>
+					<NavLink
+						to='/coleta'
+						className={({ isActive }) => (isActive ? 'selected' : undefined)}>
 						Coleta
 					</NavLink>
 				</li>
 				<li>
-					<NavLink exact to='/login' activeClassName='selected'>
+					<NavLink
+						to='/login'
+						className={({ isActive }) => (isActive ? 'selected' : undefined)}>
 						Login
 					</NavLink>
 				</li>

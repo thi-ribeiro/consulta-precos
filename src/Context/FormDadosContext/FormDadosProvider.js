@@ -28,11 +28,12 @@ export const FormDadosProvider = ({ children }) => {
 		}
 	};
 
+	//CONSULTA PRODUTOS
 	const carregarTipodeProdutos = async (_) => {
 		setloading(true);
 
 		const response = await fetch(`${contextGlobalFetch}/lista-tipo-produto`);
-
+		//console.log(response);
 		if (response.ok) {
 			const jsonRes = await response.json();
 

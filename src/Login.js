@@ -1,11 +1,20 @@
 import React, { useState, useContext } from 'react';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
+import { ToastContext } from './Context/Toast/ToastProvider';
+import Toast from './Context/Toast/Toast';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-export default function Login() {
+export default function Login(props) {
 	const [DataUser, setDataUser] = useState({ username: '', userpass: '' });
-	const [LoginStatus, setLoginStatus] = useState(false);
+	const [LoginStatus, setLoginStatus] = useState({
+		auth: false,
+		message: '',
+	});
 	const { contextGlobalFetch } = useContext(FormDadosContext);
+	const { chamaToast } = useContext(ToastContext);
+	const location = useLocation();
+	const navigate = useNavigate();
 
 	const GetData = (e) => {
 		const { name, value } = e.target;
@@ -14,106 +23,61 @@ export default function Login() {
 			[name]: value,
 		});
 
-		console.log(DataUser);
+		//console.log(DataUser);
 	};
 
 	const Submit = async () => {
-		localStorage.clear();
+		setLoginStatus({ message: '' });
+		let { pathname } = location || '/';
 
-		//let dataUsr = { username: DataUser.username, userpass: DataUser.userpass };
-
-		//const response = await axios.post(`${contextGlobalFetch}/login`, DataUser);
-
-		//axios.defaults.headers['withCredentials'] = true;
-
+		//console.log(location);
 		axios
 			.post(`${contextGlobalFetch}/login`, DataUser, {
 				withCredentials: true,
 			})
-			.then((res) =>
-				setLoginStatus({
-					auth: res.data.auth,
-					message: res.data.response,
-				})
-			)
+			.then((res) => {
+				//console.log(res);
+
+				let { auth, message } = res.data;
+
+				//console.log(auth);
+
+				if (auth) {
+					setLoginStatus({
+						auth: auth,
+						message: message,
+					});
+					navigate(pathname, { replace: true });
+					//location.go(0);
+					//href.replace('/');
+					//window.location.reload();
+				} else {
+					chamaToast(message);
+				}
+			})
 			.catch((err) => console.log(err));
-
-		// if (response.status === 200) {
-		// 	setLoginStatus({
-		// 		auth: response.data.auth,
-		// 		message: response.data.response,
-		// 	});
-		// }
-
-		//console.log(response);
-
-		// if (response.ok) {
-		// 	console.log(response);
-		// 	const jsonRes = await response.json();
-
-		// 	console.log(jsonRes);
-
-		// if (jsonRes.token) {
-		// 	setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
-
-		// 	console.log(jsonRes);
-		// }
-		// const response = await fetch(`${contextGlobalFetch}/login`, {
-		// 	method: 'GET',
-		// 	headers: {
-		// 		Accept: 'application/json',
-		// 		'Content-Type': 'application/json',
-		// 		withCredentials: true,
-		// 	},
-		// 	body: JSON.stringify(DataUser),
-		// });
-
-		// if (response.ok) {
-		// 	console.log(response);
-		// 	const jsonRes = await response.json();
-
-		// 	if (jsonRes.token) {
-		// 		setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
-		// 		localStorage.setItem('token', jsonRes.token);
-		// 		console.log(jsonRes);
-		// 	}
-
-		// 	// if (jsonRes.token) {
-		// 	// 	setLoginStatus({ auth: jsonRes.auth, message: jsonRes.response });
-		// 	// 	localStorage.setItem('token', jsonRes.token);
-		// 	// }
-		// 	// setLoginStatus({
-		// 	// 	auth: jsonRes.auth,
-		// 	// 	message: jsonRes.message,
-		// 	// });
-		//}
 	};
 
 	return (
-		<div>
-			<div>
+		<div className='login-page-form'>
+			<div className='login-page-input-text'>
 				<input
 					type='text'
 					name='username'
 					defaultValue=''
 					onChange={GetData}
-					placeholder='User'
+					placeholder='Usuário'
+				/>
+
+				<input
+					type='password'
+					name='userpass'
+					placeholder='Senha'
+					onChange={GetData}
 				/>
 			</div>
-			<div>
-				<input type='password' name='userpass' onChange={GetData} />
-			</div>
 			<input type='button' onClick={Submit} value='Login' />
-
-			<div>{DataUser.username + ' ' + DataUser.userpass}</div>
-			<div style={{ color: 'red', fontWeight: 'bold' }}>
-				Status:
-				{LoginStatus.auth
-					? 'logado!'
-					: LoginStatus.message
-					? LoginStatus.message
-					: 'deslogado!'}
-			</div>
+			<Toast />
 		</div>
 	);
 }

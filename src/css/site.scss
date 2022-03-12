@@ -567,4 +567,28 @@ body {
 			//padding-left: 5px;
 		}
 	}
+
+	.login-page-form {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.login-page-input-text {
+			display: flex;
+			flex-direction: column;
+			margin: 5px;
+			input {
+				margin: 5px;
+			}
+		}
+
+		.status-login {
+			margin: 10px;
+			background-color: red;
+			padding: 10px;
+			color: rgb(255, 255, 255);
+			font-weight: bold;
+			text-transform: uppercase;
+		}
+	}
 }

@@ -7,9 +7,8 @@ import { ToastContext } from './Context/Toast/ToastProvider';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Form_dados_coleta({ atualizar }) {
-	const { setaStatusPopup, popupStatus, editarChave } = useContext(
-		FormDadosContext
-	);
+	const { setaStatusPopup, popupStatus, editarChave, contextGlobalFetch } =
+		useContext(FormDadosContext);
 	const { chamaToast, clearToastMessages } = useContext(ToastContext);
 
 	let data = new Date();
@@ -64,7 +63,7 @@ export default function Form_dados_coleta({ atualizar }) {
 		if (editarChave.id) {
 			let id = editarChave.id;
 
-			let response = await fetch(`http://192.168.2.103:5000/atualizar-coleta`, {
+			let response = await fetch(`${contextGlobalFetch}/atualizar-coleta`, {
 				method: 'POST',
 				body: JSON.stringify({
 					id: id,
@@ -84,7 +83,7 @@ export default function Form_dados_coleta({ atualizar }) {
 				chamaToast(jsonRes.response);
 			}
 		} else {
-			let response = await fetch('http://192.168.2.103:5000/postar-coleta', {
+			let response = await fetch(`${contextGlobalFetch}/postar-coleta`, {
 				method: 'POST',
 				body: JSON.stringify({
 					empresa: empresa,

@@ -28,11 +28,11 @@ ReactDOM.render(
 					<Routes>
 						<Route path='/' exact element={<Home />} />
 
-						<Route path='/' exact element={<ProtectedRoute />}>
+						<Route path='/' element={<ProtectedRoute />}>
 							<Route path='/consulta' element={<ConsultaProdutos />} />
+							<Route path='/coleta' element={<Coleta />} />
 						</Route>
 
-						<Route path='/coleta' element={<Coleta />} />
 						<Route path='/testes' element={<Teste />} />
 						<Route path='/login' element={<Login />} />
 					</Routes>
