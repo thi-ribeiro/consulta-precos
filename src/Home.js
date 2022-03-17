@@ -55,7 +55,7 @@ export default function Home(props) {
 		<div className='container-changelog'>
 			Changelog <br />
 			{Object.keys(listaChangelog).map((dataPostagem, index) => (
-				<div className='container-changelog-item'>
+				<div className='container-changelog-item' key={index}>
 					{loading ? (
 						<Icon
 							path={mdiLoading}
@@ -71,7 +71,7 @@ export default function Home(props) {
 							<div className='container-changelog-item-conteudo'>
 								{Object.keys(listaChangelog[dataPostagem]).map(
 									(comment, ind) => (
-										<ul className='item-postagem'>
+										<ul className='item-postagem' key={ind}>
 											<li
 												className={changeColor(
 													listaChangelog[dataPostagem][comment].tipo

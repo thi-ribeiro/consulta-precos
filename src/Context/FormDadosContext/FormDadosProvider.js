@@ -11,6 +11,7 @@ export const FormDadosProvider = ({ children }) => {
 	const [loading, setloading] = useState(false);
 	const [qntidadeItens, setqntidadeItens] = useState(0);
 	const [changelogList, setChangelogList] = useState([]);
+	//const [statusAuth, setStatusAuth] = useState(false);
 
 	//const [produtoPorData, setprodutoPorData] = useState([]);
 

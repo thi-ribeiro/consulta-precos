@@ -85,6 +85,16 @@ body .menu {
           justify-content: center;
 }
 
+body .menu .login-menu {
+  border-left: 1px dotted rgba(0, 0, 0, 0.3);
+  margin: 0 0 0 10px;
+  padding: 0 0 0 10px !important;
+}
+
+body .menu .login-menu .login-selected {
+  color: #d62b2b;
+}
+
 body .menu ul {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -522,6 +532,9 @@ body .itens-toast {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   -webkit-transition: opacity 1s;
   transition: opacity 1s;
   background-color: gray;

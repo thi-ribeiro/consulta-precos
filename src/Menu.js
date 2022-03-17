@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
 	BrowserRouter as Router,
 	Switch,
@@ -7,7 +7,12 @@ import {
 	NavLink,
 } from 'react-router-dom';
 
+import { AuthContext } from './Context/AuthContext/Auth';
+
 export default function Menu() {
+	const { logout } = useContext(AuthContext);
+	const loggedin = localStorage.getItem('_user');
+
 	return (
 		<div className='menu'>
 			<ul>
@@ -32,12 +37,18 @@ export default function Menu() {
 						Coleta
 					</NavLink>
 				</li>
-				<li>
-					<NavLink
-						to='/login'
-						className={({ isActive }) => (isActive ? 'selected' : undefined)}>
-						Login
-					</NavLink>
+				<li className='login-menu'>
+					{loggedin === 'true' ? (
+						<NavLink to='/login' className='login-selected' onClick={logout}>
+							LOGOUT
+						</NavLink>
+					) : (
+						<NavLink
+							to='/login'
+							className={({ isActive }) => (isActive ? 'selected' : undefined)}>
+							Login
+						</NavLink>
+					)}
 				</li>
 			</ul>
 		</div>

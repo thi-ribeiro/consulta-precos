@@ -13,6 +13,7 @@ import Login from './Login';
 import Teste from './testes/testeFc';
 import { Toast } from './Context/Toast/ToastProvider';
 import { FormDadosProvider } from './Context/FormDadosContext/FormDadosProvider';
+import { Auth } from './Context/AuthContext/Auth';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -21,22 +22,24 @@ import ProtectedRoute from './ProtectedRoute';
 ReactDOM.render(
 	<React.StrictMode>
 		<Router>
-			<Menu />
-
 			<Toast>
-				<FormDadosProvider>
-					<Routes>
-						<Route path='/' exact element={<Home />} />
+				<Auth>
+					<Menu />
 
-						<Route path='/' element={<ProtectedRoute />}>
-							<Route path='/consulta' element={<ConsultaProdutos />} />
-							<Route path='/coleta' element={<Coleta />} />
-						</Route>
+					<FormDadosProvider>
+						<Routes>
+							<Route path='/' exact element={<Home />} />
 
-						<Route path='/testes' element={<Teste />} />
-						<Route path='/login' element={<Login />} />
-					</Routes>
-				</FormDadosProvider>
+							<Route path='/' element={<ProtectedRoute />}>
+								<Route path='/consulta' element={<ConsultaProdutos />} />
+								<Route path='/coleta' element={<Coleta />} />
+							</Route>
+
+							<Route path='/testes' element={<Teste />} />
+							<Route path='/login' element={<Login />} />
+						</Routes>
+					</FormDadosProvider>
+				</Auth>
 			</Toast>
 		</Router>
 	</React.StrictMode>,

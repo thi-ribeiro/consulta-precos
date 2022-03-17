@@ -1,20 +1,10 @@
 import React, { useState, useContext } from 'react';
-import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
-import { ToastContext } from './Context/Toast/ToastProvider';
-import Toast from './Context/Toast/Toast';
-import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
+import { AuthContext } from './Context/AuthContext/Auth';
 
 export default function Login(props) {
 	const [DataUser, setDataUser] = useState({ username: '', userpass: '' });
-	const [LoginStatus, setLoginStatus] = useState({
-		auth: false,
-		message: '',
-	});
-	const { contextGlobalFetch } = useContext(FormDadosContext);
-	const { chamaToast } = useContext(ToastContext);
-	const location = useLocation();
-	const navigate = useNavigate();
+
+	const { loginUsr } = useContext(AuthContext);
 
 	const GetData = (e) => {
 		const { name, value } = e.target;
@@ -26,36 +16,8 @@ export default function Login(props) {
 		//console.log(DataUser);
 	};
 
-	const Submit = async () => {
-		setLoginStatus({ message: '' });
-		let { pathname } = location || '/';
-
-		//console.log(location);
-		axios
-			.post(`${contextGlobalFetch}/login`, DataUser, {
-				withCredentials: true,
-			})
-			.then((res) => {
-				//console.log(res);
-
-				let { auth, message } = res.data;
-
-				//console.log(auth);
-
-				if (auth) {
-					setLoginStatus({
-						auth: auth,
-						message: message,
-					});
-					navigate(pathname, { replace: true });
-					//location.go(0);
-					//href.replace('/');
-					//window.location.reload();
-				} else {
-					chamaToast(message);
-				}
-			})
-			.catch((err) => console.log(err));
+	const Submit = () => {
+		loginUsr(DataUser);
 	};
 
 	return (
@@ -77,7 +39,6 @@ export default function Login(props) {
 				/>
 			</div>
 			<input type='button' onClick={Submit} value='Login' />
-			<Toast />
 		</div>
 	);
 }
