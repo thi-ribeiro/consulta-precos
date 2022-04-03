@@ -3,15 +3,19 @@ import ScaleLoader from 'react-spinners/ScaleLoader';
 import ListaProdutos from './Lista_produtos';
 import Icon from '@mdi/react';
 import { mdiTextSearch } from '@mdi/js';
-import Toast from './Context/Toast/Toast';
+//import Toast from './Context/Toast/Toast';
 
 import { ToastContext } from './Context/Toast/ToastProvider';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
+
+//import { AuthContext } from './Context/AuthContext/Auth';
 
 export default function Consulta_produtos() {
 	const refOrdemList = useRef();
 	const refTipoProd = useRef();
 	const refTextoBusca = useRef();
+
+	//const { verifyAuth } = useContext(AuthContext);
 
 	const {
 		clearItens,
@@ -21,7 +25,7 @@ export default function Consulta_produtos() {
 		busca,
 		carregarTipodeProdutos,
 		listaTipoprodutos,
-		loading
+		loading,
 	} = useContext(FormDadosContext);
 	const { clearToastMessages } = useContext(ToastContext);
 
@@ -29,10 +33,10 @@ export default function Consulta_produtos() {
 		{ ordem: 'preco_desc', desc: 'Preço Maior' },
 		{ ordem: 'preco_asc', desc: 'Preço Menor' },
 		{ ordem: 'coleta_desc', desc: 'Coleta Recente' },
-		{ ordem: 'coleta_asc', desc: 'Coleta Antiga' }
+		{ ordem: 'coleta_asc', desc: 'Coleta Antiga' },
 	];
 
-	const Busca = e => {
+	const Busca = (e) => {
 		e.preventDefault();
 
 		clearToastMessages();
@@ -45,7 +49,7 @@ export default function Consulta_produtos() {
 		configurarBusca({
 			tipoProduto: selectTipoProduto,
 			ordem: selectOrdem,
-			busca: textoBusca
+			busca: textoBusca,
 		});
 
 		textoBusca
@@ -53,7 +57,7 @@ export default function Consulta_produtos() {
 			: busca(selectTipoProduto, selectOrdem);
 	};
 
-	const atualizar = e => {
+	const atualizar = (e) => {
 		//console.log(configuracaoBusca);
 
 		if (configuracaoBusca.busca) {
@@ -68,6 +72,7 @@ export default function Consulta_produtos() {
 	};
 
 	useEffect(() => {
+		//	verifyAuth();
 		clearItens();
 		clearToastMessages();
 		carregarTipodeProdutos(); //FROM PROVIDER
@@ -135,8 +140,6 @@ export default function Consulta_produtos() {
 			) : null}
 
 			<ListaProdutos loading={loading} atualizar={atualizar} />
-
-			<Toast />
 		</div>
 	);
 }

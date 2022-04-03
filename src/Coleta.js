@@ -4,9 +4,7 @@ import ListaProdutos from './Lista_produtos';
 import Icon from '@mdi/react';
 import { mdiTextSearch } from '@mdi/js';
 
-//import FormDadosColeta from './Form_dados_coleta';
-
-import Toast from './Context/Toast/Toast';
+//import Toast from './Context/Toast/Toast';
 import { ToastContext } from './Context/Toast/ToastProvider';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
@@ -15,7 +13,6 @@ export default function Coleta() {
 	const { definirListaProdutos, setaStatusPopup } =
 		useContext(FormDadosContext);
 
-	//const [formularioAtivo, setformularioAtivo] = useState(false);
 	const [loading, setLoading] = useState(false);
 
 	let data = new Date();
@@ -150,7 +147,6 @@ export default function Coleta() {
 
 			<ListaProdutos loading={loading} atualizar={listaColeta} />
 			<IconeAdicionarColeta adicionarForm={formEditar} />
-			<Toast />
 
 			<div className='avoid-overlaping'></div>
 		</div>

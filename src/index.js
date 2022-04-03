@@ -12,6 +12,7 @@ import Login from './Login';
 
 import Teste from './testes/testeFc';
 import { Toast } from './Context/Toast/ToastProvider';
+import ToastElement from './Context/Toast/Toast';
 import { FormDadosProvider } from './Context/FormDadosContext/FormDadosProvider';
 import { Auth } from './Context/AuthContext/Auth';
 
@@ -31,13 +32,18 @@ ReactDOM.render(
 							<Route path='/' exact element={<Home />} />
 
 							<Route path='/' element={<ProtectedRoute />}>
-								<Route path='/consulta' element={<ConsultaProdutos />} />
-								<Route path='/coleta' element={<Coleta />} />
+								<Route
+									path='/consulta'
+									element={<ConsultaProdutos />}
+									replace
+								/>
+								<Route path='/coleta' element={<Coleta />} replace />
 							</Route>
 
 							<Route path='/testes' element={<Teste />} />
 							<Route path='/login' element={<Login />} />
 						</Routes>
+						<ToastElement />
 					</FormDadosProvider>
 				</Auth>
 			</Toast>

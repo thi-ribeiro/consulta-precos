@@ -10,7 +10,7 @@ import {
 import { AuthContext } from './Context/AuthContext/Auth';
 
 export default function Menu() {
-	const { logout } = useContext(AuthContext);
+	const { logout, statusAuth } = useContext(AuthContext);
 	const loggedin = localStorage.getItem('_user');
 
 	return (
@@ -38,7 +38,7 @@ export default function Menu() {
 					</NavLink>
 				</li>
 				<li className='login-menu'>
-					{loggedin === 'true' ? (
+					{loggedin ? (
 						<NavLink to='/login' className='login-selected' onClick={logout}>
 							LOGOUT
 						</NavLink>

@@ -7,29 +7,9 @@ import { ToastContext } from './Context/Toast/ToastProvider';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Form_dados_coleta({ atualizar }) {
-	const { setaStatusPopup, popupStatus, editarChave, contextGlobalFetch } =
+	const { setaStatusPopup, popupStatus, editarChave, contextGlobalFetch, dataCompleta } =
 		useContext(FormDadosContext);
 	const { chamaToast, clearToastMessages } = useContext(ToastContext);
-
-	let data = new Date();
-
-	const formatData = (valor) => {
-		let valorStr = valor.toString();
-		if (valorStr.length <= 1) {
-			return 0 + valorStr;
-		} else {
-			return valorStr;
-		}
-	};
-
-	let dia = formatData(data.getDate());
-	let mes = formatData(data.getMonth() + 1);
-	let ano = formatData(data.getFullYear());
-	let hora = formatData(data.getHours());
-	let minuto = formatData(data.getMinutes());
-	let sec = formatData(data.getSeconds());
-
-	let dataCompleta = `${ano}-${mes}-${dia} ${hora}:${minuto}:${sec}`;
 
 	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
 		let retorno = null;

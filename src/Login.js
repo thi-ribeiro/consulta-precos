@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { AuthContext } from './Context/AuthContext/Auth';
 
-export default function Login(props) {
+export default function Login() {
 	const [DataUser, setDataUser] = useState({ username: '', userpass: '' });
 
 	const { loginUsr } = useContext(AuthContext);
@@ -12,13 +12,15 @@ export default function Login(props) {
 			...DataUser,
 			[name]: value,
 		});
-
-		//console.log(DataUser);
 	};
 
 	const Submit = () => {
 		loginUsr(DataUser);
 	};
+
+	useEffect(() => {
+		localStorage.clear();
+	}, []);
 
 	return (
 		<div className='login-page-form'>

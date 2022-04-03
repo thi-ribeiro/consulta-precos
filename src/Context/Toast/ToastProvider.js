@@ -7,7 +7,7 @@ export const Toast = ({ children }) => {
 	const [retornoIndex, setretornoIndex] = useState(0);
 	const [childrens, setchildrens] = useState([]);
 
-	const chamaToast = msg => {
+	const chamaToast = (msg) => {
 		setretornoIndex(retornoIndex + 1);
 
 		if (retornoIndex >= 3) {
@@ -19,7 +19,7 @@ export const Toast = ({ children }) => {
 					key={retornoIndex}
 					toastMensagem={msg}
 					index={retornoIndex}
-				/>
+				/>,
 			]);
 		} else {
 			setchildrens([
@@ -28,15 +28,23 @@ export const Toast = ({ children }) => {
 					key={retornoIndex}
 					toastMensagem={msg}
 					index={retornoIndex}
-				/>
+				/>,
 			]);
 		}
 	};
 
-	const clearToastMessages = _ => {
+	const clearToastMessages = (_) => {
 		setchildrens([]);
 		setretornoIndex(0);
 	};
+
+	// useEffect(() => {
+	// 	let timeout = setTimeout(() => {
+	// 		clearToastMessages();
+	// 	}, 10000);
+
+	// 	clearTimeout(timeout);
+	// }, [childrens]);
 
 	return (
 		<ToastContext.Provider

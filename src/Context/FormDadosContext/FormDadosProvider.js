@@ -1,4 +1,5 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
+import { AuthContext } from '../AuthContext/Auth';
 
 export const FormDadosContext = createContext();
 
@@ -11,11 +12,41 @@ export const FormDadosProvider = ({ children }) => {
 	const [loading, setloading] = useState(false);
 	const [qntidadeItens, setqntidadeItens] = useState(0);
 	const [changelogList, setChangelogList] = useState([]);
+	const [changelogPopupState, setchangelogPopupState] = useState(false);
 	//const [statusAuth, setStatusAuth] = useState(false);
 
+	const { verifyAuth, statusAuth } = useContext(AuthContext);
 	//const [produtoPorData, setprodutoPorData] = useState([]);
 
 	const [contextGlobalFetch] = useState('http://localhost:5000');
+
+	let data = new Date();
+
+	const formatData = (valor) => {
+		let valorStr = valor.toString();
+		if (valorStr.length <= 1) {
+			return 0 + valorStr;
+		} else {
+			return valorStr;
+		}
+	};
+
+	let dia = formatData(data.getDate());
+	let mes = formatData(data.getMonth() + 1);
+	let ano = formatData(data.getFullYear());
+	let hora = formatData(data.getHours());
+	let minuto = formatData(data.getMinutes());
+	let sec = formatData(data.getSeconds());
+
+	let dataCompleta = `${ano}-${mes}-${dia} ${hora}:${minuto}:${sec}`;
+
+	let userDataLocalStorage = localStorage.getItem('_user') || false;
+	let userState = userDataLocalStorage
+		? JSON.parse(userDataLocalStorage).auth
+		: false;
+	let userStateUsername = userDataLocalStorage
+		? JSON.parse(userDataLocalStorage).username
+		: false;
 
 	const carregaChangelog = async (ordem) => {
 		setloading(true);
@@ -83,6 +114,11 @@ export const FormDadosProvider = ({ children }) => {
 		popupStatus
 			? (document.body.style.overflow = 'unset')
 			: (document.body.style.overflow = 'hidden');
+	};
+
+	const changelogPopup = () => {
+		//console.log(!changelogPopupState);
+		setchangelogPopupState(!changelogPopupState);
 	};
 
 	const editarItemArray = (idItem) => {
@@ -153,6 +189,10 @@ export const FormDadosProvider = ({ children }) => {
 		return produtosPorData;
 	};
 
+	useEffect(() => {
+		//verifyAuth(); //DESATIVADO MUITAS REQUISICOES AO ENTRAR NAS PAGINAS
+	}, [verifyAuth]);
+
 	return (
 		<FormDadosContext.Provider
 			value={{
@@ -179,6 +219,11 @@ export const FormDadosProvider = ({ children }) => {
 				changelogList,
 				setChangelogList,
 				contextGlobalFetch,
+				changelogPopup,
+				changelogPopupState,
+				dataCompleta,
+				userStateUsername,
+				userState,
 			}}>
 			{children}
 		</FormDadosContext.Provider>

@@ -4,23 +4,48 @@ import Icon from '@mdi/react';
 import { mdiLoading, mdiAlphaRBox, mdiAlphaMBox } from '@mdi/js';
 import AddChanges from './Icone_adicionar_coleta';
 
+import _ from 'lodash';
+
+import ChangelogForm from './ChangelogForm';
+
 export default function Home(props) {
-	const [listaChangelog, setlistaChangelog] = useState({});
-	const { contextGlobalFetch, loading, setloading } =
-		useContext(FormDadosContext);
+	const [listaChangelog, setlistaChangelog] = useState('');
+	//const [loggedIn, setloggeIn] = useState(false);
+
+	const {
+		contextGlobalFetch,
+		loading,
+		setloading,
+		changelogPopup,
+		//changelogPopupState,
+		userState
+	} = useContext(FormDadosContext);
 
 	useEffect(() => {
-		const carregaChangelog = async (ordem) => {
-			setloading(true);
-			const response = await fetch(`${contextGlobalFetch}/lista-changelog-asc`);
-			if (response.ok) {
-				const jsonRes = await response.json();
-				setlistaChangelog(jsonRes);
+		setloading(true);
+
+		//let userState = localStorage.getItem('_user')
+		//	? JSON.parse(localStorage.getItem('_user')).auth
+		//	: false;
+
+		//setloggeIn(userState);
+
+		fetch(`${contextGlobalFetch}/lista-changelog-datas-asc`)
+			.then((response) => {
+				if (response.status === 200) {
+					return response.json();
+				} else {
+					throw new Error('Something went wrong on api server!');
+				}
+			})
+			.then((data) => {
+				setlistaChangelog(_.groupBy(data, 'dataGroup'));
 				setloading(false);
-			}
-		};
-		carregaChangelog();
-	}, []);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	}, [setloading]);
 
 	const changeIcon = (tipo) => {
 		switch (true) {
@@ -54,6 +79,7 @@ export default function Home(props) {
 	return (
 		<div className='container-changelog'>
 			Changelog <br />
+			{'auth: ' + userState}
 			{Object.keys(listaChangelog).map((dataPostagem, index) => (
 				<div className='container-changelog-item' key={index}>
 					{loading ? (
@@ -64,7 +90,7 @@ export default function Home(props) {
 							style={{ textAlign: 'center' }}
 						/>
 					) : (
-						<>
+						<div>
 							<div className='container-changelog-item-header'>
 								{dataPostagem}
 							</div>
@@ -82,11 +108,12 @@ export default function Home(props) {
 									)
 								)}
 							</div>
-							<AddChanges />
-						</>
+						</div>
 					)}
 				</div>
 			))}
+			<AddChanges adicionarForm={changelogPopup} visivel={userState} />
+			<ChangelogForm />
 		</div>
 	);
 }
