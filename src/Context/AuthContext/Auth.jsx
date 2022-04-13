@@ -2,7 +2,6 @@ import React, { useState, createContext, useContext, useEffect } from 'react';
 
 //import { axios } from 'axios';
 import { ToastContext } from '../Toast/ToastProvider';
-import ToastElement from '../Toast/Toast';
 
 import { useNavigate, useLocation } from 'react-router';
 
@@ -12,7 +11,7 @@ export const Auth = ({ children }) => {
 	const [statusAuth, setstatusAuth] = useState(false);
 	const [authUser, setAuthUser] = useState('');
 	const [message, setmessage] = useState('');
-	const [contextGlobalFetch] = useState('http://localhost:5000');
+	const [contextGlobalFetch] = useState('http://192.168.2.12:5000');
 	const { chamaToast, clearToastMessages } = useContext(ToastContext);
 
 	const navigate = useNavigate();

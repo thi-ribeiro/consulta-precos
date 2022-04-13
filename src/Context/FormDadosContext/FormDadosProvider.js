@@ -1,5 +1,7 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { AuthContext } from '../AuthContext/Auth';
+import { ToastContext } from '../Toast/ToastProvider';
+import _ from 'lodash';
 
 export const FormDadosContext = createContext();
 
@@ -12,13 +14,18 @@ export const FormDadosProvider = ({ children }) => {
 	const [loading, setloading] = useState(false);
 	const [qntidadeItens, setqntidadeItens] = useState(0);
 	const [changelogList, setChangelogList] = useState([]);
+	const [changelogEditDados, setchangelogEditDados] = useState([]);
 	const [changelogPopupState, setchangelogPopupState] = useState(false);
+	const [changelogEditPopupState, setchangelogEditPopupState] = useState(false);
+	const [listaChangelog, setlistaChangelog] = useState('');
+	const [idEditarChangelog, setidEditarChangelog] = useState('');
 	//const [statusAuth, setStatusAuth] = useState(false);
 
-	const { verifyAuth, statusAuth } = useContext(AuthContext);
+	const { verifyAuth } = useContext(AuthContext);
+	const { chamaToast } = useContext(ToastContext);
 	//const [produtoPorData, setprodutoPorData] = useState([]);
 
-	const [contextGlobalFetch] = useState('http://localhost:5000');
+	const [contextGlobalFetch] = useState('http://192.168.2.12:5000');
 
 	let data = new Date();
 
@@ -48,16 +55,64 @@ export const FormDadosProvider = ({ children }) => {
 		? JSON.parse(userDataLocalStorage).username
 		: false;
 
+	const postChangelog = async (e) => {
+		e.preventDefault();
+
+		let tipo = e.target.tipoPostagem.value;
+		let descricao = e.target.descricao.value;
+
+		const response = await fetch(`${contextGlobalFetch}/post-changelog`, {
+			method: 'POST',
+			credentials: 'include',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				user: userStateUsername,
+				data: dataCompleta,
+				tipo: tipo,
+				descricao: descricao,
+			}),
+		});
+
+		if (response.ok) {
+			const jsonres = await response.json();
+			const { message } = jsonres;
+
+			chamaToast(message);
+			setchangelogPopupState(false);
+
+			carregaChangelog();
+		}
+	};
+
+	const carregarIdChangelog = async (id) => {
+		const response = await fetch(
+			`${contextGlobalFetch}/changelog-editar/${id}`
+		);
+
+		if (response.ok) {
+			const data = await response.json();
+			setchangelogEditDados(data[0]);
+		}
+	};
+
 	const carregaChangelog = async (ordem) => {
 		setloading(true);
 
-		const response = await fetch(`${contextGlobalFetch}/lista-changelog-asc`);
-
-		if (response.ok) {
-			const jsonRes = await response.json();
-			setChangelogList(jsonRes);
-			setloading(false);
-		}
+		fetch(`${contextGlobalFetch}/lista-changelog-datas-asc`)
+			.then((response) => {
+				if (response.status === 200) {
+					return response.json();
+				} else {
+					throw new Error('Something went wrong on api server!');
+				}
+			})
+			.then((data) => {
+				setlistaChangelog(_.groupBy(data, 'dataGroup'));
+				setloading(false);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
 
 	//CONSULTA PRODUTOS
@@ -119,6 +174,16 @@ export const FormDadosProvider = ({ children }) => {
 	const changelogPopup = () => {
 		//console.log(!changelogPopupState);
 		setchangelogPopupState(!changelogPopupState);
+	};
+
+	const changelogEditPopup = (e) => {
+		setchangelogEditPopupState(!changelogEditPopupState);
+		//carregarIdChangelog(id);
+
+		if (!changelogEditPopupState) {
+			carregarIdChangelog(e.currentTarget.dataset.edit);
+			console.log(e.currentTarget.dataset.edit);
+		}
 	};
 
 	const editarItemArray = (idItem) => {
@@ -216,6 +281,7 @@ export const FormDadosProvider = ({ children }) => {
 				loading,
 				setloading,
 				carregaChangelog,
+				listaChangelog,
 				changelogList,
 				setChangelogList,
 				contextGlobalFetch,
@@ -224,6 +290,11 @@ export const FormDadosProvider = ({ children }) => {
 				dataCompleta,
 				userStateUsername,
 				userState,
+				postChangelog,
+				carregarIdChangelog,
+				changelogEditDados,
+				changelogEditPopup,
+				changelogEditPopupState,
 			}}>
 			{children}
 		</FormDadosContext.Provider>

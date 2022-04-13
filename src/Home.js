@@ -1,71 +1,38 @@
 import React, { useEffect, useContext, useState } from 'react';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 import Icon from '@mdi/react';
-import { mdiLoading, mdiAlphaRBox, mdiAlphaMBox } from '@mdi/js';
+import {
+	mdiLoading,
+	mdiClipboardRemoveOutline,
+	mdiClipboardEditOutline,
+	mdiBookEditOutline,
+} from '@mdi/js';
+import ChangelogEdit from './ChangelogEdit';
 import AddChanges from './Icone_adicionar_coleta';
-
-import _ from 'lodash';
 
 import ChangelogForm from './ChangelogForm';
 
-export default function Home(props) {
-	const [listaChangelog, setlistaChangelog] = useState('');
-	//const [loggedIn, setloggeIn] = useState(false);
-
+export default function Home() {
 	const {
-		contextGlobalFetch,
 		loading,
-		setloading,
+		carregaChangelog,
+		listaChangelog,
 		changelogPopup,
-		//changelogPopupState,
-		userState
+		userState,
+		changelogEditPopup,
+		carregarIdChangelog,
 	} = useContext(FormDadosContext);
 
 	useEffect(() => {
-		setloading(true);
-
-		//let userState = localStorage.getItem('_user')
-		//	? JSON.parse(localStorage.getItem('_user')).auth
-		//	: false;
-
-		//setloggeIn(userState);
-
-		fetch(`${contextGlobalFetch}/lista-changelog-datas-asc`)
-			.then((response) => {
-				if (response.status === 200) {
-					return response.json();
-				} else {
-					throw new Error('Something went wrong on api server!');
-				}
-			})
-			.then((data) => {
-				setlistaChangelog(_.groupBy(data, 'dataGroup'));
-				setloading(false);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-	}, [setloading]);
-
-	const changeIcon = (tipo) => {
-		switch (true) {
-			case tipo === 'R':
-				return mdiAlphaRBox;
-
-			case tipo === 'M':
-				return mdiAlphaMBox;
-
-			default:
-				break;
-		}
-	};
+		carregaChangelog();
+	}, []);
 
 	const changeColor = (tipo) => {
 		switch (true) {
-			case tipo === 'P':
+			case tipo === 'I':
 				return 'list-green';
 
-			case tipo === 'M':
+			case tipo === 'A':
 				return 'list-yellow';
 
 			case tipo === 'R':
@@ -78,8 +45,8 @@ export default function Home(props) {
 
 	return (
 		<div className='container-changelog'>
-			Changelog <br />
-			{'auth: ' + userState}
+			<h1>Changelog</h1>
+
 			{Object.keys(listaChangelog).map((dataPostagem, index) => (
 				<div className='container-changelog-item' key={index}>
 					{loading ? (
@@ -95,18 +62,34 @@ export default function Home(props) {
 								{dataPostagem}
 							</div>
 							<div className='container-changelog-item-conteudo'>
-								{Object.keys(listaChangelog[dataPostagem]).map(
-									(comment, ind) => (
-										<ul className='item-postagem' key={ind}>
-											<li
-												className={changeColor(
-													listaChangelog[dataPostagem][comment].tipo
-												)}>
-												{listaChangelog[dataPostagem][comment].comentario}
+								<ul className='item-postagem' key={index}>
+									{Object.keys(listaChangelog[dataPostagem]).map(
+										(comment, ind) => (
+											<li>
+												<div
+													className={changeColor(
+														listaChangelog[dataPostagem][comment].tipo
+													)}></div>
+												<div className='item-changelog-comentario'>
+													{listaChangelog[dataPostagem][comment].comentario}
+
+													{userState ? (
+														<div className='item-edit'>
+															<button
+																data-edit={
+																	listaChangelog[dataPostagem][comment].id
+																}
+																onClick={changelogEditPopup}>
+																<Icon path={mdiClipboardEditOutline} size={1} />
+															</button>
+															<Icon path={mdiClipboardRemoveOutline} size={1} />
+														</div>
+													) : null}
+												</div>
 											</li>
-										</ul>
-									)
-								)}
+										)
+									)}
+								</ul>
 							</div>
 						</div>
 					)}
@@ -114,6 +97,7 @@ export default function Home(props) {
 			))}
 			<AddChanges adicionarForm={changelogPopup} visivel={userState} />
 			<ChangelogForm />
+			<ChangelogEdit />
 		</div>
 	);
 }

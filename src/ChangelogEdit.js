@@ -3,29 +3,37 @@ import Icon from '@mdi/react';
 import { mdiClose } from '@mdi/js';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
-export default function ChangelogForm() {
+export default function ChangelogEdit() {
 	const {
-		changelogPopup,
-		changelogPopupState,
+		changelogEditPopupState,
+
 		dataCompleta,
 		userStateUsername,
-		postChangelog,
+		idEditarChangelog,
+		changelogEditDados,
+		changelogEditPopup,
+		carregaIdChangelog,
+		carregarIdChangelog,
 	} = useContext(FormDadosContext);
 
-	return changelogPopupState ? (
+	let { comentario, tipo, data } = changelogEditDados;
+
+	console.log(comentario);
+
+	return changelogEditPopupState ? (
 		<div className='background-adicionar-dados'>
-			<div className='fechar-form-coleta' onClick={changelogPopup}>
+			<div className='fechar-form-coleta' onClick={changelogEditPopup}>
 				<Icon path={mdiClose} title='Filtrar' size={1} color='#000' />
 			</div>
 			<div className='formulario-changelog'>
-				<h1>Adicionar Changelog</h1>
-				<form method='POST' onSubmit={postChangelog}>
+				<h1>Editar Changelog</h1>
+				<form method='POST' onSubmit={(e) => e.preventDefault()}>
 					<div>
 						<input
 							type='hidden'
 							name='data'
 							placeholder='Data'
-							defaultValue={dataCompleta}
+							defaultValue={data}
 							disabled
 						/>
 					</div>
@@ -39,9 +47,9 @@ export default function ChangelogForm() {
 						/>
 					</div>
 					<div className='formulario-header'>
-						<div>{userStateUsername + ' - ' + dataCompleta}</div>
+						<div>{userStateUsername + ' - ' + data}</div>
 						<div>
-							<select name='tipoPostagem'>
+							<select name='tipoPostagem' value={tipo}>
 								<option value='I'>Inclusão</option>
 								<option value='A'>Alteração</option>
 								<option value='R'>Remoção</option>
@@ -51,7 +59,8 @@ export default function ChangelogForm() {
 					<div>
 						<textarea
 							name='descricao'
-							placeholder='Descrição das alterações...'></textarea>
+							placeholder='Descrição das alterações...'
+							value={comentario}></textarea>
 					</div>
 					<input type='submit' value='Enviar' />
 				</form>
