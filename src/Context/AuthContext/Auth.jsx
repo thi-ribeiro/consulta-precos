@@ -1,42 +1,22 @@
-import React, { useState, createContext, useContext, useEffect } from 'react';
-
-//import { axios } from 'axios';
+import React, { useState, createContext, useContext } from 'react';
 import { ToastContext } from '../Toast/ToastProvider';
-
 import { useNavigate, useLocation } from 'react-router';
 
 export const AuthContext = createContext();
 
 export const Auth = ({ children }) => {
-	const [statusAuth, setstatusAuth] = useState(false);
-	const [authUser, setAuthUser] = useState('');
-	const [message, setmessage] = useState('');
-	const [contextGlobalFetch] = useState('http://192.168.2.12:5000');
+	const [statusAuth, setstatusAuth] = useState();
+	const [authUser] = useState('');
+	const [message] = useState('');
+	const [contextGlobalFetch] = useState('http://localhost:5000');
 	const { chamaToast, clearToastMessages } = useContext(ToastContext);
+	//const [loadingAuth, setloadingAuth] = useState(false);
 
 	const navigate = useNavigate();
 	const loca = useLocation();
 
-	// const verifyAuth = () => {
-	// 	fetch(`${contextGlobalFetch}/auth`, {
-	// 		credentials: 'include', //PARTE MAIS IMPORTANTE A QUAL SE INCLUI AS CREDENCIAIS
-	// 		mode: 'cors',
-	// 		method: 'GET',
-	// 		headers: { 'Content-Type': 'application/json' },
-	// 	})
-	// 		.then((res) => res.json())
-	// 		.then((data) => {
-	// 			let { auth } = data;
-	// 			setstatusAuth(auth);
-	// 			console.log(data);
-	// 			if (!auth) {
-	// 				localStorage.removeItem('_user');
-	// 			}
-	// 			return auth;
-	// 		});
-	// };
-
 	const verifyAuth = async () => {
+		//setloadingAuth(true);
 		const response = await fetch(`${contextGlobalFetch}/auth`, {
 			credentials: 'include', //PARTE MAIS IMPORTANTE A QUAL SE INCLUI AS CREDENCIAIS
 			mode: 'cors',
@@ -51,8 +31,9 @@ export const Auth = ({ children }) => {
 
 			if (!auth) {
 				localStorage.removeItem('_user');
-				//window.location.reload();
+				setstatusAuth(false);
 			}
+			//setloadingAuth(false);
 		}
 	};
 
@@ -88,14 +69,14 @@ export const Auth = ({ children }) => {
 
 		if (response.ok) {
 			const jsonRes = await response.json();
-			let { auth, message, username } = jsonRes;
+			let { auth, message, username, expiresIn } = jsonRes;
 
 			if (auth) {
 				let paginaAnterior = loca.state ? loca.state.from.pathname : '/';
 
 				localStorage.setItem(
 					'_user',
-					JSON.stringify({ auth: auth, username: username })
+					JSON.stringify({ usuario: username, expiresIn: expiresIn })
 				);
 				setstatusAuth(auth);
 				navigate(paginaAnterior, true);
@@ -104,13 +85,16 @@ export const Auth = ({ children }) => {
 		}
 	};
 
-	useEffect(() => {
-		//clearToastMessages();
-	}, []);
-
 	return (
 		<AuthContext.Provider
-			value={{ authUser, statusAuth, message, verifyAuth, loginUsr, logout }}>
+			value={{
+				authUser,
+				statusAuth,
+				message,
+				verifyAuth,
+				loginUsr,
+				logout,
+			}}>
 			{children}
 		</AuthContext.Provider>
 	);

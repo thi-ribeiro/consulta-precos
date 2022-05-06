@@ -96,6 +96,7 @@ export default function Coleta() {
 	useEffect(() => {
 		clearToastMessages();
 		listaColeta();
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (

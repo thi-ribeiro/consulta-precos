@@ -1,17 +1,9 @@
 import React, { useContext } from 'react';
-import {
-	BrowserRouter as Router,
-	Switch,
-	Route,
-	Link,
-	NavLink,
-} from 'react-router-dom';
-
+import { NavLink } from 'react-router-dom';
 import { AuthContext } from './Context/AuthContext/Auth';
 
 export default function Menu() {
 	const { logout, statusAuth } = useContext(AuthContext);
-	const loggedin = localStorage.getItem('_user');
 
 	return (
 		<div className='menu'>
@@ -38,7 +30,7 @@ export default function Menu() {
 					</NavLink>
 				</li>
 				<li className='login-menu'>
-					{loggedin ? (
+					{statusAuth ? (
 						<NavLink to='/login' className='login-selected' onClick={logout}>
 							LOGOUT
 						</NavLink>

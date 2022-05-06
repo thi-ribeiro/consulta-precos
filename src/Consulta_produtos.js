@@ -76,6 +76,7 @@ export default function Consulta_produtos() {
 		clearItens();
 		clearToastMessages();
 		carregarTipodeProdutos(); //FROM PROVIDER
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return loading ? (

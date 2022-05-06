@@ -1,14 +1,15 @@
-import React, { useEffect, useContext, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 import Icon from '@mdi/react';
 import {
 	mdiLoading,
 	mdiClipboardRemoveOutline,
 	mdiClipboardEditOutline,
-	mdiBookEditOutline,
 } from '@mdi/js';
 import ChangelogEdit from './ChangelogEdit';
 import AddChanges from './Icone_adicionar_coleta';
+
+import { AuthContext } from './Context/AuthContext/Auth';
 
 import ChangelogForm from './ChangelogForm';
 
@@ -20,11 +21,13 @@ export default function Home() {
 		changelogPopup,
 		userState,
 		changelogEditPopup,
-		carregarIdChangelog,
 	} = useContext(FormDadosContext);
+
+	const { statusAuth } = useContext(AuthContext);
 
 	useEffect(() => {
 		carregaChangelog();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const changeColor = (tipo) => {
@@ -65,7 +68,7 @@ export default function Home() {
 								<ul className='item-postagem' key={index}>
 									{Object.keys(listaChangelog[dataPostagem]).map(
 										(comment, ind) => (
-											<li>
+											<li key={ind}>
 												<div
 													className={changeColor(
 														listaChangelog[dataPostagem][comment].tipo
@@ -73,7 +76,7 @@ export default function Home() {
 												<div className='item-changelog-comentario'>
 													{listaChangelog[dataPostagem][comment].comentario}
 
-													{userState ? (
+													{statusAuth ? (
 														<div className='item-edit'>
 															<button
 																data-edit={

@@ -6,19 +6,18 @@ import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 export default function ChangelogEdit() {
 	const {
 		changelogEditPopupState,
-
-		dataCompleta,
+		// dataCompleta,
 		userStateUsername,
-		idEditarChangelog,
+		// idEditarChangelog,
 		changelogEditDados,
 		changelogEditPopup,
-		carregaIdChangelog,
-		carregarIdChangelog,
+		// carregaIdChangelog,
+		// carregarIdChangelog,
 	} = useContext(FormDadosContext);
 
 	let { comentario, tipo, data } = changelogEditDados;
 
-	console.log(comentario);
+	//console.log(comentario);
 
 	return changelogEditPopupState ? (
 		<div className='background-adicionar-dados'>

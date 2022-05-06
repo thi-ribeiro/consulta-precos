@@ -1,10 +1,13 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import { AuthContext } from './Context/AuthContext/Auth';
+//import { useNavigate, useLocation, Navigate } from 'react-router';
 
 export default function Login() {
 	const [DataUser, setDataUser] = useState({ username: '', userpass: '' });
-
 	const { loginUsr } = useContext(AuthContext);
+
+	// const navi = useNavigate();
+	// const loca = useLocation();
 
 	const GetData = (e) => {
 		const { name, value } = e.target;
@@ -17,10 +20,6 @@ export default function Login() {
 	const Submit = () => {
 		loginUsr(DataUser);
 	};
-
-	useEffect(() => {
-		localStorage.clear();
-	}, []);
 
 	return (
 		<div className='login-page-form'>
