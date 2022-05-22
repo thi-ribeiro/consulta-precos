@@ -10,27 +10,31 @@ import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Coleta() {
 	const { clearToastMessages } = useContext(ToastContext);
-	const { definirListaProdutos, setaStatusPopup } =
-		useContext(FormDadosContext);
+	const {
+		definirListaProdutos,
+		setaStatusPopup,
+		dataCompletaEscape,
+		clearItens,
+	} = useContext(FormDadosContext);
 
 	const [loading, setLoading] = useState(false);
 
-	let data = new Date();
+	// let data = new Date();
 
-	const formatData = (valor) => {
-		let valorStr = valor.toString();
-		if (valorStr.length <= 1) {
-			return 0 + valorStr;
-		} else {
-			return valorStr;
-		}
-	};
+	// const formatData = (valor) => {
+	// 	let valorStr = valor.toString();
+	// 	if (valorStr.length <= 1) {
+	// 		return 0 + valorStr;
+	// 	} else {
+	// 		return valorStr;
+	// 	}
+	// };
 
-	let dia = formatData(data.getDate());
-	let mes = formatData(data.getMonth() + 1);
-	let ano = formatData(data.getFullYear());
+	// let dia = formatData(data.getDate());
+	// let mes = formatData(data.getMonth() + 1);
+	// let ano = formatData(data.getFullYear());
 
-	let dataCompletaEscape = `${dia}-${mes}-${ano}`;
+	// let dataCompletaEscape = `${dia}-${mes}-${ano}`;
 
 	const formEditar = (_) => {
 		clearToastMessages();
@@ -88,7 +92,12 @@ export default function Coleta() {
 
 		if (response.ok) {
 			const jsonRes = await response.json();
-			definirListaProdutos(jsonRes);
+
+			if (jsonRes.message) {
+				definirListaProdutos(0);
+			} else {
+				definirListaProdutos(jsonRes);
+			}
 			setLoading(false);
 		}
 	};
@@ -96,12 +105,17 @@ export default function Coleta() {
 	useEffect(() => {
 		clearToastMessages();
 		listaColeta();
-			// eslint-disable-next-line react-hooks/exhaustive-deps
+		clearItens();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return (
 		<div className='coleta-selecao'>
-			<h1>Coleta de dados</h1>
+			<div className='coleta-titulo'>
+				<h1>Coleta de dados</h1>
+				<h5>Dados da data atual {dataCompletaEscape}</h5>
+			</div>
+
 			<form className='form-coleta' onSubmit={filtrarResultados}>
 				<div className='lista-busca-filtrada'>
 					<div className='form-coleta-filtros'>

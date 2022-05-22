@@ -8,7 +8,7 @@ export const Auth = ({ children }) => {
 	const [statusAuth, setstatusAuth] = useState();
 	const [authUser] = useState('');
 	const [message] = useState('');
-	const [contextGlobalFetch] = useState('http://localhost:5000');
+	const [contextGlobalFetch] = useState('http://192.168.2.12:5000');
 	const { chamaToast, clearToastMessages } = useContext(ToastContext);
 	//const [loadingAuth, setloadingAuth] = useState(false);
 

@@ -1,16 +1,12 @@
-import React, { useEffect, useContext } from 'react';
+import React, { useEffect, useContext, useState } from 'react';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 import Icon from '@mdi/react';
-import {
-	mdiLoading,
-	mdiClipboardRemoveOutline,
-	mdiClipboardEditOutline,
-} from '@mdi/js';
+import { mdiLoading } from '@mdi/js';
 import ChangelogEdit from './ChangelogEdit';
 import AddChanges from './Icone_adicionar_coleta';
 
 import { AuthContext } from './Context/AuthContext/Auth';
-
+import EditChangelogPopup from './EditChangelogPopup';
 import ChangelogForm from './ChangelogForm';
 
 export default function Home() {
@@ -19,12 +15,10 @@ export default function Home() {
 		carregaChangelog,
 		listaChangelog,
 		changelogPopup,
-		userState,
 		changelogEditPopup,
 	} = useContext(FormDadosContext);
 
 	const { statusAuth } = useContext(AuthContext);
-
 	useEffect(() => {
 		carregaChangelog();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,18 +70,11 @@ export default function Home() {
 												<div className='item-changelog-comentario'>
 													{listaChangelog[dataPostagem][comment].comentario}
 
-													{statusAuth ? (
-														<div className='item-edit'>
-															<button
-																data-edit={
-																	listaChangelog[dataPostagem][comment].id
-																}
-																onClick={changelogEditPopup}>
-																<Icon path={mdiClipboardEditOutline} size={1} />
-															</button>
-															<Icon path={mdiClipboardRemoveOutline} size={1} />
-														</div>
-													) : null}
+													<EditChangelogPopup
+														editClick={changelogEditPopup}
+														statusAuth={statusAuth}
+														id={listaChangelog[dataPostagem][comment].id}
+													/>
 												</div>
 											</li>
 										)
@@ -98,7 +85,7 @@ export default function Home() {
 					)}
 				</div>
 			))}
-			<AddChanges adicionarForm={changelogPopup} visivel={userState} />
+			<AddChanges adicionarForm={changelogPopup} visivel={statusAuth} />
 			<ChangelogForm />
 			<ChangelogEdit />
 		</div>

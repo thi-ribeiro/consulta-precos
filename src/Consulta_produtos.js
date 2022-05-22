@@ -1,25 +1,19 @@
 import React, { useEffect, useRef, useContext } from 'react';
-import ScaleLoader from 'react-spinners/ScaleLoader';
 import ListaProdutos from './Lista_produtos';
 import Icon from '@mdi/react';
 import { mdiTextSearch } from '@mdi/js';
-//import Toast from './Context/Toast/Toast';
-
 import { ToastContext } from './Context/Toast/ToastProvider';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
-
-//import { AuthContext } from './Context/AuthContext/Auth';
 
 export default function Consulta_produtos() {
 	const refOrdemList = useRef();
 	const refTipoProd = useRef();
 	const refTextoBusca = useRef();
 
-	//const { verifyAuth } = useContext(AuthContext);
-
 	const {
 		clearItens,
-		configurarBusca,
+		//configurarBusca,
+		setconfiguracaoBusca,
 		configuracaoBusca,
 		buscaFiltrada,
 		busca,
@@ -45,8 +39,12 @@ export default function Consulta_produtos() {
 		let selectOrdem = refOrdemList.current.value;
 		let textoBusca = refTextoBusca.current.value;
 
+		//console.log(selectTipoProduto);
+
 		//CONFIG NOVO
-		configurarBusca({
+		//configurarBusca();
+
+		setconfiguracaoBusca({
 			tipoProduto: selectTipoProduto,
 			ordem: selectOrdem,
 			busca: textoBusca,
@@ -76,20 +74,10 @@ export default function Consulta_produtos() {
 		clearItens();
 		clearToastMessages();
 		carregarTipodeProdutos(); //FROM PROVIDER
-			// eslint-disable-next-line react-hooks/exhaustive-deps
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	return loading ? (
-		<div className='tabelas-centralizar'>
-			<ScaleLoader
-				color='silver'
-				width='3px'
-				margin='2px'
-				radius='2px'
-				height='20px'
-			/>
-		</div>
-	) : (
+	return (
 		<div className='tabelas-select'>
 			<h1>Consulta de Produto</h1>
 			{listaTipoprodutos.length ? (
@@ -100,6 +88,7 @@ export default function Consulta_produtos() {
 							name='tipoProduto'
 							className='tabela-select'
 							defaultValue={configuracaoBusca.tipoProduto}>
+							<option key='all'>TODOS</option>
 							{listaTipoprodutos.map((item, index) => (
 								<option key={index}>{item.tipoProduto}</option>
 							))}

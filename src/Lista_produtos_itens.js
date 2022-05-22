@@ -11,27 +11,18 @@ export default function Lista_produtos_itens() {
 		editarItemArray,
 		listaProdutos,
 		setqntidadeItens,
-		qntidadeItens
+		qntidadeItens,
+		formatarMoeda,
+		deletarColeta,
 	} = useContext(FormDadosContext);
-	const { chamaToast } = useContext(ToastContext);
+
 	const [listaItens, setlistaItens] = useState(listaProdutos);
 
-	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
-		let formatter = new Intl.NumberFormat('pt-BR', {
-			style: 'currency',
-			currency: 'BRL'
-		});
-
-		let result = formatter.format(num).replace(replace, replaceTo);
-
-		return trim ? result.trim() : result;
-	};
-
-	const deletarItemColeta = async e => {
+	const deletarItemColeta = async (e) => {
 		let id = parseInt(e.currentTarget.dataset.id);
 		let qnt = qntidadeItens;
 
-		Object.keys(listaItens).map(datas => {
+		Object.keys(listaItens).map((datas) => {
 			listaItens[datas].map((itm, index) => {
 				if (itm.id === id) {
 					listaItens[datas].splice(index, 1);
@@ -39,7 +30,7 @@ export default function Lista_produtos_itens() {
 			});
 		});
 
-		Object.keys(listaItens).map(datas => {
+		Object.keys(listaItens).map((datas) => {
 			if (!listaItens[datas].length) {
 				delete listaItens[datas];
 			}
@@ -47,28 +38,17 @@ export default function Lista_produtos_itens() {
 		});
 
 		qnt -= 1;
-
-		//chamaToast(`Faz de conta q apagou!`);
 		setqntidadeItens(qnt);
-
-		//FETCH SOMENTE ATUALIZA O BD A ATUALIZACAO VISUAL DEPENDE DO ARRAY A CIMA
-		const response = await fetch(
-			`http://192.168.2.103:5000/deletar-produto/${id}`
-		);
-
-		if (response.ok) {
-			const resJson = await response.json();
-			chamaToast(`${resJson.response}`);
-		}
+		deletarColeta(id);
 	};
 
-	const editarItemColeta = e => {
+	const editarItemColeta = (e) => {
 		//let itens = listaItens;
 		let target = parseInt(e.currentTarget.dataset.id);
 		let tar = [];
 
-		Object.keys(listaItens).map(datas => {
-			listaItens[datas].map(item => {
+		Object.keys(listaProdutos).map((datas) => {
+			listaProdutos[datas].map((item) => {
 				if (item.id === target) {
 					//console.log(item);
 					tar = item;
@@ -81,14 +61,21 @@ export default function Lista_produtos_itens() {
 		editarItemArray(tar);
 	};
 
-	return Object.keys(listaItens).map((data, index) => (
+	return Object.keys(listaProdutos).map((data, index) => (
 		<div key={index}>
 			<div className='hl_data'>
 				<span className='dataSpan'>Coleta {data}</span>
 			</div>
 
-			{listaItens[data].map((item, index2) => (
+			{listaProdutos[data].map((item, index2) => (
 				<div key={index2} className='produto-card'>
+					<div
+						className='imgProduto'
+						style={{
+							backgroundImage: `url('${process.env.PUBLIC_URL}/img/${item.imagem}')`,
+							backgroundSize: 'auto',
+							backgroundPosition: 'center center',
+						}}></div>
 					<div className='grid-container'>
 						<div className='Detalhes'>
 							<div className='detalhes-marca-preco'>
@@ -113,22 +100,22 @@ export default function Lista_produtos_itens() {
 						</div>
 						<div className='Funcoes'>
 							<button data-id={item.id} onClick={editarItemColeta}>
-								EDT
 								<Icon
 									path={mdiFileDocumentEditOutline}
 									title='editarItem'
 									size={1}
 									color='rgba(0, 0, 0, 0.5)'
 								/>
+								&nbsp;EDT
 							</button>
 							<button data-id={item.id} onClick={deletarItemColeta}>
-								DEL
 								<Icon
 									path={mdiTextBoxRemoveOutline}
 									title='deletarItem'
 									size={1}
 									color='rgba(0, 0, 0, 0.5)'
 								/>
+								&nbsp;DEL
 							</button>
 						</div>
 					</div>

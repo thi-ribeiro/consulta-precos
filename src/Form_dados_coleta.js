@@ -1,15 +1,26 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import Icon from '@mdi/react';
-import { mdiClose } from '@mdi/js';
+import {
+	mdiClose,
+	mdiFileDocumentEditOutline,
+	mdiTextBoxPlusOutline,
+} from '@mdi/js';
 import AutoComplete from './AutoComplete';
 
 import { ToastContext } from './Context/Toast/ToastProvider';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Form_dados_coleta({ atualizar }) {
-	const { setaStatusPopup, popupStatus, editarChave, contextGlobalFetch, dataCompleta } =
-		useContext(FormDadosContext);
+	const {
+		setaStatusPopup,
+		popupStatus,
+		editarChave,
+		contextGlobalFetch,
+		dataCompleta,
+	} = useContext(FormDadosContext);
 	const { chamaToast, clearToastMessages } = useContext(ToastContext);
+
+	const [imagemUpload, setimagemUpload] = useState();
 
 	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
 		let retorno = null;
@@ -39,49 +50,55 @@ export default function Form_dados_coleta({ atualizar }) {
 		let tipoProduto = e.target.ac_tipoProduto.value.toUpperCase();
 		let preco = e.target.preco.value.replace(',', '.');
 
-		//if (!postarDadosController) {
+		console.log(e.target.imagem.files[0]);
+
+		let dataFormx = new FormData();
+
 		if (editarChave.id) {
 			let id = editarChave.id;
-
-			let response = await fetch(`${contextGlobalFetch}/atualizar-coleta`, {
-				method: 'POST',
-				body: JSON.stringify({
-					id: id,
-					empresa: empresa,
-					dataColeta: dataColeta,
-					marca: marca,
-					tipoProduto: tipoProduto,
-					preco: preco,
-				}),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			});
-
-			if (response.ok) {
-				let jsonRes = await response.json();
-				chamaToast(jsonRes.response);
-			}
-		} else {
-			let response = await fetch(`${contextGlobalFetch}/postar-coleta`, {
-				method: 'POST',
-				body: JSON.stringify({
-					empresa: empresa,
-					dataColeta: dataColeta,
-					marca: marca,
-					tipoProduto: tipoProduto,
-					preco: preco,
-				}),
-				headers: {
-					'Content-Type': 'application/json',
-				},
-			});
-
-			if (response.ok) {
-				let jsonRes = await response.json();
-				chamaToast(jsonRes.response);
-			}
+			dataFormx.append('id', id);
 		}
+
+		dataFormx.append('imagem', e.target.imagem.files[0]);
+		dataFormx.append('empresa', empresa);
+		dataFormx.append('coleta', dataColeta);
+		dataFormx.append('marca', marca);
+		dataFormx.append('tipoProduto', tipoProduto);
+		dataFormx.append('preco', preco);
+
+		//if (!postarDadosController) {
+
+		// if (editarChave.id) {
+		// 	let id = editarChave.id;
+
+		// 	dataFormx.append('id', id);
+
+		let response = await fetch(`${contextGlobalFetch}/postar-coleta`, {
+			method: 'POST',
+			credentials: 'include',
+			mode: 'no-cors',
+			headers: { 'Content-Type': 'application/json' },
+			body: dataFormx,
+		});
+
+		if (response.ok) {
+			let { message } = await response.json();
+			chamaToast(message);
+		}
+		// } else {
+		// 	let response = await fetch(`${contextGlobalFetch}/postar-coleta`, {
+		// 		method: 'POST',
+		// 		credentials: 'include',
+		// 		mode: 'no-cors',
+		// 		headers: { 'Content-Type': 'application/json' },
+		// 		body: dataFormx,
+		// 	});
+
+		// 	if (response.ok) {
+		// 		let { message } = await response.json();
+		// 		chamaToast(message);
+		// 	}
+		// }
 
 		setTimeout(() => {
 			//setpostarDadosController(false);
@@ -99,10 +116,27 @@ export default function Form_dados_coleta({ atualizar }) {
 		}
 	};
 
+	const setImage = (e) => {
+		setimagemUpload(e.target.files[0]);
+		console.log(e.target.files[0]);
+	};
+
+	useEffect(() => {
+		setimagemUpload('');
+	}, []);
+
+	const clearEnd = () => {
+		setimagemUpload();
+		setaStatusPopup();
+	};
+
 	return popupStatus ? (
-		<form className='formulario-coleta-dados' onSubmit={postarDados}>
+		<form
+			className='formulario-coleta-dados'
+			onSubmit={postarDados}
+			encType='multipart/form-data'>
 			<div className='background-adicionar-dados'>
-				<div className='fechar-form-coleta' onClick={(e) => setaStatusPopup()}>
+				<div className='fechar-form-coleta' onClick={(e) => clearEnd(e)}>
 					<Icon path={mdiClose} title='Filtrar' size={1} color='#000' />
 				</div>
 
@@ -162,12 +196,64 @@ export default function Form_dados_coleta({ atualizar }) {
 								autoComplete='off'
 							/>
 						</div>
+
+						<div className='imageUpload'>
+							{valorEdicao('imagem') ? (
+								<div>
+									<div className='tituloSubstituir'>Imagem do produto</div>
+									<div className='olderImage'>
+										{valorEdicao('imagem')}
+										<div className='olderImageContainer'>
+											<img
+												src={`${process.env.PUBLIC_URL}/img/${valorEdicao(
+													'imagem'
+												)}`}
+												alt='prodimg'
+											/>
+										</div>
+									</div>
+								</div>
+							) : (
+								''
+							)}
+							<label htmlFor='carregar_imagem'>
+								{valorEdicao('imagem') ? 'Subistituir ' : 'Carregar nova '}
+								Imagem
+							</label>
+							<input
+								type='file'
+								id='carregar_imagem'
+								name='imagem'
+								onChange={setImage}
+							/>
+							{imagemUpload ? (
+								<div className='imagem_dados'>{imagemUpload.name}</div>
+							) : (
+								''
+							)}
+						</div>
 					</div>
 
 					{editarChave.id ? (
-						<button>Atualizar</button>
+						<button>
+							<Icon
+								path={mdiFileDocumentEditOutline}
+								title='Editar'
+								size={1}
+								color='#000'
+							/>
+							&nbsp; Atualizar
+						</button>
 					) : (
-						<button>Inserir</button>
+						<button>
+							<Icon
+								path={mdiTextBoxPlusOutline}
+								title='Inserir'
+								size={1}
+								color='#000'
+							/>
+							&nbsp;Inserir
+						</button>
 					)}
 				</div>
 			</div>

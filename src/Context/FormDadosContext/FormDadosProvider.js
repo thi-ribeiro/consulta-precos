@@ -1,5 +1,5 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
-import { AuthContext } from '../AuthContext/Auth';
+import React, { useState, createContext, useContext } from 'react';
+//import { AuthContext } from '../AuthContext/Auth';
 import { ToastContext } from '../Toast/ToastProvider';
 import _ from 'lodash';
 
@@ -18,12 +18,10 @@ export const FormDadosProvider = ({ children }) => {
 	const [changelogPopupState, setchangelogPopupState] = useState(false);
 	const [changelogEditPopupState, setchangelogEditPopupState] = useState(false);
 	const [listaChangelog, setlistaChangelog] = useState('');
-	const [idEditarChangelog, setidEditarChangelog] = useState('');
+	const [idEditar, setidEditar] = useState();
 	//const [statusAuth, setStatusAuth] = useState(false);
-
-	const { verifyAuth } = useContext(AuthContext);
+	//const { verifyAuth } = useContext(AuthContext);
 	const { chamaToast } = useContext(ToastContext);
-	//const [produtoPorData, setprodutoPorData] = useState([]);
 
 	const [contextGlobalFetch] = useState('http://192.168.2.12:5000');
 
@@ -46,14 +44,26 @@ export const FormDadosProvider = ({ children }) => {
 	let sec = formatData(data.getSeconds());
 
 	let dataCompleta = `${ano}-${mes}-${dia} ${hora}:${minuto}:${sec}`;
+	let dataCompletaEscape = `${dia}-${mes}-${ano}`;
 
 	let userDataLocalStorage = localStorage.getItem('_user') || false;
-	let userState = userDataLocalStorage
-		? JSON.parse(userDataLocalStorage).auth
-		: false;
+	// let userState = userDataLocalStorage
+	// 	? JSON.parse(userDataLocalStorage).auth
+	// 	: false;
 	let userStateUsername = userDataLocalStorage
-		? JSON.parse(userDataLocalStorage).username
-		: false;
+		? JSON.parse(userDataLocalStorage).usuario
+		: 'CheckAuth!';
+
+	const formatarMoeda = (num, replace, replaceTo, trim = false) => {
+		let formatter = new Intl.NumberFormat('pt-BR', {
+			style: 'currency',
+			currency: 'BRL',
+		});
+
+		let result = formatter.format(num).replace(replace, replaceTo);
+
+		return trim ? result.trim() : result;
+	};
 
 	const postChangelog = async (e) => {
 		e.preventDefault();
@@ -84,14 +94,58 @@ export const FormDadosProvider = ({ children }) => {
 		}
 	};
 
+	const atualizaIdChangelog = async (dados) => {
+		//e.preventDefault();
+		//let tipo = e.target.tipoPostagem.value;
+		//let descricao = e.target.descricao.value;
+		//let id = e.target.id.value;
+
+		//console.log(idEditar);
+		//console.log(dados);
+
+		const response = await fetch(`${contextGlobalFetch}/changelog-atualizar`, {
+			method: 'POST',
+			credentials: 'include',
+			mode: 'cors',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ ...dados, id: idEditar }),
+		});
+		if (response.ok) {
+			const data = await response.json();
+			chamaToast(data.message);
+			carregaChangelog();
+			setchangelogEditPopupState(false);
+		}
+	};
+
 	const carregarIdChangelog = async (id) => {
 		const response = await fetch(
 			`${contextGlobalFetch}/changelog-editar/${id}`
 		);
 
 		if (response.ok) {
+			setchangelogEditDados('');
 			const data = await response.json();
 			setchangelogEditDados(data[0]);
+		}
+	};
+
+	const deletarChangelog = async (e) => {
+		const response = await fetch(`${contextGlobalFetch}/changelog-remover`, {
+			method: 'POST',
+			credentials: 'include',
+			mode: 'cors',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				id: e.target.dataset.id,
+			}),
+		});
+
+		if (response.ok) {
+			const data = await response.json();
+			chamaToast(data.message);
+			carregaChangelog();
+			setchangelogEditPopupState(false);
 		}
 	};
 
@@ -161,6 +215,15 @@ export const FormDadosProvider = ({ children }) => {
 		}
 	};
 
+	const deletarColeta = async (id) => {
+		const response = await fetch(`${contextGlobalFetch}/deletar-produto/${id}`);
+
+		if (response.ok) {
+			const { message } = await response.json();
+			chamaToast(message);
+		}
+	};
+
 	const setaStatusPopup = (e) => {
 		setpopupStatus(!popupStatus);
 
@@ -179,10 +242,9 @@ export const FormDadosProvider = ({ children }) => {
 	const changelogEditPopup = (e) => {
 		setchangelogEditPopupState(!changelogEditPopupState);
 		//carregarIdChangelog(id);
-
+		setidEditar(e.currentTarget.dataset.edit);
 		if (!changelogEditPopupState) {
 			carregarIdChangelog(e.currentTarget.dataset.edit);
-			console.log(e.currentTarget.dataset.edit);
 		}
 	};
 
@@ -214,49 +276,57 @@ export const FormDadosProvider = ({ children }) => {
 	};
 
 	const definirListaProdutos = (lista) => {
-		setlistaProdutos(groupBy(lista));
+		let grupoDatas = _.groupBy(lista, 'coletaFormatada');
+
+		setlistaProdutos(grupoDatas);
+		let qnt = 0;
+		let countDatas = _.countBy(lista, 'coletaFormatada');
+		Object.entries(countDatas).map((item) => (qnt += item[1]));
+
+		setqntidadeItens(qnt);
 	};
 
 	const clearItens = () => {
 		setlistaProdutos([]);
+		setqntidadeItens(0);
 	};
 
-	const configurarBusca = (valores) => {
-		setconfiguracaoBusca(valores);
-	};
+	// const configurarBusca = (valores) => {
+	// 	setconfiguracaoBusca(valores);
+	// };
 
-	const groupBy = (array) => {
-		let datas = [];
-		let produtosPorData = [];
-		let qnt = 0;
+	// const groupBy = (array) => {
+	// 	let datas = [];
+	// 	let produtosPorData = [];
+	// 	let qnt = 0;
 
-		if (array.length) {
-			array.map((e, ind) => {
-				return (datas[ind] = e.coletaFormatada);
-			});
-		}
+	// 	if (array.length) {
+	// 		array.map((e, ind) => {
+	// 			return (datas[ind] = e.coletaFormatada);
+	// 		});
+	// 	}
 
-		let unique = datas.filter(function (elem, index, self) {
-			return index === self.indexOf(elem);
-		});
+	// 	let unique = datas.filter(function (elem, index, self) {
+	// 		return index === self.indexOf(elem);
+	// 	});
 
-		unique.filter((i1) => {
-			produtosPorData[i1] = array.filter((i) => {
-				if (i.coletaFormatada === i1) {
-					qnt += 1;
-					return i.coletaFormatada === i1;
-				}
-			});
-		});
+	// 	unique.filter((i1) => {
+	// 		produtosPorData[i1] = array.filter((i) => {
+	// 			if (i.coletaFormatada === i1) {
+	// 				qnt += 1;
+	// 				return i.coletaFormatada === i1;
+	// 			}
+	// 		});
+	// 	});
 
-		setqntidadeItens(qnt);
+	// 	setqntidadeItens(qnt);
 
-		return produtosPorData;
-	};
+	// 	return produtosPorData;
+	// };
 
-	useEffect(() => {
-		//verifyAuth(); //DESATIVADO MUITAS REQUISICOES AO ENTRAR NAS PAGINAS
-	}, [verifyAuth]);
+	// useEffect(() => {
+	// 	//verifyAuth(); //DESATIVADO MUITAS REQUISICOES AO ENTRAR NAS PAGINAS
+	// }, []);
 
 	return (
 		<FormDadosContext.Provider
@@ -272,11 +342,14 @@ export const FormDadosProvider = ({ children }) => {
 				qntidadeItens,
 				setqntidadeItens,
 				clearItens,
-				configurarBusca,
+				deletarColeta,
+				//configurarBusca,
+				setconfiguracaoBusca,
 				configuracaoBusca,
 				buscaFiltrada,
 				busca,
 				carregarTipodeProdutos,
+				formatarMoeda,
 				listaTipoprodutos,
 				loading,
 				setloading,
@@ -287,14 +360,17 @@ export const FormDadosProvider = ({ children }) => {
 				contextGlobalFetch,
 				changelogPopup,
 				changelogPopupState,
+				atualizaIdChangelog,
 				dataCompleta,
+				dataCompletaEscape,
 				userStateUsername,
-				userState,
 				postChangelog,
 				carregarIdChangelog,
+				idEditar,
 				changelogEditDados,
 				changelogEditPopup,
 				changelogEditPopupState,
+				deletarChangelog,
 			}}>
 			{children}
 		</FormDadosContext.Provider>

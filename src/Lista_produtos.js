@@ -6,9 +6,11 @@ import FormDadosColeta from './Form_dados_coleta';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function Lista_produtos({ loading, atualizar }) {
-	const { qntidadeItens } = useContext(
-		FormDadosContext
-	);
+	const { qntidadeItens } = useContext(FormDadosContext);
+
+	//console.log(qntidadeItens);
+
+	//useEffect(() => {}, [qntidadeItens]);
 
 	return loading ? (
 		<div className='loading-centralizar'>

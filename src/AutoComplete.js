@@ -9,7 +9,7 @@ export default function AutoComplete({
 	limit = 5,
 	referencia = null,
 	placeholder = null,
-	req = true
+	req = true,
 }) {
 	const [autoCompleteArray, setautoCompleteArray] = useState([]);
 	const [filtro, setfiltro] = useState();
@@ -40,7 +40,7 @@ export default function AutoComplete({
 		let arrayAutoComplete = [];
 
 		const busca = autoCompleteArray
-			.filter(e => {
+			.filter((e) => {
 				return e[colunaBusca]
 					.toLowerCase()
 					.includes(target.value.toLowerCase());
@@ -73,13 +73,13 @@ export default function AutoComplete({
 		changeStatusAutoComplete();
 	};
 
-	const changeStatusAutoComplete = e => {
+	const changeStatusAutoComplete = (e) => {
 		setautoCompleteStatus(false);
 		//console.log(e);
 		//console.log(valorInicial.current.value);
 	};
 
-	const keyPressSearch = e => {
+	const keyPressSearch = (e) => {
 		if (e.key === 'Enter' || e.key === 'Escape') {
 			setautoCompleteStatus(false);
 		}
@@ -87,7 +87,7 @@ export default function AutoComplete({
 
 	const retornoAutoComplete = async () => {
 		let response = await fetch(
-			`http://localhost:5000/lista-auto-complete/${colunaBusca}/${tipoProduto}`
+			`http://192.168.2.12:5000/lista-auto-complete/${colunaBusca}/${tipoProduto}`
 		);
 
 		if (response.ok) {
@@ -97,7 +97,7 @@ export default function AutoComplete({
 		}
 	};
 
-	const editarTextbox = _ => {
+	const editarTextbox = (_) => {
 		if (valorEditar) {
 			setvalorSelecionado(valorEditar);
 			return valorEditar;
@@ -125,13 +125,13 @@ export default function AutoComplete({
 			border: '1px solid rgba(0, 0, 0, 0.3)',
 			borderTop: 'none',
 			top: '33px',
-			zIndex: '8'
+			zIndex: '8',
 		},
 		divsAutoCompletar: {
 			display: 'flex',
-			alignItens: 'center'
+			alignItens: 'center',
 			//textTransform: 'uppercase'
-		}
+		},
 	};
 
 	return (

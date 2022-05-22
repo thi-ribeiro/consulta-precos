@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Icon from '@mdi/react';
-import { mdiClose } from '@mdi/js';
+import { mdiClose, mdiTextBoxCheckOutline } from '@mdi/js';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function ChangelogForm() {
@@ -39,7 +39,7 @@ export default function ChangelogForm() {
 						/>
 					</div>
 					<div className='formulario-header'>
-						<div>{userStateUsername + ' - ' + dataCompleta}</div>
+						<div>{`${userStateUsername} - ${dataCompleta}`}</div>
 						<div>
 							<select name='tipoPostagem'>
 								<option value='I'>Inclusão</option>
@@ -53,7 +53,16 @@ export default function ChangelogForm() {
 							name='descricao'
 							placeholder='Descrição das alterações...'></textarea>
 					</div>
-					<input type='submit' value='Enviar' />
+
+					<button>
+						<Icon
+							path={mdiTextBoxCheckOutline}
+							title='Filtrar'
+							size={1}
+							color='#000'
+						/>
+						&nbsp; Enviar
+					</button>
 				</form>
 			</div>
 		</div>

@@ -1,23 +1,30 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Icon from '@mdi/react';
-import { mdiClose } from '@mdi/js';
+import {
+	mdiClose,
+	mdiTextBoxRemoveOutline,
+	mdiTextBoxCheckOutline,
+} from '@mdi/js';
 import { FormDadosContext } from './Context/FormDadosContext/FormDadosProvider';
 
 export default function ChangelogEdit() {
 	const {
 		changelogEditPopupState,
-		// dataCompleta,
 		userStateUsername,
-		// idEditarChangelog,
 		changelogEditDados,
 		changelogEditPopup,
-		// carregaIdChangelog,
-		// carregarIdChangelog,
+		atualizaIdChangelog,
+		deletarChangelog,
 	} = useContext(FormDadosContext);
 
-	let { comentario, tipo, data } = changelogEditDados;
+	let { comentario, tipo, data, id } = changelogEditDados;
 
-	//console.log(comentario);
+	const [dadosForm, setdadosForm] = useState();
+
+	const handlerOnChange = (e) => {
+		setdadosForm({ ...dadosForm, [e.target.name]: e.target.value });
+		//console.log(dadosForm);
+	};
 
 	return changelogEditPopupState ? (
 		<div className='background-adicionar-dados'>
@@ -25,44 +32,62 @@ export default function ChangelogEdit() {
 				<Icon path={mdiClose} title='Filtrar' size={1} color='#000' />
 			</div>
 			<div className='formulario-changelog'>
-				<h1>Editar Changelog</h1>
-				<form method='POST' onSubmit={(e) => e.preventDefault()}>
+				<h1>{`Editar Changelog`}</h1>
+
+				<input type='hidden' name='id' defaultValue={id} />
+				<input type='hidden' name='data' defaultValue={data} />
+				<input type='hidden' name='usuario' defaultValue={userStateUsername} />
+
+				<div className='formulario-header'>
+					<div className='formulario-header-dados-usuario'>
+						<h4>{`Usuário ${userStateUsername}`}</h4>
+						<h5>{`${data}`}</h5>
+					</div>
+
 					<div>
-						<input
-							type='hidden'
-							name='data'
-							placeholder='Data'
-							defaultValue={data}
-							disabled
+						<select
+							key={id}
+							name='tipo'
+							onChange={handlerOnChange}
+							defaultValue={tipo}>
+							<option value='I'>Inclusão</option>
+							<option value='A'>Alteração</option>
+							<option value='R'>Remoção</option>
+						</select>
+					</div>
+				</div>
+				<div>
+					<textarea
+						name='comentario'
+						placeholder='Descrição das alterações...'
+						onChange={handlerOnChange}
+						key={id}
+						defaultValue={comentario}></textarea>
+				</div>
+				<div className='formulario-editar-buttons'>
+					<button
+						data-id={id}
+						onClick={() => {
+							atualizaIdChangelog(dadosForm);
+						}}>
+						<Icon
+							path={mdiTextBoxCheckOutline}
+							title='Filtrar'
+							size={1}
+							color='#000'
 						/>
-					</div>
-					<div>
-						<input
-							type='hidden'
-							name='usuario'
-							placeholder='Usuário'
-							defaultValue={userStateUsername}
-							disabled
+						&nbsp; Editar
+					</button>
+					<button data-id={id} onClick={deletarChangelog}>
+						<Icon
+							path={mdiTextBoxRemoveOutline}
+							title='Filtrar'
+							size={1}
+							color='#000'
 						/>
-					</div>
-					<div className='formulario-header'>
-						<div>{userStateUsername + ' - ' + data}</div>
-						<div>
-							<select name='tipoPostagem' value={tipo}>
-								<option value='I'>Inclusão</option>
-								<option value='A'>Alteração</option>
-								<option value='R'>Remoção</option>
-							</select>
-						</div>
-					</div>
-					<div>
-						<textarea
-							name='descricao'
-							placeholder='Descrição das alterações...'
-							value={comentario}></textarea>
-					</div>
-					<input type='submit' value='Enviar' />
-				</form>
+						&nbsp; Remover
+					</button>
+				</div>
 			</div>
 		</div>
 	) : null;
