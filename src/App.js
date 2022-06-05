@@ -2,6 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import Home from './Home';
 import Menu from './Menu';
 import ConsultaProdutos from './Consulta_produtos';
+import ConsultaValidades from './consulta-validades/Validades';
 import Coleta from './Coleta';
 import Login from './Login';
 // import Teste from './testes/testeFc';
@@ -10,6 +11,8 @@ import ToastElement from './Context/Toast/Toast';
 import { FormDadosProvider } from './Context/FormDadosContext/FormDadosProvider';
 import { AuthContext } from './Context/AuthContext/Auth';
 import { Routes, Route } from 'react-router-dom';
+import { ValidadesProvider } from './Context/ValidadesContext/ValidadesProvider';
+
 import ProtectedRoute from './ProtectedRoute';
 
 export default function App() {
@@ -23,20 +26,32 @@ export default function App() {
 	return (
 		<div>
 			<Menu />
+			<div className='globalFixStickMenu'>
+				<FormDadosProvider>
+					<ValidadesProvider>
+						<Routes>
+							<Route path='/' exact element={<Home />} />
 
-			<FormDadosProvider>
-				<Routes>
-					<Route path='/' exact element={<Home />} />
+							<Route path='/' element={<ProtectedRoute status={statusAuth} />}>
+								<Route
+									path='/consulta'
+									element={<ConsultaProdutos />}
+									replace
+								/>
+								<Route
+									path='/validades'
+									element={<ConsultaValidades />}
+									replace
+								/>
+								<Route path='/coleta' element={<Coleta />} replace />
+							</Route>
 
-					<Route path='/' element={<ProtectedRoute status={statusAuth} />}>
-						<Route path='/consulta' element={<ConsultaProdutos />} replace />
-						<Route path='/coleta' element={<Coleta />} replace />
-					</Route>
-
-					<Route path='/login' element={<Login />} />
-				</Routes>
-				<ToastElement />
-			</FormDadosProvider>
+							<Route path='/login' element={<Login />} />
+						</Routes>
+						<ToastElement />
+					</ValidadesProvider>
+				</FormDadosProvider>
+			</div>
 		</div>
 	);
 }

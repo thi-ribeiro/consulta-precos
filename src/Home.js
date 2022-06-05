@@ -69,7 +69,6 @@ export default function Home() {
 													)}></div>
 												<div className='item-changelog-comentario'>
 													{listaChangelog[dataPostagem][comment].comentario}
-
 													<EditChangelogPopup
 														editClick={changelogEditPopup}
 														statusAuth={statusAuth}

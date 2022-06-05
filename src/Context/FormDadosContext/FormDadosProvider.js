@@ -45,6 +45,9 @@ export const FormDadosProvider = ({ children }) => {
 
 	let dataCompleta = `${ano}-${mes}-${dia} ${hora}:${minuto}:${sec}`;
 	let dataCompletaEscape = `${dia}-${mes}-${ano}`;
+	let dataBarra = `${ano}/${mes}/${dia}`;
+	let dataBarraBr = `${dia}/${mes}/${ano}`;
+	let dataMesAnoBarra = `${mes}/${ano}`;
 
 	let userDataLocalStorage = localStorage.getItem('_user') || false;
 	// let userState = userDataLocalStorage
@@ -362,6 +365,9 @@ export const FormDadosProvider = ({ children }) => {
 				changelogPopupState,
 				atualizaIdChangelog,
 				dataCompleta,
+				dataBarra,
+				dataBarraBr,
+				dataMesAnoBarra,
 				dataCompletaEscape,
 				userStateUsername,
 				postChangelog,

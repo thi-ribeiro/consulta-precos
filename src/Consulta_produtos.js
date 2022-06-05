@@ -87,7 +87,8 @@ export default function Consulta_produtos() {
 							ref={refTipoProd}
 							name='tipoProduto'
 							className='tabela-select'
-							defaultValue={configuracaoBusca.tipoProduto}>
+							defaultValue={configuracaoBusca.tipoProduto}
+							title='tipoProdutos'>
 							<option key='all'>TODOS</option>
 							{listaTipoprodutos.map((item, index) => (
 								<option key={index}>{item.tipoProduto}</option>
@@ -97,7 +98,8 @@ export default function Consulta_produtos() {
 							ref={refOrdemList}
 							name='ordemLista'
 							className='ordem_lista'
-							defaultValue={configuracaoBusca.ordem}>
+							defaultValue={configuracaoBusca.ordem}
+							title='ordemLista'>
 							{organizacao.map((i, index) => {
 								return (
 									<option key={index} value={i.ordem}>

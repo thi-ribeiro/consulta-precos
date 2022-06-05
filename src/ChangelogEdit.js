@@ -72,7 +72,7 @@ export default function ChangelogEdit() {
 						}}>
 						<Icon
 							path={mdiTextBoxCheckOutline}
-							title='Filtrar'
+							title='Editar'
 							size={1}
 							color='#000'
 						/>
@@ -81,7 +81,7 @@ export default function ChangelogEdit() {
 					<button data-id={id} onClick={deletarChangelog}>
 						<Icon
 							path={mdiTextBoxRemoveOutline}
-							title='Filtrar'
+							title='Remover'
 							size={1}
 							color='#000'
 						/>

@@ -30,7 +30,7 @@ body {
 		font-weight: bold;
 		text-transform: uppercase;
 		align-items: center;
-		background: rgba(0, 0, 0, 0.05);
+		background-color: rgba(0, 0, 0, 0.05);
 		border: 1px solid rgba(0, 0, 0, 0.2);
 		transition-property: border, box-shadow, background-color;
 		transition: 500ms ease-in-out 0s;
@@ -87,16 +87,27 @@ body {
 	}
 
 	.menu {
-		background-color: rgba(0, 0, 0, 0.05);
+		background-color: rgba(243, 243, 243, 0.9);
 		border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 		padding: 10px;
 		font-size: large;
 		font-weight: bold;
 		text-transform: uppercase;
-
+		cursor: pointer;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		user-select: none;
+
+		-webkit-tap-highlight-color: transparent;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+
+		z-index: 8;
 
 		.login-menu {
 			border-left: 1px solid rgba(0, 0, 0, 0.2);
@@ -115,8 +126,59 @@ body {
 
 			li {
 				padding: 0 5px;
+				position: relative;
+				color: rgba(0, 0, 0, 0.5);
+			}
+
+			li:hover {
+				color: rgba(0, 0, 0, 1);
 			}
 		}
+
+		label {
+			border: none;
+			background-color: transparent;
+			margin: 0;
+			padding: 0;
+			height: 0;
+			width: auto;
+			display: block;
+		}
+
+		.consulta-tipo-popup {
+			position: absolute;
+			background-color: rgba(243, 243, 243, 0.9);
+			border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+			border-left: 1px solid rgba(0, 0, 0, 0.1);
+			border-right: 1px solid rgba(0, 0, 0, 0.1);
+			z-index: -1;
+
+			li {
+				width: 100%;
+				padding: 5px 10px;
+			}
+		}
+
+		.fadeOut {
+			top: 0px;
+			opacity: 0;
+			transition: top 1s, opacity 1s, z-index 0.5s;
+		}
+
+		.fadeIn {
+			top: 34px;
+			opacity: 1;
+			transition: top 0.5s, opacity 0.5s, z-index 1s;
+			z-index: 1;
+		}
+	}
+
+	.sticky {
+		position: fixed;
+		top: 0;
+		width: 100%;
+		transition: all 500ms ease-in-out 0s;
+		z-index: 8;
 	}
 
 	.tabelas-centralizar {
@@ -685,6 +747,8 @@ body {
 								border: none;
 								margin: 0;
 								padding: 0;
+								background-color: transparent;
+								box-shadow: none;
 							}
 						}
 
@@ -786,6 +850,28 @@ body {
 		}
 	}
 
+	.formulario-validades {
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 90%;
+
+		.formulario-validade-dados-numericos {
+			display: flex;
+			flex-direction: column;
+
+			input {
+				margin: 5px 0;
+				//width: 50%;
+			}
+		}
+
+		button {
+			margin: 10px 0;
+		}
+	}
+
 	.login-page-form {
 		display: flex;
 		flex-direction: column;
@@ -808,5 +894,193 @@ body {
 			font-weight: bold;
 			text-transform: uppercase;
 		}
+	}
+
+	.menu-validades-busca {
+		display: flex;
+
+		button {
+			margin: 0 5px;
+		}
+	}
+
+	.validades-select {
+		display: flex;
+		flex-direction: column;
+		//overflow-x: hidden;
+		//width: 100%;
+
+		.coleta-validades-div-atual,
+		.coleta-validades-div-mes {
+			//width: 500px;
+		}
+
+		.consulta-validades-produtos-listados {
+			//@at-root: flex;
+			//padding-top: 10px;
+			margin: 10px 0;
+			//min-height: 215px;
+			max-height: 215px;
+			overflow: auto;
+			display: flex;
+			flex-direction: column;
+
+			.consulta-validades-produto-div-visivel {
+				display: flex;
+				flex-direction: row;
+				background-color: rgba(0, 0, 0, 0.05);
+				border: 1px solid rgba(0, 0, 0, 0.2);
+				padding: 5px;
+				margin: 5px 0 0 0;
+				align-items: center;
+				justify-content: space-between;
+				position: relative;
+			}
+
+			.finalizado-por-background {
+				background-color: rgba(0, 255, 0, 0.1);
+				border: 1px solid rgba(0, 100, 0, 0.5);
+			}
+
+			.produto-na-data {
+				background-color: rgba(100, 100, 255, 0.1);
+				border: 1px solid rgba(0, 0, 150, 0.5);
+			}
+
+			.produto-vencido {
+				background-color: rgba(255, 0, 0, 0.1);
+				border: 1px solid rgba(150, 0, 0, 0.5);
+			}
+
+			.produto-proximo-vencimento {
+				background-color: rgba(255, 225, 0, 0.1);
+				border: 1px solid rgba(150, 150, 0, 0.5);
+			}
+
+			.consulta-validades-produto-div-hidden {
+				display: flex;
+				flex-direction: column;
+				overflow: hidden;
+				background-color: rgba(0, 0, 0, 0);
+				height: 0;
+				opacity: 0;
+				//height: 100px;
+			}
+
+			//	.consulta-validades-produto-div:hover {
+			.consulta-validades-produto-div-hidden-show {
+				transition: opacity 500ms linear 0s;
+				display: flex;
+				flex-direction: column;
+				height: auto;
+				opacity: 1;
+				padding: 5px;
+				border: 1px solid rgba(0, 0, 0, 0.2);
+				border-top: none;
+				align-items: center;
+			}
+
+			.edicao-produto {
+				display: flex;
+				margin: 10px 0;
+
+				button {
+					margin: 0 5px;
+				}
+			}
+
+			.finalizado-por {
+				display: flex;
+				text-align: justify;
+				flex-direction: column;
+			}
+
+			.validade-final,
+			.validade-nome,
+			.validade-codigoBarra,
+			.validade-lote,
+			.validade-quantidade-produtos {
+				display: flex;
+				align-items: center;
+
+				.validade-dias-vencer {
+					margin: 0 5px;
+					font-weight: bold;
+				}
+
+				.iconeMod {
+					margin: 0 5px 0 0;
+				}
+			}
+
+			// .validade-final {
+			// 	//display: flex;
+
+			// 	.validade-dias-vencer,
+			// 	.validade-data-vencer {
+			// 		//flex-grow: 2;
+			// 		// justify-content: space-between;
+			// 	}
+			// }
+
+			.validade-nome {
+				border-right: 1px solid rgba(0, 0, 0, 0.1);
+				width: 100px;
+				//justify-content: flex-start;
+				padding: 0 5px 0 0;
+				font-weight: bold;
+				//text-align: center;
+			}
+
+			.validade-quantidade-produtos {
+				border-left: 1px solid rgba(0, 0, 0, 0.1);
+				width: 40px;
+				justify-content: center;
+				padding: 0 0 0 5px;
+				font-weight: bold;
+			}
+		}
+
+		.separador {
+			border-top: 1px solid rgba(0, 0, 0, 0.3);
+		}
+
+		.coleta-validades-titulo {
+			margin: 20px 0;
+
+			h1 {
+				margin: 0 auto;
+			}
+			h5 {
+				margin: 0 5px;
+			}
+		}
+	}
+
+	.popupConfirmation {
+		position: absolute;
+		//background-color: rgba(255, 255, 255, 0.8);
+		padding: 5px;
+		font-weight: bold;
+		//border: 1px solid #000;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: 90%;
+
+		.botoes-confirmacao {
+			display: flex;
+			//flex-direction: row;
+			margin: 10px 0 0 0;
+			justify-content: flex-end;
+			button {
+				margin: 0 5px 0 0;
+				//background-color: rgba(255, 255, 255, 0.8);
+			}
+		}
+	}
+
+	.globalFixStickMenu {
+		margin: 50px 0;
 	}
 }
