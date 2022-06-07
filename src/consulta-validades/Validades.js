@@ -10,17 +10,12 @@ import PopupConfirmation from '../Componentes/PopupConfirmation';
 import { ValidadesContext } from '../Context/ValidadesContext/ValidadesProvider';
 
 export default function Validades() {
-	const {
-		validadePopupState,
-		setvalidadePopupState,
-		stadoPopConfirma,
-		setstadoPopConfirma,
-		dadosConfirmacao,
-	} = useContext(ValidadesContext);
+	const { validadePopupState, setvalidadePopupState } =
+		useContext(ValidadesContext);
 
 	const changeState = () => {
 		setvalidadePopupState(!validadePopupState);
-		console.log(validadePopupState);
+		//console.log(validadePopupState);
 	};
 
 	return (
@@ -30,11 +25,7 @@ export default function Validades() {
 			<ListaValidadesMes />
 			<IconeAddColeta adicionarForm={changeState} />
 
-			<PopupConfirmation
-				{...dadosConfirmacao}
-				visivel={stadoPopConfirma}
-				funcaoFechar={() => setstadoPopConfirma(false)}
-			/>
+			<PopupConfirmation />
 			<AdicionarValidade />
 		</div>
 	);

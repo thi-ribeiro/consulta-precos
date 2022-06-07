@@ -35,7 +35,7 @@ export default function AdicionarValidade() {
 					<h5>Data de referência {dataBarraBr}</h5>
 				</div>
 
-				<form method='POST' onSubmit={dadosPostValidade} autocomplete="off">
+				<form method='POST' onSubmit={dadosPostValidade} autoComplete='off'>
 					<div className='formulario-validade-header'>
 						<div className='formulario-validade-dados-texto'>
 							<input
@@ -67,6 +67,15 @@ export default function AdicionarValidade() {
 								placeholder='Quantidade'
 								name='quantidadeProdutos'
 							/>
+						</div>
+						<div className='formulario-validade-lancamento-sistema'>
+							<input
+								type='checkbox'
+								id='checkLanca'
+								name='checkLanca'
+								value='1'
+							/>
+							<span>&nbsp; Já lançado?</span>
 						</div>
 					</div>
 

@@ -141,7 +141,8 @@ body .menu .consulta-tipo-popup li {
   padding: 5px 10px;
 }
 body .menu .fadeOut {
-  top: 0px;
+  z-index: -1;
+  top: -15px;
   opacity: 0;
   transition: top 1s, opacity 1s, z-index 0.5s;
 }
@@ -516,7 +517,7 @@ body .floatButton {
   align-items: center;
   justify-content: center;
   text-align: center;
-  background-color: #eee;
+  background-color: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(0, 0, 0, 0.2);
   box-shadow: 0px 0px 0px rgba(0, 0, 0, 0.1);
   border-radius: 100%;
@@ -525,14 +526,16 @@ body .floatButton {
   position: fixed;
   right: 25px;
   bottom: 25px;
-  transition: border-color, box-shadow 500ms ease-in-out 0s;
+  transition: border-color, background-color, box-shadow 500ms ease-in-out 0s;
   z-index: 8;
 }
 body .floatButton::-moz-selection {
+  background-color: rgb(255, 255, 255);
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
 }
 body .floatButton:hover,
 body .floatButton::selection {
+  background-color: rgb(255, 255, 255);
   box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
 }
 body .coleta-vazia {
@@ -660,6 +663,12 @@ body .formulario-validades .formulario-validade-dados-numericos {
 body .formulario-validades .formulario-validade-dados-numericos input {
   margin: 5px 0;
 }
+body .formulario-validades .formulario-validade-lancamento-sistema {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  text-transform: capitalize;
+}
 body .formulario-validades button {
   margin: 10px 0;
 }
@@ -690,10 +699,6 @@ body .menu-validades-busca {
 body .menu-validades-busca button {
   margin: 0 5px;
 }
-body .validades-select {
-  display: flex;
-  flex-direction: column;
-}
 body .validades-select .consulta-validades-produtos-listados {
   margin: 10px 0;
   max-height: 215px;
@@ -711,6 +716,9 @@ body .validades-select .consulta-validades-produtos-listados .consulta-validades
   align-items: center;
   justify-content: space-between;
   position: relative;
+}
+body .validades-select .consulta-validades-produtos-listados .lancado-sistema {
+  display: flex;
 }
 body .validades-select .consulta-validades-produtos-listados .finalizado-por-background {
   background-color: rgba(0, 255, 0, 0.1);
@@ -783,20 +791,19 @@ body .validades-select .consulta-validades-produtos-listados .validade-quantidad
   margin: 0 5px 0 0;
 }
 body .validades-select .consulta-validades-produtos-listados .validade-nome {
-  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  border-right: 1px solid rgba(0, 0, 0, 0.2);
   width: 100px;
   padding: 0 5px 0 0;
   font-weight: bold;
 }
 body .validades-select .consulta-validades-produtos-listados .validade-quantidade-produtos {
-  border-left: 1px solid rgba(0, 0, 0, 0.1);
-  width: 40px;
-  justify-content: center;
+  border-left: 1px solid rgba(0, 0, 0, 0.2);
+  width: 50px;
   padding: 0 0 0 5px;
   font-weight: bold;
 }
 body .validades-select .separador {
-  border-top: 1px solid rgba(0, 0, 0, 0.3);
+  border-top: 2px solid rgba(0, 0, 0, 0.1);
 }
 body .validades-select .coleta-validades-titulo {
   margin: 20px 0;

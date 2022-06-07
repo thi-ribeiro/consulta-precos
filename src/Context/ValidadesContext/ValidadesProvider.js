@@ -13,6 +13,7 @@ import {
 	mdiPlaylistEdit,
 	mdiPlaylistCheck,
 	mdiPlaylistMinus,
+	mdiCheckCircleOutline,
 } from '@mdi/js';
 
 export const ValidadesContext = createContext();
@@ -115,6 +116,16 @@ export const ValidadesProvider = ({ children }) => {
 			.then((data) => {
 				setdataAtualFetch(data);
 				setloadingAtual(false);
+
+				console.log(data);
+
+				data.forEach(({ validadeFinal, finalizadoPor }) => {
+					if (diasVence(validadeFinal) <= 0) {
+						if (finalizadoPor) {
+							console.log(validadeFinal);
+						}
+					}
+				});
 			})
 			.catch((error) => {
 				console.error(error);
@@ -160,15 +171,17 @@ export const ValidadesProvider = ({ children }) => {
 		setvalidadePopupState(false);
 	};
 
-	const removerValidade = (e) => {
-		e.preventDefault();
+	const removerValidade = (id) => {
+		//e.preventDefault();
+
+		console.log(id);
 
 		fetch(`${contextGlobalFetch}/deleteValidade`, {
 			method: 'POST',
 			credentials: 'include',
 			mode: 'cors',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ id: e.target.dataset.id }),
+			body: JSON.stringify({ id: id }),
 		})
 			.then((response) => {
 				if (response.status === 200) {
@@ -186,12 +199,12 @@ export const ValidadesProvider = ({ children }) => {
 			});
 	};
 
-	const finalizarValidade = (e) => {
-		e.preventDefault();
+	const finalizarValidade = (id) => {
+		//e.preventDefault();
 
 		//id, usuario, dataFinalizacao
 		let finalizacaoData = {
-			id: e.target.dataset.id,
+			id: id,
 			usuario: JSON.parse(localStorage.getItem('_user')).usuario,
 			dataFinalizacao: dataBarraBr,
 		};
@@ -238,7 +251,7 @@ export const ValidadesProvider = ({ children }) => {
 				colorMod = 'rgba(168, 0, 0, 0.7)';
 			} else if (
 				diasVence(dataProdutoVence) > 0 &&
-				diasVence(dataProdutoVence) < 6
+				diasVence(dataProdutoVence) <= 6
 			) {
 				pathMod = mdiCalendarAlert;
 				colorMod = 'rgba(150, 150, 0, 0.7)';
@@ -271,21 +284,21 @@ export const ValidadesProvider = ({ children }) => {
 			return `${classFinal} produto-na-data`;
 		} else if (vencimento <= 0) {
 			return `${classFinal} produto-vencido`;
-		} else if (vencimento > 0 && vencimento < 6) {
+		} else if (vencimento > 0 && vencimento <= 6) {
 			return `${classFinal} produto-proximo-vencimento`;
 		}
 	};
 
 	const mensagemVencimento = (vencimento, diasVencimento, finalizado) => {
 		if (finalizado) {
-			return `Finalizado ${finalizado}.`;
+			return `Fin. ${finalizado}.`;
 		}
 
 		if (diasVencimento > 6) {
 			return `${vencimento} ${diasVencimento} dia(s).`;
 		} else if (diasVencimento <= 0) {
 			return `Vencido ${vencimento}.`;
-		} else if (diasVencimento > 0 && diasVencimento < 6) {
+		} else if (diasVencimento > 0 && diasVencimento <= 6) {
 			return `Venc. ${diasVencimento} dias(s).`;
 		}
 	};
@@ -323,100 +336,74 @@ export const ValidadesProvider = ({ children }) => {
 		);
 	};
 
-	const PopUpConfirma = (tipo) => {
-		switch (true) {
-			case tipo === 0:
+	const PopUpConfirma = (id, nomeProduto, tipo) => {
+		switch (tipo) {
+			case 0:
 				setdadosConfirmacao({
-					mensagemConfirmacao: `Deseja editar a validade?`,
+					mensagemConfirmacao: `Deseja editar a validade do produto [ ${nomeProduto} ] ?`,
 					funcaoTexto: 'Editar',
-					funcaoExecutar: 'editar()',
+					funcaoExecutar: tipo,
+					id: id,
+				});
+				break;
+			case 1:
+				setdadosConfirmacao({
+					mensagemConfirmacao: `Deseja finalizar a validade do produto [ ${nomeProduto} ] ?`,
+					funcaoTexto: 'Finalizar',
+					funcaoExecutar: tipo,
+					id: id,
 				});
 
 				break;
-			case tipo === 1:
+			case 2:
 				setdadosConfirmacao({
-					mensagemConfirmacao: `Deseja finalizar a validade?`,
-					funcaoTexto: 'Finalizar',
-					funcaoExecutar: 'finalizar()',
-				});
-				break;
-			case tipo === 2:
-				setdadosConfirmacao({
-					mensagemConfirmacao: `Deseja deletar a validade?`,
+					mensagemConfirmacao: `Deseja deletar a validade do produto [ ${nomeProduto} ] ?`,
 					funcaoTexto: 'Deletar',
-					funcaoExecutar: 'deletar()',
+					funcaoExecutar: tipo,
+					id: id,
 				});
 				break;
 
 			default:
 		}
-		setstadoPopConfirma(!stadoPopConfirma);
-		console.log(dadosConfirmacao);
+
+		return setstadoPopConfirma(!stadoPopConfirma);
+
+		//console.log(dadosConfirmacao);
 	};
 
 	const SlideDownDados = (e) => {
+		let idScrollto = document.getElementById(
+			`div-${e.currentTarget.dataset.id}`
+		);
+
+		console.log(idScrollto);
+
+		idScrollto.scrollIntoView({
+			behavior: 'smooth',
+			//block: 'nearest',
+			//inline: 'nearest',
+		});
 		setdadosOnClick(e.currentTarget.dataset.id);
-		console.log(e.currentTarget.dataset.id);
 	};
 
-	// const ItemValidade = ({
-	// 	index,
-	// 	nomeProduto,
-	// 	finalizadoPor,
-	// 	finalizadoData,
-	// 	validadeFinal,
-	// 	validadeFinalBr,
-	// 	quantidadeProdutos,
-	// 	dadosOnClick,
-	// 	id,
-	// 	finalizarValidade,
-	// 	PopUpConfirma,
-	// }) => {
-	// 	return (
-	// 		<div key={index} className={`consulta-validades-produto-div`}>
-	// 			<ValidadeVisivel
-	// 				nomeProduto={nomeProduto}
-	// 				finalizadoPor={finalizadoPor}
-	// 				validadeFinal={validadeFinal}
-	// 				validadeFinalBr={validadeFinalBr}
-	// 				finalizadoData={finalizadoData}
-	// 				quantidadeProdutos={quantidadeProdutos}
-	// 			/>
-	// 			<div
-	// 				className={`consulta-validades-produto-div-hidden${
-	// 					dadosOnClick ? 'show' : ''
-	// 				}`}>
-	// 				<div className='nome-edicao-produto'>{nomeProduto}</div>
+	const lancadoSis = (lancado) => {
+		let corLancado = {
+			lancado: 'rgba(0, 100, 0, 0.9)',
+			nlancado: 'darkgrey',
+		};
 
-	// 				<div className='edicao-produto'>
-	// 					<button>
-	// 						<Icon className='iconeMod' path={mdiPlaylistEdit} size={1} />
-	// 						&nbsp; Editar
-	// 					</button>
+		let cor = lancado ? corLancado.lancado : corLancado.nlancado;
 
-	// 					{!finalizadoData ? (
-	// 						<button onClick={finalizarValidade} data-id={id}>
-	// 							<Icon className='iconeMod' path={mdiPlaylistCheck} size={1} />
-	// 							&nbsp; Finalizar
-	// 						</button>
-	// 					) : null}
-
-	// 					<button onClick={PopUpConfirma} data-id={id}>
-	// 						<Icon className='iconeMod' path={mdiPlaylistMinus} size={1} />
-	// 						&nbsp; Remover
-	// 					</button>
-	// 				</div>
-
-	// 				{finalizadoData ? (
-	// 					<div className='finalizado-por'>
-	// 						O produto foi finalizado dia {finalizadoData} por&nbsp;
-	// 						{finalizadoPor}.
-	// 					</div>
-	// 				) : null}
-	// 			</div>
-	// 		</div>
-	// 	);
-	// };
+		return (
+			<Icon
+				className='iconeMod'
+				path={mdiCheckCircleOutline}
+				size={0.7}
+				color={cor}
+			/>
+		);
+	};
 
 	const mapValidades = (valores, tipoLoading) => {
 		return tipoLoading ? (
@@ -430,7 +417,7 @@ export const ValidadesProvider = ({ children }) => {
 				/>
 			</div>
 		) : (
-			<div className='consulta-validades-produtos-listados'>
+			<div className='consulta-validades-produtos-listados atualmente'>
 				{!valores.length ? (
 					<div>Nenhum vencimento cadastrado ou para listar.</div>
 				) : null}
@@ -446,22 +433,45 @@ export const ValidadesProvider = ({ children }) => {
 						finalizadoData,
 						finalizadoPor,
 						quantidadeProdutos,
+						lancadoSistema,
 					} = item;
 
 					return (
 						<div
 							key={index}
 							className={`consulta-validades-produto-div`}
+							id={`div-${id}`}
 							data-id={id}
 							onClick={SlideDownDados}>
-							<ValidadeVisivel
-								nomeProduto={nomeProduto}
-								finalizadoPor={finalizadoPor}
-								validadeFinal={validadeFinal}
-								validadeFinalBr={validadeFinalBr}
-								finalizadoData={finalizadoData}
-								quantidadeProdutos={quantidadeProdutos}
-							/>
+							<div
+								className={StatusDivColor(
+									diasVence(validadeFinal),
+									finalizadoPor
+								)}>
+								<div className='validade-nome' data-produto={nomeProduto}>
+									<SetIcon
+										dataProduto={validadeFinal}
+										finalizadoData={finalizadoData}
+									/>
+									{LimitaNomeProduto(nomeProduto)}
+								</div>
+
+								<div className='validade-final'>
+									<div className='validade-dias-vencer'>
+										{mensagemVencimento(
+											validadeFinalBr,
+											diasVence(validadeFinal),
+											finalizadoData
+										)}
+									</div>
+								</div>
+
+
+								<div className='validade-quantidade-produtos'>
+								{lancadoSis(lancadoSistema)}
+									{quantidadeProdutos}
+								</div>
+							</div>
 							<div
 								className={`consulta-validades-produto-div-hidden${
 									parseInt(id) === parseInt(dadosOnClick) ? '-show' : ''
@@ -469,7 +479,9 @@ export const ValidadesProvider = ({ children }) => {
 								<div className='nome-edicao-produto'>{nomeProduto}</div>
 
 								<div className='edicao-produto'>
-									<button onClick={() => PopUpConfirma(0)} data-id={id}>
+									<button
+										onClick={() => PopUpConfirma(id, nomeProduto, 0)}
+										data-id={id}>
 										<Icon
 											className='iconeMod'
 											path={mdiPlaylistEdit}
@@ -479,7 +491,9 @@ export const ValidadesProvider = ({ children }) => {
 									</button>
 
 									{!finalizadoData ? (
-										<button onClick={() => PopUpConfirma(1)} data-id={id}>
+										<button
+											onClick={() => PopUpConfirma(id, nomeProduto, 1)}
+											data-id={id}>
 											<Icon
 												className='iconeMod'
 												path={mdiPlaylistCheck}
@@ -489,7 +503,7 @@ export const ValidadesProvider = ({ children }) => {
 										</button>
 									) : null}
 
-									<button onClick={() => PopUpConfirma(2)} data-id={id}>
+									<button onClick={() => PopUpConfirma(id, nomeProduto, 2)}>
 										<Icon
 											className='iconeMod'
 											path={mdiPlaylistMinus}
@@ -540,6 +554,8 @@ export const ValidadesProvider = ({ children }) => {
 				stadoPopConfirma,
 				setstadoPopConfirma,
 				dadosConfirmacao,
+				removerValidade,
+				finalizarValidade,
 			}}>
 			{children}
 		</ValidadesContext.Provider>
