@@ -1,28 +1,35 @@
 import React, { useContext, useState, useEffect, useRef } from 'react';
 import { NavLink } from 'react-router-dom';
 import { AuthContext } from './Context/AuthContext/Auth';
+import { ValidadesContext } from './Context/ValidadesContext/ValidadesProvider';
+
+import Icon from '@mdi/react';
+import { mdiAlertDecagram } from '@mdi/js';
 
 export default function Menu() {
 	const { logout, statusAuth } = useContext(AuthContext);
+	const { fetchValidadesAlert, validadesAlert } = useContext(ValidadesContext);
 
 	const [statusPop, setstatusPop] = useState(false);
 	//const [stickyNav, setstickyNav] = useState(false);
 
 	useEffect(() => {
 		const verifica = (e) => {
-			let wrapped = wrapperRef.current.className;
-			//console.log(wrapperRef.current.className);
-			//console.log(e.target.href);
-			if (wrapped && !wrapperRef.current.contains(e.target)) {
-				//console.log('CLICOU FORA!');
-				setstatusPop(false);
-			} else if (e.target.href) {
-				setstatusPop(false);
-				//console.log('CLICOU DENTRO!');
+			if (e) {
+				let wrapped = wrapperRef.current.className;
+				//console.log(wrapperRef.current.className);
+				//console.log(e.target.href);
+				if (wrapped && !wrapperRef.current.contains(e.target)) {
+					//console.log('CLICOU FORA!');
+					setstatusPop(false);
+				} else if (e.target.href) {
+					setstatusPop(false);
+					//console.log('CLICOU DENTRO!');
+				}
+				//
 			}
-			//
 		};
-
+		fetchValidadesAlert();
 		// window.addEventListener('scroll', () => {
 		// 	let { pageYOffset } = window;
 		// 	//console.log(pageYOffset);
@@ -42,6 +49,25 @@ export default function Menu() {
 		};
 	}, []);
 
+	const LoggedInAlertDates = ({ statusAuth }) => {
+		//fetchValidadesAlert();
+
+		if (statusAuth && validadesAlert.length > 0) {
+			return (
+				<span className='alert-validades'>
+					<Icon
+						className='iconeMod'
+						path={mdiAlertDecagram}
+						size={0.8}
+						color='rgba(150, 0, 0, 0.8)'
+					/>
+				</span>
+			);
+		}
+
+		return null;
+	};
+
 	const wrapperRef = useRef();
 
 	return (
@@ -55,7 +81,10 @@ export default function Menu() {
 					</NavLink>
 				</li>
 				<li className='menu-consulta'>
-					<span onClick={() => setstatusPop(!statusPop)}>Consultas</span>
+					<span onClick={() => setstatusPop(!statusPop)}>
+						Consultas
+						<LoggedInAlertDates statusAuth={statusAuth} />
+					</span>
 					<ul
 						className={`consulta-tipo-popup ${
 							statusPop ? 'fadeIn' : 'fadeOut'

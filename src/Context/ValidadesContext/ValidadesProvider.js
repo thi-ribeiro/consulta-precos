@@ -27,6 +27,7 @@ export const ValidadesProvider = ({ children }) => {
 	const [validadePopupState, setvalidadePopupState] = useState(false);
 	const [stadoPopConfirma, setstadoPopConfirma] = useState(false);
 	const [dadosOnClick, setdadosOnClick] = useState();
+	const [validadesAlert, setvalidadesAlert] = useState([]);
 	const [dadosConfirmacao, setdadosConfirmacao] = useState([]);
 
 	const [contextGlobalFetch] = useState('http://192.168.2.12:5000');
@@ -51,6 +52,32 @@ export const ValidadesProvider = ({ children }) => {
 		} else {
 			return -1;
 		}
+	};
+
+	const fetchValidadesAlert = () => {
+		fetch(`${contextGlobalFetch}/validadesLimite`)
+			.then((response) => {
+				if (response.status === 200) {
+					return response.json();
+				} else {
+					throw new Error('Something went wrong on api server!');
+				}
+			})
+			.then((data) => {
+				//console.log(data);
+				let datas = [];
+				data.forEach(({ validadeFinal }) => {
+					if (diasVence(validadeFinal) >= -1 && diasVence(validadeFinal) <= 3) {
+						//console.log(validadeFinal, diasVence(validadeFinal));
+						datas.push(validadeFinal);
+					}
+				});
+				setvalidadesAlert(datas);
+				//console.log(datas);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
 	};
 
 	const fetchDatasSelect = () => {
@@ -117,15 +144,15 @@ export const ValidadesProvider = ({ children }) => {
 				setdataAtualFetch(data);
 				setloadingAtual(false);
 
-				console.log(data);
+				//console.log(data);
 
-				data.forEach(({ validadeFinal, finalizadoPor }) => {
-					if (diasVence(validadeFinal) <= 0) {
-						if (finalizadoPor) {
-							console.log(validadeFinal);
-						}
-					}
-				});
+				// data.forEach(({ validadeFinal, finalizadoPor }) => {
+				// 	if (diasVence(validadeFinal) <= 0) {
+				// 		if (finalizadoPor) {
+				// 			//console.log(validadeFinal);
+				// 		}
+				// 	}
+				// });
 			})
 			.catch((error) => {
 				console.error(error);
@@ -135,17 +162,22 @@ export const ValidadesProvider = ({ children }) => {
 	const dadosPostValidade = (e) => {
 		e.preventDefault();
 
-		console.log(e);
+		//console.log(e);
 		let dados = {};
 
 		[...e.target].forEach((target) => {
 			//console.log(target.type);
-			if (target.type !== 'submit') {
+			if (target.type !== 'submit' && target.id !== 'checkLanca') {
 				Object.assign(dados, { [target.name]: target.value });
+			}
+
+			if (target.id === 'checkLanca') {
+				//console.log(target.checked);
+				Object.assign(dados, { [target.name]: target.checked });
 			}
 		});
 
-		console.log(dados);
+		//console.log(dados);
 
 		fetch(`${contextGlobalFetch}/adicionarValidade`, {
 			method: 'POST',
@@ -164,6 +196,7 @@ export const ValidadesProvider = ({ children }) => {
 			.then((data) => {
 				chamaToast(data.message);
 				fetchDataAtual();
+				fetchValidadesAlert();
 			})
 			.catch((error) => {
 				console.error(error);
@@ -174,7 +207,7 @@ export const ValidadesProvider = ({ children }) => {
 	const removerValidade = (id) => {
 		//e.preventDefault();
 
-		console.log(id);
+		//console.log(id);
 
 		fetch(`${contextGlobalFetch}/deleteValidade`, {
 			method: 'POST',
@@ -193,6 +226,7 @@ export const ValidadesProvider = ({ children }) => {
 			.then((data) => {
 				chamaToast(data.message);
 				fetchDataAtual();
+				fetchValidadesAlert();
 			})
 			.catch((error) => {
 				console.error(error);
@@ -228,6 +262,7 @@ export const ValidadesProvider = ({ children }) => {
 			.then((data) => {
 				chamaToast(data.message);
 				fetchDataAtual();
+				fetchValidadesAlert();
 			})
 			.catch((error) => {
 				console.error(error);
@@ -273,10 +308,10 @@ export const ValidadesProvider = ({ children }) => {
 		return nomeProduto;
 	};
 
-	const StatusDivColor = (vencimento, finalizado) => {
+	const StatusDivColor = (vencimento, finalizadoPor) => {
 		let classFinal = `consulta-validades-produto-div-visivel`;
 
-		if (finalizado) {
+		if (finalizadoPor !== '0') {
 			return `${classFinal} finalizado-por-background`;
 		}
 
@@ -291,11 +326,11 @@ export const ValidadesProvider = ({ children }) => {
 
 	const mensagemVencimento = (vencimento, diasVencimento, finalizado) => {
 		if (finalizado) {
-			return `Fin. ${finalizado}.`;
+			return `OK ${finalizado}.`;
 		}
 
 		if (diasVencimento > 6) {
-			return `${vencimento} ${diasVencimento} dia(s).`;
+			return `${vencimento} - ${diasVencimento} dia(s).`;
 		} else if (diasVencimento <= 0) {
 			return `Vencido ${vencimento}.`;
 		} else if (diasVencimento > 0 && diasVencimento <= 6) {
@@ -377,11 +412,11 @@ export const ValidadesProvider = ({ children }) => {
 			`div-${e.currentTarget.dataset.id}`
 		);
 
-		console.log(idScrollto);
+		//console.log(idScrollto);
 
 		idScrollto.scrollIntoView({
 			behavior: 'smooth',
-			//block: 'nearest',
+			block: 'nearest',
 			//inline: 'nearest',
 		});
 		setdadosOnClick(e.currentTarget.dataset.id);
@@ -393,7 +428,7 @@ export const ValidadesProvider = ({ children }) => {
 			nlancado: 'darkgrey',
 		};
 
-		let cor = lancado ? corLancado.lancado : corLancado.nlancado;
+		let cor = lancado === 'true' ? corLancado.lancado : corLancado.nlancado;
 
 		return (
 			<Icon
@@ -426,11 +461,13 @@ export const ValidadesProvider = ({ children }) => {
 						id,
 						dataColetaValidade,
 						validadeFinalBr,
+						validadeFinalBrSemAno,
 						nomeProduto,
 						codigoBarra,
 						lote,
 						validadeFinal,
 						finalizadoData,
+						finalizadoDataSemAno,
 						finalizadoPor,
 						quantidadeProdutos,
 						lancadoSistema,
@@ -459,16 +496,15 @@ export const ValidadesProvider = ({ children }) => {
 								<div className='validade-final'>
 									<div className='validade-dias-vencer'>
 										{mensagemVencimento(
-											validadeFinalBr,
+											validadeFinalBrSemAno,
 											diasVence(validadeFinal),
 											finalizadoData
 										)}
 									</div>
 								</div>
 
-
 								<div className='validade-quantidade-produtos'>
-								{lancadoSis(lancadoSistema)}
+									{lancadoSis(lancadoSistema)}
 									{quantidadeProdutos}
 								</div>
 							</div>
@@ -556,6 +592,8 @@ export const ValidadesProvider = ({ children }) => {
 				dadosConfirmacao,
 				removerValidade,
 				finalizarValidade,
+				fetchValidadesAlert,
+				validadesAlert,
 			}}>
 			{children}
 		</ValidadesContext.Provider>

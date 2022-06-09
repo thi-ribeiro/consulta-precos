@@ -114,7 +114,7 @@ body {
 			margin: 0 0 0 6px;
 			padding: 0 0 0 10px !important;
 			.login-selected {
-				color: rgb(214, 43, 43);
+				color: rgba(150, 0, 0, 0.9);
 			}
 		}
 
@@ -180,6 +180,34 @@ body {
 		width: 100%;
 		transition: all 500ms ease-in-out 0s;
 		z-index: 8;
+	}
+
+	.alert-validades {
+		position: absolute;
+		top: -8px;
+		right: -5px;
+		//background-color: rgba(0, 0, 0, 0.4);
+		//color: #fff;
+		//font-size: small;
+		//padding: 5px;
+		//border-radius: 50%;
+		animation-name: pulse;
+		animation-duration: 0.2s;
+		animation-timing-function: ease-out;
+		animation-delay: 0s;
+		animation-direction: alternate;
+		animation-iteration-count: infinite;
+		animation-fill-mode: none;
+		animation-play-state: running;
+	}
+
+	@keyframes pulse {
+		0% {
+			transform: scale(0.9);
+		}
+		100% {
+			transform: scale(1);
+		}
 	}
 
 	.tabelas-centralizar {

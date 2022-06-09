@@ -24,11 +24,11 @@ export default function App() {
 	}, []);
 
 	return (
-		<div>
-			<Menu />
-			<div className='globalFixStickMenu'>
-				<FormDadosProvider>
-					<ValidadesProvider>
+		<React.Fragment>
+			<FormDadosProvider>
+				<ValidadesProvider>
+					<Menu />
+					<div className='globalFixStickMenu'>
 						<Routes>
 							<Route path='/' exact element={<Home />} />
 
@@ -49,9 +49,9 @@ export default function App() {
 							<Route path='/login' element={<Login />} />
 						</Routes>
 						<ToastElement />
-					</ValidadesProvider>
-				</FormDadosProvider>
-			</div>
-		</div>
+					</div>
+				</ValidadesProvider>
+			</FormDadosProvider>
+		</React.Fragment>
 	);
 }

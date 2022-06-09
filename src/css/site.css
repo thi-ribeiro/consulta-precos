@@ -103,7 +103,7 @@ body .menu .login-menu {
   padding: 0 0 0 10px !important;
 }
 body .menu .login-menu .login-selected {
-  color: rgb(214, 43, 43);
+  color: rgba(150, 0, 0, 0.9);
 }
 body .menu ul {
   display: flex;
@@ -158,6 +158,43 @@ body .sticky {
   width: 100%;
   transition: all 500ms ease-in-out 0s;
   z-index: 8;
+}
+body .alert-validades {
+  position: absolute;
+  top: -8px;
+  right: -5px;
+  -webkit-animation-name: pulse;
+          animation-name: pulse;
+  -webkit-animation-duration: 0.2s;
+          animation-duration: 0.2s;
+  -webkit-animation-timing-function: ease-out;
+          animation-timing-function: ease-out;
+  -webkit-animation-delay: 0s;
+          animation-delay: 0s;
+  -webkit-animation-direction: alternate;
+          animation-direction: alternate;
+  -webkit-animation-iteration-count: infinite;
+          animation-iteration-count: infinite;
+  -webkit-animation-fill-mode: none;
+          animation-fill-mode: none;
+  -webkit-animation-play-state: running;
+          animation-play-state: running;
+}
+@-webkit-keyframes pulse {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes pulse {
+  0% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 body .tabelas-centralizar {
   display: flex;

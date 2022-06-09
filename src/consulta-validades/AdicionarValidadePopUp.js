@@ -55,6 +55,7 @@ export default function AdicionarValidade() {
 								type='date'
 								placeholder='Validade do produto'
 								name='validadeFinal'
+								required
 							/>
 							<input
 								type='number'
