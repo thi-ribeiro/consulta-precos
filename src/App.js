@@ -6,6 +6,7 @@ import ConsultaValidades from './consulta-validades/Validades';
 import Coleta from './Coleta';
 import Login from './Login';
 // import Teste from './testes/testeFc';
+import Testes from './Testes';
 import ToastElement from './Context/Toast/Toast';
 
 import { FormDadosProvider } from './Context/FormDadosContext/FormDadosProvider';
@@ -47,6 +48,7 @@ export default function App() {
 							</Route>
 
 							<Route path='/login' element={<Login />} />
+							<Route path='/testes' element={<Testes />} />
 						</Routes>
 						<ToastElement />
 					</div>

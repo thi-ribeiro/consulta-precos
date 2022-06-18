@@ -738,14 +738,12 @@ body .menu-validades-busca button {
 }
 body .validades-select .consulta-validades-produtos-listados {
   margin: 10px 0;
-  max-height: 215px;
-  overflow: auto;
+  min-height: 60vh;
   display: flex;
   flex-direction: column;
 }
 body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div-visivel {
   display: flex;
-  flex-direction: row;
   background-color: rgba(0, 0, 0, 0.05);
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 5px;
@@ -773,36 +771,64 @@ body .validades-select .consulta-validades-produtos-listados .produto-proximo-ve
   background-color: rgba(255, 225, 0, 0.1);
   border: 1px solid rgba(150, 150, 0, 0.5);
 }
-body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div-hidden {
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-hidden {
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0);
+  height: 0px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-top: none;
+}
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show {
+  transition: max-height 500ms ease-in-out 0s;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: rgba(0, 0, 0, 0);
-  height: 0;
-  opacity: 0;
-}
-body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div-hidden-show {
-  transition: opacity 500ms linear 0s;
-  display: flex;
-  flex-direction: column;
-  height: auto;
-  opacity: 1;
-  padding: 5px;
+  max-height: 0;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-top: none;
+}
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .edicoes-show,
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .finalizado-por {
+  display: flex;
   align-items: center;
+  padding: 0 10px 10px 10px;
 }
-body .validades-select .consulta-validades-produtos-listados .edicao-produto {
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .edicoes-show .nome-edicao-produto,
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .finalizado-por .nome-edicao-produto {
+  width: 100%;
+  font-weight: bold;
+}
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .edicoes-show .edicao-produto,
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .finalizado-por .edicao-produto {
   display: flex;
-  margin: 10px 0;
+  justify-content: flex-end;
+  padding: 10px 0;
 }
-body .validades-select .consulta-validades-produtos-listados .edicao-produto button {
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .edicoes-show .edicao-produto button,
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .finalizado-por .edicao-produto button {
+  width: 30px;
   margin: 0 5px;
+  height: 30px;
 }
-body .validades-select .consulta-validades-produtos-listados .finalizado-por {
-  display: flex;
-  text-align: justify;
-  flex-direction: column;
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .edicoes-show .edicao-produto button[name=editar],
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .finalizado-por .edicao-produto button[name=editar] {
+  background-color: rgba(255, 225, 0, 0.1);
+  border: 1px solid rgba(150, 150, 0, 0.5);
+  color: rgb(150, 150, 0);
+}
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .edicoes-show .edicao-produto button[name=finalizar],
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .finalizado-por .edicao-produto button[name=finalizar] {
+  background-color: rgba(100, 100, 255, 0.1) !important;
+  border: 1px solid rgba(0, 0, 150, 0.5);
+  color: rgb(0, 0, 150);
+}
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .edicoes-show .edicao-produto button[name=deletar],
+body .validades-select .consulta-validades-produtos-listados .consulta-validades-produto-div .consulta-validades-produto-div-show .finalizado-por .edicao-produto button[name=deletar] {
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 1px solid rgba(150, 0, 0, 0.5);
+  color: rgb(150, 0, 0);
 }
 body .validades-select .consulta-validades-produtos-listados .validade-final,
 body .validades-select .consulta-validades-produtos-listados .validade-nome,

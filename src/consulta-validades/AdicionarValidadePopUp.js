@@ -69,15 +69,6 @@ export default function AdicionarValidade() {
 								name='quantidadeProdutos'
 							/>
 						</div>
-						<div className='formulario-validade-lancamento-sistema'>
-							<input
-								type='checkbox'
-								id='checkLanca'
-								name='checkLanca'
-								value='1'
-							/>
-							<span>&nbsp; Já lançado?</span>
-						</div>
 					</div>
 
 					<button>

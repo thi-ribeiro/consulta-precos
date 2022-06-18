@@ -2,6 +2,7 @@ import React, { useState, createContext, useContext, useEffect } from 'react';
 import { FormDadosContext } from '../FormDadosContext/FormDadosProvider';
 import { ToastContext } from '../Toast/ToastProvider';
 import ScaleLoader from 'react-spinners/ScaleLoader';
+//import EditarValidade from '../../consulta-validades/EditarValidade';
 
 import Icon from '@mdi/react';
 import {
@@ -14,6 +15,7 @@ import {
 	mdiPlaylistCheck,
 	mdiPlaylistMinus,
 	mdiCheckCircleOutline,
+	mdiTextToSpeechOff,
 } from '@mdi/js';
 
 export const ValidadesContext = createContext();
@@ -29,6 +31,9 @@ export const ValidadesProvider = ({ children }) => {
 	const [dadosOnClick, setdadosOnClick] = useState();
 	const [validadesAlert, setvalidadesAlert] = useState([]);
 	const [dadosConfirmacao, setdadosConfirmacao] = useState([]);
+	const [estadoPop, setestadoPop] = useState(false);
+	const [idEditarValidade, setidEditarValidade] = useState();
+	const [editarDadosValidade, seteditarDadosValidade] = useState(0);
 
 	const [contextGlobalFetch] = useState('http://192.168.2.12:5000');
 
@@ -143,26 +148,14 @@ export const ValidadesProvider = ({ children }) => {
 			.then((data) => {
 				setdataAtualFetch(data);
 				setloadingAtual(false);
-
-				//console.log(data);
-
-				// data.forEach(({ validadeFinal, finalizadoPor }) => {
-				// 	if (diasVence(validadeFinal) <= 0) {
-				// 		if (finalizadoPor) {
-				// 			//console.log(validadeFinal);
-				// 		}
-				// 	}
-				// });
+				console.log(data);
 			})
 			.catch((error) => {
 				console.error(error);
 			});
 	};
 
-	const dadosPostValidade = (e) => {
-		e.preventDefault();
-
-		//console.log(e);
+	const montaArrayForm = (e) => {
 		let dados = {};
 
 		[...e.target].forEach((target) => {
@@ -177,14 +170,17 @@ export const ValidadesProvider = ({ children }) => {
 			}
 		});
 
-		//console.log(dados);
+		return dados;
+	};
 
+	const dadosPostValidade = (e) => {
+		e.preventDefault();
 		fetch(`${contextGlobalFetch}/adicionarValidade`, {
 			method: 'POST',
 			credentials: 'include',
 			mode: 'cors',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(dados),
+			body: JSON.stringify(montaArrayForm(e)),
 		})
 			.then((response) => {
 				if (response.status === 200) {
@@ -302,7 +298,7 @@ export const ValidadesProvider = ({ children }) => {
 
 	const LimitaNomeProduto = (nomeProduto) => {
 		if (nomeProduto.length > 5) {
-			return nomeProduto.substring(0, 6) + '...';
+			return nomeProduto.substring(0, 5) + '...';
 		}
 
 		return nomeProduto;
@@ -326,7 +322,7 @@ export const ValidadesProvider = ({ children }) => {
 
 	const mensagemVencimento = (vencimento, diasVencimento, finalizado) => {
 		if (finalizado) {
-			return `OK ${finalizado}.`;
+			return `OK - ${finalizado}.`;
 		}
 
 		if (diasVencimento > 6) {
@@ -338,49 +334,41 @@ export const ValidadesProvider = ({ children }) => {
 		}
 	};
 
-	const ValidadeVisivel = ({
-		finalizadoPor,
-		nomeProduto,
-		validadeFinal,
-		finalizadoData,
-		validadeFinalBr,
-		quantidadeProdutos,
-	}) => {
-		return (
-			<div className={StatusDivColor(diasVence(validadeFinal), finalizadoPor)}>
-				<div className='validade-nome' data-produto={nomeProduto}>
-					<SetIcon
-						dataProduto={validadeFinal}
-						finalizadoData={finalizadoData}
-					/>
-					{LimitaNomeProduto(nomeProduto)}
-				</div>
+	// const ValidadeVisivel = ({
+	// 	finalizadoPor,
+	// 	nomeProduto,
+	// 	validadeFinal,
+	// 	finalizadoData,
+	// 	validadeFinalBr,
+	// 	quantidadeProdutos,
+	// }) => {
+	// 	return (
+	// 		<div className={StatusDivColor(diasVence(validadeFinal), finalizadoPor)}>
+	// 			<div className='validade-nome' data-produto={nomeProduto}>
+	// 				<SetIcon
+	// 					dataProduto={validadeFinal}
+	// 					finalizadoData={finalizadoData}
+	// 				/>
+	// 				{LimitaNomeProduto(nomeProduto)}
+	// 			</div>
 
-				<div className='validade-final'>
-					<div className='validade-dias-vencer'>
-						{mensagemVencimento(
-							validadeFinalBr,
-							diasVence(validadeFinal),
-							finalizadoData
-						)}
-					</div>
-				</div>
+	// 			<div className='validade-final'>
+	// 				<div className='validade-dias-vencer'>
+	// 					{mensagemVencimento(
+	// 						validadeFinalBr,
+	// 						diasVence(validadeFinal),
+	// 						finalizadoData
+	// 					)}
+	// 				</div>
+	// 			</div>
 
-				<div className='validade-quantidade-produtos'>{quantidadeProdutos}</div>
-			</div>
-		);
-	};
+	// 			<div className='validade-quantidade-produtos'>{quantidadeProdutos}</div>
+	// 		</div>
+	// 	);
+	// };
 
 	const PopUpConfirma = (id, nomeProduto, tipo) => {
 		switch (tipo) {
-			case 0:
-				setdadosConfirmacao({
-					mensagemConfirmacao: `Deseja editar a validade do produto [ ${nomeProduto} ] ?`,
-					funcaoTexto: 'Editar',
-					funcaoExecutar: tipo,
-					id: id,
-				});
-				break;
 			case 1:
 				setdadosConfirmacao({
 					mensagemConfirmacao: `Deseja finalizar a validade do produto [ ${nomeProduto} ] ?`,
@@ -407,21 +395,6 @@ export const ValidadesProvider = ({ children }) => {
 		//console.log(dadosConfirmacao);
 	};
 
-	const SlideDownDados = (e) => {
-		let idScrollto = document.getElementById(
-			`div-${e.currentTarget.dataset.id}`
-		);
-
-		//console.log(idScrollto);
-
-		idScrollto.scrollIntoView({
-			behavior: 'smooth',
-			block: 'nearest',
-			//inline: 'nearest',
-		});
-		setdadosOnClick(e.currentTarget.dataset.id);
-	};
-
 	const lancadoSis = (lancado) => {
 		let corLancado = {
 			lancado: 'rgba(0, 100, 0, 0.9)',
@@ -440,7 +413,126 @@ export const ValidadesProvider = ({ children }) => {
 		);
 	};
 
-	const mapValidades = (valores, tipoLoading) => {
+	const lancaSistemaButton = (id, statusSistema) => {
+		statusSistema = statusSistema === 'true' ? 'false' : 'true';
+
+		fetch(`${contextGlobalFetch}/lancarSistema`, {
+			method: 'POST',
+			credentials: 'include',
+			mode: 'cors',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				id: id,
+				statusSistema: statusSistema,
+			}),
+		})
+			.then((response) => {
+				if (response.status === 200) {
+					return response.json();
+				} else {
+					throw new Error('Something went wrong on api server!');
+				}
+			})
+			.then((data) => {
+				chamaToast(data.message);
+				const newState = dataAtualFetch.map((obj, index) => {
+					if (obj.id === id) {
+						return { ...dataAtualFetch[index], lancadoSistema: statusSistema };
+					}
+					return obj;
+				});
+
+				setdataAtualFetch(newState);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
+
+	const carregaDadosEditar = (id) => {
+		fetch(`${contextGlobalFetch}/carregarDataEditar/${id}`)
+			.then((response) => {
+				if (response.status === 200) {
+					return response.json();
+				} else {
+					throw new Error('Something went wrong on api server!');
+				}
+			})
+			.then((data) => {
+				seteditarDadosValidade(data);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
+
+	const atualizarDadosEdit = (e) => {
+		e.preventDefault();
+		console.log(e);
+		console.log(montaArrayForm(e));
+
+		fetch(`${contextGlobalFetch}/atualizarValidade/`, {
+			method: 'POST',
+			credentials: 'include',
+			mode: 'cors',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify(montaArrayForm(e)),
+		})
+			.then((response) => {
+				if (response.status === 200) {
+					return response.json();
+				} else {
+					throw new Error('Something went wrong on api server!');
+				}
+			})
+			.then((data) => {
+				chamaToast(data.message);
+
+				setestadoPop(false);
+				fetchDataAtual();
+				fetchValidadesAlert();
+
+				seteditarDadosValidade([]);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
+	};
+
+	const estadoEdit = (id) => {
+		setestadoPop(!estadoPop);
+		carregaDadosEditar(id);
+	};
+
+	const SlideDownDados = (e) => {
+		// let idScrollto = document.getElementById(
+		// 	`div-${e.currentTarget.dataset.id}`
+		// );
+
+		// idScrollto.scrollIntoView({
+		// 	behavior: 'smooth',
+		// });
+
+		setdadosOnClick(e.currentTarget.dataset.id);
+	};
+
+	// const openDiv = (id) => {
+	// 	if (parseInt(dadosOnClick) === parseInt(id)) {
+	// 		return `consulta-validades-produto-div-show animateShow`;
+	// 	} else {
+	// 		return `consulta-validades-produto-div-hidden`;
+	// 	}
+	// };
+
+	const MapValidades = ({ valores, tipoLoading }) => {
+		//const [toogle, settoogle] = useState(false);
+		const [idToogle, setidToogle] = useState(0);
+
+		const funcToogle = (id) => {
+			//settoogle(true);
+			setidToogle(id);
+		};
+
 		return tipoLoading ? (
 			<div className='loading-centralizar'>
 				<ScaleLoader
@@ -453,9 +545,10 @@ export const ValidadesProvider = ({ children }) => {
 			</div>
 		) : (
 			<div className='consulta-validades-produtos-listados atualmente'>
-				{!valores.length ? (
+				{!valores.length && (
 					<div>Nenhum vencimento cadastrado ou para listar.</div>
-				) : null}
+				)}
+
 				{valores.map((item, index) => {
 					let {
 						id,
@@ -479,7 +572,7 @@ export const ValidadesProvider = ({ children }) => {
 							className={`consulta-validades-produto-div`}
 							id={`div-${id}`}
 							data-id={id}
-							onClick={SlideDownDados}>
+							onClick={() => funcToogle(id)}>
 							<div
 								className={StatusDivColor(
 									diasVence(validadeFinal),
@@ -503,58 +596,62 @@ export const ValidadesProvider = ({ children }) => {
 									</div>
 								</div>
 
-								<div className='validade-quantidade-produtos'>
+								<div
+									className='validade-quantidade-produtos'
+									onClick={() => lancaSistemaButton(id, lancadoSistema)}>
 									{lancadoSis(lancadoSistema)}
 									{quantidadeProdutos}
 								</div>
 							</div>
 							<div
-								className={`consulta-validades-produto-div-hidden${
-									parseInt(id) === parseInt(dadosOnClick) ? '-show' : ''
-								}`}>
-								<div className='nome-edicao-produto'>{nomeProduto}</div>
-
-								<div className='edicao-produto'>
-									<button
-										onClick={() => PopUpConfirma(id, nomeProduto, 0)}
-										data-id={id}>
-										<Icon
-											className='iconeMod'
-											path={mdiPlaylistEdit}
-											size={1}
-										/>
-										&nbsp; Editar
-									</button>
-
-									{!finalizadoData ? (
+								className={`consulta-validades-produto-div-show`}
+								style={{
+									maxHeight: idToogle === id ? '300px' : '0px',
+								}}>
+								<div className='edicoes-show'>
+									<div className='nome-edicao-produto'>{nomeProduto}</div>
+									<div className='edicao-produto'>
 										<button
-											onClick={() => PopUpConfirma(id, nomeProduto, 1)}
-											data-id={id}>
+											data-id={id}
+											name='editar'
+											onClick={() => estadoEdit(id)}>
 											<Icon
 												className='iconeMod'
-												path={mdiPlaylistCheck}
+												path={mdiPlaylistEdit}
 												size={1}
 											/>
-											&nbsp; Finalizar
 										</button>
-									) : null}
 
-									<button onClick={() => PopUpConfirma(id, nomeProduto, 2)}>
-										<Icon
-											className='iconeMod'
-											path={mdiPlaylistMinus}
-											size={1}
-										/>
-										&nbsp; Remover
-									</button>
+										{!finalizadoData && (
+											<button
+												name='finalizar'
+												onClick={() => PopUpConfirma(id, nomeProduto, 1)}
+												data-id={id}>
+												<Icon
+													className='iconeMod'
+													path={mdiPlaylistCheck}
+													size={1}
+												/>
+											</button>
+										)}
+
+										<button
+											name='deletar'
+											onClick={() => PopUpConfirma(id, nomeProduto, 2)}>
+											<Icon
+												className='iconeMod'
+												path={mdiPlaylistMinus}
+												size={1}
+											/>
+										</button>
+									</div>
 								</div>
-
-								{finalizadoData ? (
+								{finalizadoData && (
 									<div className='finalizado-por'>
 										O produto foi finalizado dia {finalizadoData} por&nbsp;
 										{finalizadoPor}.
 									</div>
-								) : null}
+								)}
 							</div>
 						</div>
 					);
@@ -583,7 +680,7 @@ export const ValidadesProvider = ({ children }) => {
 				dataSelectedReferencia,
 				SetIcon,
 				LimitaNomeProduto,
-				mapValidades,
+				MapValidades,
 				validadePopupState,
 				setvalidadePopupState,
 				dadosPostValidade,
@@ -594,6 +691,18 @@ export const ValidadesProvider = ({ children }) => {
 				finalizarValidade,
 				fetchValidadesAlert,
 				validadesAlert,
+				atualizarDadosEdit,
+				setestadoPop,
+				estadoPop,
+				SlideDownDados,
+				dadosOnClick,
+				lancadoSis,
+				StatusDivColor,
+				mensagemVencimento,
+				estadoEdit,
+				PopUpConfirma,
+				editarDadosValidade,
+				contextGlobalFetch,
 			}}>
 			{children}
 		</ValidadesContext.Provider>

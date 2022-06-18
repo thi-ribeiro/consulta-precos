@@ -17,10 +17,6 @@ export default function PopupConfirmation() {
 
 	const tipoFunc = (tipo) => {
 		switch (tipo) {
-			case 0:
-				console.log('EDITAR');
-				setstadoPopConfirma(false);
-				break;
 			case 1:
 				finalizarValidade(dadosConfirmacao.id);
 				setstadoPopConfirma(false);

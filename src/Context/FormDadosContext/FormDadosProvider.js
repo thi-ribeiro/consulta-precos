@@ -363,6 +363,7 @@ export const FormDadosProvider = ({ children }) => {
 				contextGlobalFetch,
 				changelogPopup,
 				changelogPopupState,
+				setchangelogPopupState,
 				atualizaIdChangelog,
 				dataCompleta,
 				dataBarra,

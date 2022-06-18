@@ -36,10 +36,10 @@ export default function Coleta() {
 
 	// let dataCompletaEscape = `${dia}-${mes}-${ano}`;
 
-	const formEditar = (_) => {
-		clearToastMessages();
-		setaStatusPopup();
-	};
+	// const formEditar = (_) => {
+	// 	clearToastMessages();
+	// 	setaStatusPopup();
+	// };
 
 	const listagemColeta = async (_) => {
 		console.log('cheguei aki dentro de coleta!');
@@ -161,7 +161,7 @@ export default function Coleta() {
 			</form>
 
 			<ListaProdutos loading={loading} atualizar={listaColeta} />
-			<IconeAdicionarColeta adicionarForm={formEditar} />
+			<IconeAdicionarColeta tipoForm='editColeta' />
 
 			<div className='avoid-overlaping'></div>
 		</div>

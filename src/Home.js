@@ -84,7 +84,7 @@ export default function Home() {
 					)}
 				</div>
 			))}
-			<AddChanges adicionarForm={changelogPopup} visivel={statusAuth} />
+			<AddChanges tipoForm='changelogAdd' visivel={statusAuth} />
 			<ChangelogForm />
 			<ChangelogEdit />
 		</div>

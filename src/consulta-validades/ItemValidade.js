@@ -144,49 +144,115 @@ export default function ItemValidade(
 			</div>
 		);
 	};
-
-	return (
-		<div key={index} className={`consulta-validades-produto-div`}>
-			<ValidadeVisivel
-				nomeProduto={nomeProduto}
-				finalizadoPor={finalizadoPor}
-				validadeFinal={validadeFinal}
-				validadeFinalBr={validadeFinalBr}
-				finalizadoData={finalizadoData}
-				quantidadeProdutos={quantidadeProdutos}
+	
+	return tipoLoading ? (
+		<div className='loading-centralizar'>
+			<ScaleLoader
+				color='gray'
+				width='5px'
+				margin='2px'
+				radius='5px'
+				height='20px'
 			/>
-			<div
-				className={`consulta-validades-produto-div-hidden${
-					dadosOnClick ? 'show' : ''
-				}`}>
-				<div className='nome-edicao-produto'>{nomeProduto}</div>
+		</div>
+	) : (
+		<div className='consulta-validades-produtos-listados atualmente'>
+			{!valores.length ? (
+				<div>Nenhum vencimento cadastrado ou para listar.</div>
+			) : null}
+			{valores.map((item, index) => {
+				let {
+					id,
+					dataColetaValidade,
+					validadeFinalBr,
+					validadeFinalBrSemAno,
+					nomeProduto,
+					codigoBarra,
+					lote,
+					validadeFinal,
+					finalizadoData,
+					finalizadoDataSemAno,
+					finalizadoPor,
+					quantidadeProdutos,
+					lancadoSistema,
+				} = item;
 
-				<div className='edicao-produto'>
-					<button>
-						<Icon className='iconeMod' path={mdiPlaylistEdit} size={1} />
-						&nbsp; Editar
-					</button>
+				return (
+					<div
+						key={index}
+						className={`consulta-validades-produto-div`}
+						id={`div-${id}`}
+						data-id={id}
+						onClick={SlideDownDados}>
+						<div
+							className={StatusDivColor(
+								diasVence(validadeFinal),
+								finalizadoPor
+							)}>
+							<div className='validade-nome' data-produto={nomeProduto}>
+								<SetIcon
+									dataProduto={validadeFinal}
+									finalizadoData={finalizadoData}
+								/>
+								{LimitaNomeProduto(nomeProduto)}
+							</div>
 
-					{!finalizadoData ? (
-						<button onClick={finalizarValidade} data-id={id}>
-							<Icon className='iconeMod' path={mdiPlaylistCheck} size={1} />
-							&nbsp; Finalizar
-						</button>
-					) : null}
+							<div className='validade-final'>
+								<div className='validade-dias-vencer'>
+									{mensagemVencimento(
+										validadeFinalBrSemAno,
+										diasVence(validadeFinal),
+										finalizadoData
+									)}
+								</div>
+							</div>
 
-					<button onClick={PopUpConfirma} data-id={id}>
-						<Icon className='iconeMod' path={mdiPlaylistMinus} size={1} />
-						&nbsp; Remover
-					</button>
-				</div>
+							<div className='validade-quantidade-produtos'>
+								{lancadoSis(lancadoSistema)}
+								{quantidadeProdutos}
+							</div>
+						</div>
+						<div
+							className={`consulta-validades-produto-div-hidden${
+								parseInt(id) === parseInt(dadosOnClick) ? '-show' : ''
+							}`}>
+							<div className='nome-edicao-produto'>{nomeProduto}</div>
 
-				{finalizadoData ? (
-					<div className='finalizado-por'>
-						O produto foi finalizado dia {finalizadoData} por&nbsp;
-						{finalizadoPor}.
+							<div className='edicao-produto'>
+								<button data-id={id} onClick={() => estadoEdit}>
+									<Icon className='iconeMod' path={mdiPlaylistEdit} size={1} />
+									&nbsp; Editar
+								</button>
+
+								{!finalizadoData ? (
+									<button
+										onClick={() => PopUpConfirma(id, nomeProduto, 1)}
+										data-id={id}>
+										<Icon
+											className='iconeMod'
+											path={mdiPlaylistCheck}
+											size={1}
+										/>
+										&nbsp; Finalizar
+									</button>
+								) : null}
+
+								<button onClick={() => PopUpConfirma(id, nomeProduto, 2)}>
+									<Icon className='iconeMod' path={mdiPlaylistMinus} size={1} />
+									&nbsp; Remover
+								</button>
+							</div>
+
+							{finalizadoData ? (
+								<div className='finalizado-por'>
+									O produto foi finalizado dia {finalizadoData} por&nbsp;
+									{finalizadoPor}.
+								</div>
+							) : null}
+						</div>
 					</div>
-				) : null}
-			</div>
+				);
+			})}
 		</div>
 	);
 }
